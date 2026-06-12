@@ -1,0 +1,44 @@
+# ─── Environment / Secrets ────────────────────────────────────────────────────
+.env
+.env.local
+.env.*.local
+.env.production
+.env.staging
+*.env
+
+# ─── Python ───────────────────────────────────────────────────────────────────
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+*.egg-info/
+dist/
+build/
+*.egg
+.venv/
+venv/
+env/
+
+# ─── Node / Next.js ──────────────────────────────────────────────────────────
+node_modules/
+.next/
+out/
+.vercel/
+*.tsbuildinfo
+
+# ─── IDE / OS ─────────────────────────────────────────────────────────────────
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+.DS_Store
+Thumbs.db
+desktop.ini
+
+# ─── Logs / Coverage ─────────────────────────────────────────────────────────
+*.log
+npm-debug.log*
+coverage/
+htmlcov/
+.pytest_cache/

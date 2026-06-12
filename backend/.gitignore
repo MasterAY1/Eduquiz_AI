@@ -1,0 +1,38 @@
+# ─── Environment / Secrets ────────────────────────────────────────────────────
+.env
+.env.local
+.env.*.local
+.env.production
+*.env
+
+# ─── Python ───────────────────────────────────────────────────────────────────
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+*.egg-info/
+dist/
+build/
+*.egg
+.venv/
+venv/
+env/
+
+# ─── Alembic ─────────────────────────────────────────────────────────────────
+# Keep migration files but ignore temp
+alembic/tmp/
+
+# ─── IDE / OS ─────────────────────────────────────────────────────────────────
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+.DS_Store
+Thumbs.db
+
+# ─── Logs / Testing ──────────────────────────────────────────────────────────
+*.log
+.pytest_cache/
+htmlcov/
+coverage/
