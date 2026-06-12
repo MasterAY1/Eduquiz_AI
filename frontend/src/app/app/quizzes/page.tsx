@@ -1,5 +1,6 @@
 'use client';
 
+import { Suspense } from 'react';
 import { useQuizzes, useGenerateQuiz } from '@/hooks/useQuizzes';
 import { useDocuments } from '@/hooks/useDocuments';
 import { Card } from '@/components/ui/Card';
@@ -39,7 +40,7 @@ const difficultyColors = {
   hard: 'bg-[rgba(255,107,107,0.1)] text-[#FF6B6B] border border-[rgba(255,107,107,0.2)]',
 };
 
-export default function QuizzesPage() {
+function QuizzesContent() {
   const searchParams = useSearchParams();
   const docIdParam = searchParams.get('docId');
 
@@ -342,5 +343,21 @@ export default function QuizzesPage() {
         </motion.div>
       </div>
     </motion.div>
+  );
+}
+
+export default function QuizzesPage() {
+  return (
+    <Suspense fallback={
+      <div className="p-6 space-y-8 max-w-7xl mx-auto">
+        <Skeleton className="h-10 w-64" />
+        <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
+          <Skeleton className="h-96 w-full rounded-2xl" />
+          <Skeleton className="h-96 w-full lg:col-span-2 rounded-2xl" />
+        </div>
+      </div>
+    }>
+      <QuizzesContent />
+    </Suspense>
   );
 }
