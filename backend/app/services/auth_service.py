@@ -3,6 +3,8 @@
 import uuid
 from datetime import datetime, timedelta, timezone
 
+from fastapi import UploadFile
+
 from sqlalchemy import select
 from sqlalchemy.ext.asyncio import AsyncSession
 
@@ -25,6 +27,7 @@ from app.utils.security import (
     hash_token,
     verify_password,
 )
+from app.storage.cloudinary_storage import upload_to_cloudinary
 
 logger = get_logger(__name__)
 
@@ -294,6 +297,35 @@ class AuthService:
         await db.flush()
         logger.info(f"Profile updated for user {user_id}")
         return user
+
+    # ── Upload avatar ──────────────────────────────────────────────────────────
+    
+    async def upload_avatar(
+        self,
+        db: AsyncSession,
+        user_id: uuid.UUID,
+        file: UploadFile,
+    ) -> User:
+        """
+        Upload an avatar image to Cloudinary and update the user's profile.
+        """
+        user = await self.get_user_by_id(db, user_id)
+        
+        # Upload to Cloudinary
+        file_content = await file.read()
+        try:
+            upload_result = await upload_to_cloudinary(
+                file_content,
+                filename=file.filename,
+                folder="avatars"
+            )
+            user.avatar_url = upload_result["secure_url"]
+            await db.flush()
+            logger.info(f"Avatar updated for user {user_id}")
+            return user
+        except Exception as e:
+            logger.error(f"Failed to upload avatar: {e}")
+            raise ValidationError("Failed to upload avatar image. Please try again.")
 
     # ── Private helpers ────────────────────────────────────────────────────────
 

@@ -67,6 +67,18 @@ export function useAuth() {
     },
   });
 
+  const uploadAvatarMutation = useMutation({
+    mutationFn: authApi.uploadAvatar,
+    onSuccess: (data) => {
+      store.setUser(data);
+      queryClient.invalidateQueries({ queryKey: ['me'] });
+      addToast({ type: 'success', message: 'Profile photo updated successfully!' });
+    },
+    onError: () => {
+      addToast({ type: 'error', message: 'Failed to upload photo. Please try again.' });
+    },
+  });
+
   return {
     user: user || store.user,
     isAuthenticated: store.isAuthenticated,
@@ -74,6 +86,7 @@ export function useAuth() {
     register: registerMutation,
     logout,
     updateProfile: updateProfileMutation,
+    uploadAvatar: uploadAvatarMutation,
     refetchUser: refetch,
   };
 }

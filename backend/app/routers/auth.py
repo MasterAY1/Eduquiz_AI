@@ -1,6 +1,6 @@
 """Authentication API router."""
 
-from fastapi import APIRouter, Depends, Request, status
+from fastapi import APIRouter, Depends, Request, status, UploadFile, File
 from sqlalchemy.ext.asyncio import AsyncSession
 
 from app.dependencies import get_db, get_current_active_user
@@ -99,4 +99,19 @@ async def update_me(
 ) -> UserResponse:
     """Update profile details of the current logged-in user."""
     updated_user = await auth_service.update_profile(db, current_user.id, request)
+    return UserResponse.model_validate(updated_user)
+
+
+@router.post(
+    "/me/avatar",
+    response_model=UserResponse,
+    status_code=status.HTTP_200_OK,
+)
+async def upload_avatar(
+    file: UploadFile = File(...),
+    current_user: User = Depends(get_current_active_user),
+    db: AsyncSession = Depends(get_db),
+) -> UserResponse:
+    """Upload and update the user's avatar image."""
+    updated_user = await auth_service.upload_avatar(db, current_user.id, file)
     return UserResponse.model_validate(updated_user)

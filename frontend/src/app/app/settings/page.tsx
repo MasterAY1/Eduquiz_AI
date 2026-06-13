@@ -5,7 +5,7 @@ import { Card } from '@/components/ui/Card';
 import { Button } from '@/components/ui/Button';
 import { Badge } from '@/components/ui/Badge';
 import { motion } from 'framer-motion';
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import {
   Settings,
   User as UserIcon,
@@ -29,7 +29,8 @@ const itemVariants = {
 };
 
 export default function SettingsPage() {
-  const { user, updateProfile, logout } = useAuth();
+  const { user, updateProfile, uploadAvatar, logout } = useAuth();
+  const fileInputRef = useRef<HTMLInputElement>(null);
 
   // Profile fields state
   const [fullName, setFullName] = useState('');
@@ -64,6 +65,13 @@ export default function SettingsPage() {
       class_level: classLevel || undefined,
       preferred_subjects,
     });
+  };
+
+  const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (file) {
+      uploadAvatar.mutate(file);
+    }
   };
 
   return (
@@ -147,14 +155,30 @@ export default function SettingsPage() {
               <div className="flex flex-col sm:flex-row gap-6 sm:gap-8 items-start bg-white/5 p-4 sm:p-6 rounded-2xl border border-white/10">
                 <div className="flex flex-col items-center gap-3 w-full sm:w-auto">
                   <div className="relative w-24 h-24 rounded-full bg-gradient-to-tr from-emerald-400 to-sky-400 p-[3px] flex-shrink-0 shadow-[0_0_20px_rgba(52,211,153,0.2)]">
-                    <div className="w-full h-full rounded-full bg-[#0a0a1a] flex items-center justify-center">
-                      <span className="text-3xl font-bold font-heading text-white">
-                        {user?.full_name?.split(' ').map((n) => n[0]).join('') || 'U'}
-                      </span>
+                    <div className="w-full h-full rounded-full bg-[#0a0a1a] flex items-center justify-center overflow-hidden">
+                      {user?.avatar_url ? (
+                        <img src={user.avatar_url} alt={user.full_name || 'Avatar'} className="w-full h-full object-cover" />
+                      ) : (
+                        <span className="text-3xl font-bold font-heading text-white">
+                          {user?.full_name?.split(' ').map((n) => n[0]).join('').substring(0, 2) || 'U'}
+                        </span>
+                      )}
                     </div>
                   </div>
-                  <button type="button" className="text-[10px] uppercase font-bold tracking-wider text-emerald-400 hover:text-emerald-300 transition-colors">
-                    Upload Photo
+                  <input
+                    type="file"
+                    ref={fileInputRef}
+                    onChange={handleFileChange}
+                    accept="image/*"
+                    className="hidden"
+                  />
+                  <button 
+                    type="button" 
+                    onClick={() => fileInputRef.current?.click()}
+                    disabled={uploadAvatar.isPending}
+                    className="text-[10px] uppercase font-bold tracking-wider text-emerald-400 hover:text-emerald-300 transition-colors disabled:opacity-50"
+                  >
+                    {uploadAvatar.isPending ? 'Uploading...' : 'Upload Photo'}
                   </button>
                 </div>
                 

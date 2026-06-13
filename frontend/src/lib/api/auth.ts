@@ -23,4 +23,16 @@ export const authApi = {
 
   updateProfile: (data: Partial<User>) =>
     apiClient.put<User>('/api/v1/auth/me', data).then((r) => r.data),
+
+  uploadAvatar: (file: File) => {
+    const formData = new FormData();
+    formData.append('file', file);
+    return apiClient
+      .post<User>('/api/v1/auth/me/avatar', formData, {
+        headers: {
+          'Content-Type': 'multipart/form-data',
+        },
+      })
+      .then((r) => r.data);
+  },
 };
