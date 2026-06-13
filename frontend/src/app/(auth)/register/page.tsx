@@ -135,16 +135,16 @@ export default function RegisterPage() {
                 className={cn(
                   'w-8 h-8 rounded-full flex items-center justify-center text-xs font-bold transition-all',
                   isDone
-                    ? 'bg-gradient-to-r from-[#7C6FFF] to-[#00D4FF] text-white'
+                    ? 'bg-gradient-to-r from-emerald-400 to-emerald-600 text-white'
                     : isActive
-                    ? 'bg-gradient-to-r from-[#7C6FFF] to-[#00D4FF] text-white shadow-lg shadow-[rgba(124,111,255,0.4)]'
-                    : 'bg-[rgba(255,255,255,0.06)] text-[#4A5568] border border-[rgba(255,255,255,0.08)]'
+                    ? 'bg-gradient-to-r from-emerald-400 to-emerald-600 text-white shadow-lg shadow-emerald-500/40'
+                    : 'bg-white/5 text-slate-500 border border-white/10'
                 )}
               >
                 {isDone ? <Check className="w-3.5 h-3.5" /> : stepNum}
               </div>
               {i < stepLabels.length - 1 && (
-                <div className={cn('w-10 h-px transition-all', step > stepNum ? 'bg-[#7C6FFF]' : 'bg-[rgba(255,255,255,0.1)]')} />
+                <div className={cn('w-10 h-px transition-all', step > stepNum ? 'bg-emerald-500' : 'bg-white/10')} />
               )}
             </div>
           );
@@ -162,10 +162,10 @@ export default function RegisterPage() {
             transition={{ duration: 0.25 }}
           >
             <div className="mb-6 text-center">
-              <h1 className="font-heading text-2xl font-bold mb-1">
-                Create Your <span className="gradient-text">Account</span>
+              <h1 className="font-heading text-2xl font-bold mb-1 text-white">
+                Create Your <span className="text-emerald-400">Account</span>
               </h1>
-              <p className="text-[#8892A4] text-sm">Step 1 of 3 — Basic information</p>
+              <p className="text-slate-400 text-sm">Step 1 of 3 — Basic information</p>
             </div>
 
             <form onSubmit={handleSubmit(onStep1Submit)} className="space-y-4">
@@ -209,9 +209,9 @@ export default function RegisterPage() {
               </Button>
             </form>
 
-            <p className="mt-5 text-center text-sm text-[#8892A4]">
+            <p className="mt-5 text-center text-sm text-slate-400">
               Already have an account?{' '}
-              <Link href="/login" className="text-[#7C6FFF] hover:text-[#9D93FF] font-semibold transition-colors">
+              <Link href="/login" className="text-emerald-400 hover:text-emerald-300 font-semibold transition-colors">
                 Sign in
               </Link>
             </p>
@@ -228,16 +228,16 @@ export default function RegisterPage() {
             transition={{ duration: 0.25 }}
           >
             <div className="mb-6 text-center">
-              <h2 className="font-heading text-2xl font-bold mb-1">
-                Your <span className="gradient-text">Education</span>
+              <h2 className="font-heading text-2xl font-bold mb-1 text-white">
+                Your <span className="text-emerald-400">Education</span>
               </h2>
-              <p className="text-[#8892A4] text-sm">Step 2 of 3 — Education details</p>
+              <p className="text-slate-400 text-sm">Step 2 of 3 — Education details</p>
             </div>
 
             <div className="space-y-5">
               <div>
-                <label className="block text-sm font-medium text-[#8892A4] mb-2">
-                  Educational Level <span className="text-[#FF6B6B]">*</span>
+                <label className="block text-sm font-medium text-slate-400 mb-2">
+                  Educational Level <span className="text-rose-500">*</span>
                 </label>
                 <div className="grid grid-cols-2 gap-2">
                   {educationalLevels.map((level) => (
@@ -248,8 +248,8 @@ export default function RegisterPage() {
                       className={cn(
                         'flex items-center gap-2 px-3 py-2.5 rounded-xl text-sm font-medium text-left transition-all border',
                         formState.educational_level === level.value
-                          ? 'bg-gradient-to-r from-[rgba(124,111,255,0.2)] to-[rgba(0,212,255,0.1)] border-[rgba(124,111,255,0.5)] text-[#F0F0FF]'
-                          : 'bg-[rgba(255,255,255,0.03)] border-[rgba(255,255,255,0.06)] text-[#8892A4] hover:border-[rgba(255,255,255,0.12)] hover:text-[#F0F0FF]'
+                          ? 'bg-emerald-500/20 border-emerald-500/50 text-white'
+                          : 'bg-white/5 border-white/10 text-slate-400 hover:border-white/20 hover:text-white'
                       )}
                     >
                       <span>{level.icon}</span>
@@ -307,7 +307,7 @@ export default function RegisterPage() {
               <button
                 type="button"
                 onClick={onStep2Next}
-                className="w-full text-center text-xs text-[#4A5568] hover:text-[#8892A4] transition-colors py-1"
+                className="w-full text-center text-xs text-slate-500 hover:text-slate-400 transition-colors py-1"
               >
                 Skip for now
               </button>
@@ -325,10 +325,10 @@ export default function RegisterPage() {
             transition={{ duration: 0.25 }}
           >
             <div className="mb-6 text-center">
-              <h2 className="font-heading text-2xl font-bold mb-1">
-                Your <span className="gradient-text">Subjects</span>
+              <h2 className="font-heading text-2xl font-bold mb-1 text-white">
+                Your <span className="text-emerald-400">Subjects</span>
               </h2>
-              <p className="text-[#8892A4] text-sm">Step 3 of 3 — Select subjects you study</p>
+              <p className="text-slate-400 text-sm">Step 3 of 3 — Select subjects you study</p>
             </div>
 
             <div className="space-y-4">
@@ -343,8 +343,8 @@ export default function RegisterPage() {
                       className={cn(
                         'px-3.5 py-2 rounded-full text-sm font-medium transition-all border',
                         selected
-                          ? 'bg-gradient-to-r from-[#7C6FFF] to-[#00D4FF] border-transparent text-white shadow-lg shadow-[rgba(124,111,255,0.3)]'
-                          : 'bg-[rgba(255,255,255,0.03)] border-[rgba(255,255,255,0.08)] text-[#8892A4] hover:border-[rgba(124,111,255,0.3)] hover:text-[#F0F0FF]'
+                          ? 'bg-gradient-to-r from-emerald-400 to-emerald-600 border-transparent text-white shadow-lg shadow-emerald-500/30'
+                          : 'bg-white/5 border-white/10 text-slate-400 hover:border-emerald-500/30 hover:text-white'
                       )}
                     >
                       {selected && <Check className="w-3 h-3 inline mr-1" />}
@@ -355,7 +355,7 @@ export default function RegisterPage() {
               </div>
 
               {formState.preferred_subjects.length > 0 && (
-                <p className="text-xs text-[#7C6FFF]">
+                <p className="text-xs text-emerald-400">
                   {formState.preferred_subjects.length} subject{formState.preferred_subjects.length > 1 ? 's' : ''} selected
                 </p>
               )}

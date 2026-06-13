@@ -51,11 +51,11 @@ export default function DocumentDetailsPage() {
   if (isError || !doc) {
     return (
       <div className="flex flex-col items-center justify-center min-h-[60vh] text-center p-6 space-y-4">
-        <div className="w-16 h-16 rounded-full bg-[rgba(255,107,107,0.1)] flex items-center justify-center">
-          <Layers className="w-8 h-8 text-[#FF6B6B]" />
+        <div className="w-16 h-16 rounded-full bg-rose-500/10 flex items-center justify-center">
+          <Layers className="w-8 h-8 text-[rose-500]" />
         </div>
-        <h3 className="text-xl font-bold font-heading text-[#F0F0FF]">Document not found</h3>
-        <p className="text-[#8892A4] max-w-sm">
+        <h3 className="text-xl font-bold font-heading text-[white]">Document not found</h3>
+        <p className="text-[slate-400] max-w-sm">
           We could not load the study guide details. It might have been deleted.
         </p>
         <Link href="/app/documents">
@@ -74,7 +74,7 @@ export default function DocumentDetailsPage() {
     >
       {/* Back button */}
       <motion.div variants={itemVariants}>
-        <Link href="/app/documents" className="inline-flex items-center gap-1 text-xs text-[#8892A4] hover:text-[#7C6FFF] transition-colors">
+        <Link href="/app/documents" className="inline-flex items-center gap-1 text-xs text-[slate-400] hover:text-[emerald-400] transition-colors">
           <ChevronLeft className="w-4 h-4" />
           Back to Library
         </Link>
@@ -82,18 +82,18 @@ export default function DocumentDetailsPage() {
 
       {/* Header card */}
       <motion.div variants={itemVariants}>
-        <Card className="p-6 md:p-8 flex flex-col md:flex-row justify-between items-start md:items-center gap-6 bg-gradient-to-r from-[rgba(124,111,255,0.06)] to-[rgba(0,212,255,0.03)] border-[rgba(124,111,255,0.15)] relative overflow-hidden">
+        <Card className="p-6 md:p-8 flex flex-col md:flex-row justify-between items-start md:items-center gap-6 bg-gradient-to-r from-emerald-500/10 to-sky-500/5 border-emerald-500/15 relative overflow-hidden">
           <div className="flex gap-4 items-start min-w-0 z-10">
-            <div className="w-14 h-14 rounded-2xl bg-[rgba(124,111,255,0.1)] flex items-center justify-center text-[#7C6FFF] flex-shrink-0">
+            <div className="w-14 h-14 rounded-2xl bg-emerald-500/10 flex items-center justify-center text-[emerald-400] flex-shrink-0">
               <FileText className="w-7 h-7" />
             </div>
             <div className="space-y-1 min-w-0">
-              <h1 className="text-2xl sm:text-3xl font-bold font-heading text-[#F0F0FF] truncate">
+              <h1 className="text-2xl sm:text-3xl font-bold font-heading text-[white] truncate">
                 {doc.title}
               </h1>
-              <div className="flex flex-wrap items-center gap-x-3 gap-y-1.5 text-xs text-[#8892A4]">
+              <div className="flex flex-wrap items-center gap-x-3 gap-y-1.5 text-xs text-[slate-400]">
                 {doc.subject && (
-                  <Badge className="bg-[rgba(124,111,255,0.15)] text-[#9D93FF] border border-[rgba(124,111,255,0.25)] font-semibold">
+                  <Badge className="bg-emerald-500/15 text-[emerald-300] border border-emerald-500/25 font-semibold">
                     {doc.subject}
                   </Badge>
                 )}
@@ -130,12 +130,12 @@ export default function DocumentDetailsPage() {
         {/* Summary (Col span 2) */}
         <div className="lg:col-span-2 space-y-6">
           <Card className="p-6 md:p-8 space-y-6">
-            <div className="flex items-center gap-2 border-b border-[rgba(255,255,255,0.06)] pb-4">
-              <BookOpen className="w-5 h-5 text-[#7C6FFF]" />
-              <h2 className="text-xl font-bold font-heading text-[#F0F0FF]">AI Study Guide & Summary</h2>
+            <div className="flex items-center gap-2 border-b border-white/10 pb-4">
+              <BookOpen className="w-5 h-5 text-[emerald-400]" />
+              <h2 className="text-xl font-bold font-heading text-[white]">AI Study Guide & Summary</h2>
             </div>
             
-            <div className="text-sm text-[#8892A4] space-y-4 leading-relaxed whitespace-pre-line font-medium text-justify">
+            <div className="text-sm text-[slate-400] space-y-4 leading-relaxed whitespace-pre-line font-medium text-justify">
               {doc.summary || 'Summary is not available for this document.'}
             </div>
           </Card>
@@ -145,29 +145,29 @@ export default function DocumentDetailsPage() {
         <div className="space-y-6">
           {/* Extracted Topics Card */}
           <Card className="p-6 space-y-6">
-            <div className="flex items-center gap-2 border-b border-[rgba(255,255,255,0.06)] pb-4">
-              <Layers className="w-5 h-5 text-[#00D4FF]" />
-              <h2 className="text-xl font-bold font-heading text-[#F0F0FF]">Topics Covered</h2>
+            <div className="flex items-center gap-2 border-b border-white/10 pb-4">
+              <Layers className="w-5 h-5 text-[sky-400]" />
+              <h2 className="text-xl font-bold font-heading text-[white]">Topics Covered</h2>
             </div>
 
             <div className="space-y-4">
               {!doc.topics || doc.topics.length === 0 ? (
-                <p className="text-xs text-[#8892A4] italic">No topics extracted.</p>
+                <p className="text-xs text-[slate-400] italic">No topics extracted.</p>
               ) : (
                 doc.topics.map((topic) => {
                   const sub = doc.subtopics?.[topic] || [];
                   return (
                     <div key={topic} className="space-y-2">
-                      <div className="flex items-center gap-2 text-[#F0F0FF] font-semibold text-sm">
-                        <Sparkles className="w-3.5 h-3.5 text-[#FFB020]" />
+                      <div className="flex items-center gap-2 text-[white] font-semibold text-sm">
+                        <Sparkles className="w-3.5 h-3.5 text-[amber-400]" />
                         <span>{topic}</span>
                       </div>
                       
                       {sub.length > 0 && (
-                        <div className="pl-6 border-l border-[rgba(255,255,255,0.06)] space-y-1.5">
+                        <div className="pl-6 border-l border-white/10 space-y-1.5">
                           {sub.map((subtopic: string) => (
-                            <div key={subtopic} className="text-xs text-[#8892A4] flex items-center gap-1.5">
-                              <div className="w-1 h-1 rounded-full bg-[#00D4FF]" />
+                            <div key={subtopic} className="text-xs text-[slate-400] flex items-center gap-1.5">
+                              <div className="w-1 h-1 rounded-full bg-[sky-400]" />
                               <span>{subtopic}</span>
                             </div>
                           ))}
@@ -181,13 +181,13 @@ export default function DocumentDetailsPage() {
           </Card>
 
           {/* RAG Knowledge base details */}
-          <Card className="p-5 bg-[rgba(15,15,45,0.3)] border-[rgba(255,255,255,0.04)] space-y-3">
-            <div className="flex items-center gap-2 text-xs text-[#8892A4]">
-              <ListCheck className="w-4 h-4 text-[#00E5A0]" />
+          <Card className="p-5 bg-white/5 border-white/5 space-y-3">
+            <div className="flex items-center gap-2 text-xs text-[slate-400]">
+              <ListCheck className="w-4 h-4 text-[emerald-400]" />
               <span className="font-semibold uppercase tracking-wider">RAG Knowledge Base</span>
             </div>
-            <p className="text-xs text-[#8892A4]">
-              This document was divided into <strong className="text-[#F0F0FF] font-semibold">{doc.chunk_count} semantic chunks</strong> and indexed using 768-dimensional embeddings for accurate quiz matching.
+            <p className="text-xs text-[slate-400]">
+              This document was divided into <strong className="text-[white] font-semibold">{doc.chunk_count} semantic chunks</strong> and indexed using 768-dimensional embeddings for accurate quiz matching.
             </p>
           </Card>
         </div>

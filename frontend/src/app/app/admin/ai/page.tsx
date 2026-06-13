@@ -88,25 +88,25 @@ export default function AIMonitorPage() {
     switch (status) {
       case 'healthy':
         return (
-          <Badge className="bg-[rgba(0,229,160,0.15)] text-[#00E5A0] border border-[rgba(0,229,160,0.25)] font-semibold text-xs uppercase">
+          <Badge className="bg-emerald-500/15 text-[emerald-400] border border-emerald-500/25 font-semibold text-xs uppercase">
             Healthy
           </Badge>
         );
       case 'cooling_down':
         return (
-          <Badge className="bg-[rgba(255,176,32,0.15)] text-[#FFB020] border border-[rgba(255,176,32,0.25)] font-semibold text-xs uppercase">
+          <Badge className="bg-amber-500/15 text-[amber-400] border border-amber-500/25 font-semibold text-xs uppercase">
             Cooling Down
           </Badge>
         );
       case 'exhausted':
         return (
-          <Badge className="bg-[rgba(255,107,107,0.15)] text-[#FF6B6B] border border-[rgba(255,107,107,0.25)] font-semibold text-xs uppercase">
+          <Badge className="bg-rose-500/15 text-[rose-500] border border-rose-500/25 font-semibold text-xs uppercase">
             Exhausted
           </Badge>
         );
       default:
         return (
-          <Badge className="bg-[rgba(136,146,164,0.15)] text-[#8892A4] border border-[rgba(136,146,164,0.25)] font-semibold text-xs uppercase">
+          <Badge className="bg-slate-500/15 text-[slate-400] border border-slate-500/25 font-semibold text-xs uppercase">
             Unknown
           </Badge>
         );
@@ -154,9 +154,9 @@ export default function AIMonitorPage() {
       <motion.div variants={itemVariants} className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
         <div>
           <h1 className="text-3xl sm:text-4xl font-bold font-heading">
-            AI Model <span className="gradient-text">Router Dashboard</span>
+            AI Model <span className="text-emerald-400">Router Dashboard</span>
           </h1>
-          <p className="text-[#8892A4] text-sm mt-1">
+          <p className="text-[slate-400] text-sm mt-1">
             Real-time multi-model routing, failover logs, and API quota optimization.
           </p>
         </div>
@@ -164,7 +164,7 @@ export default function AIMonitorPage() {
           <Button
             onClick={fetchStatus}
             variant="ghost"
-            className="text-xs text-[#8892A4] hover:text-[#F0F0FF] border border-[rgba(255,255,255,0.06)] hover:bg-[rgba(255,255,255,0.04)]"
+            className="text-xs text-[slate-400] hover:text-[white] border border-white/10 hover:bg-white/5"
             disabled={loading}
           >
             <RefreshCw className={`w-4 h-4 mr-2 ${loading ? 'animate-spin' : ''}`} />
@@ -173,7 +173,7 @@ export default function AIMonitorPage() {
           <Button
             onClick={handleReset}
             variant="ghost"
-            className="text-xs text-[#FF6B6B] hover:bg-[rgba(255,107,107,0.1)] hover:text-[#FF6B6B] border border-[rgba(255,107,107,0.2)]"
+            className="text-xs text-[rose-500] hover:bg-rose-500/10 hover:text-[rose-500] border border-rose-500/20"
             disabled={resetting}
           >
             Reset Quotas
@@ -184,39 +184,39 @@ export default function AIMonitorPage() {
       {/* Global Usage Analytics */}
       <motion.div variants={itemVariants} className="grid grid-cols-1 md:grid-cols-3 gap-6">
         {/* Total Tokens Card */}
-        <Card className="p-6 bg-gradient-to-br from-[rgba(124,111,255,0.03)] to-transparent flex items-center gap-4">
-          <div className="w-12 h-12 rounded-xl bg-[rgba(124,111,255,0.08)] border border-[rgba(124,111,255,0.15)] flex items-center justify-center text-[#7C6FFF] flex-shrink-0">
+        <Card className="p-6 bg-gradient-to-br from-emerald-500/5 to-transparent flex items-center gap-4">
+          <div className="w-12 h-12 rounded-xl bg-emerald-500/10 border border-emerald-500/15 flex items-center justify-center text-[emerald-400] flex-shrink-0">
             <Zap className="w-6 h-6 fill-current" />
           </div>
           <div>
-            <p className="text-xs text-[#8892A4] uppercase tracking-wider font-semibold">Today's Token Volume</p>
-            <h3 className="text-2xl font-bold font-heading text-[#F0F0FF] mt-0.5">
+            <p className="text-xs text-[slate-400] uppercase tracking-wider font-semibold">Today's Token Volume</p>
+            <h3 className="text-2xl font-bold font-heading text-[white] mt-0.5">
               {data?.total_tokens_consumed_today.toLocaleString() ?? 0}
             </h3>
           </div>
         </Card>
 
         {/* Failover Card */}
-        <Card className="p-6 bg-gradient-to-br from-[rgba(255,107,107,0.03)] to-transparent flex items-center gap-4">
-          <div className="w-12 h-12 rounded-xl bg-[rgba(255,107,107,0.08)] border border-[rgba(255,107,107,0.15)] flex items-center justify-center text-[#FF6B6B] flex-shrink-0">
+        <Card className="p-6 bg-gradient-to-br from-rose-500/5 to-transparent flex items-center gap-4">
+          <div className="w-12 h-12 rounded-xl bg-rose-500/10 border border-rose-500/15 flex items-center justify-center text-[rose-500] flex-shrink-0">
             <AlertTriangle className="w-6 h-6" />
           </div>
           <div>
-            <p className="text-xs text-[#8892A4] uppercase tracking-wider font-semibold">Failovers (Last 24h)</p>
-            <h3 className="text-2xl font-bold font-heading text-[#F0F0FF] mt-0.5">
+            <p className="text-xs text-[slate-400] uppercase tracking-wider font-semibold">Failovers (Last 24h)</p>
+            <h3 className="text-2xl font-bold font-heading text-[white] mt-0.5">
               {data?.active_fallbacks_last_24h ?? 0}
             </h3>
           </div>
         </Card>
 
         {/* Global Router Health */}
-        <Card className="p-6 bg-gradient-to-br from-[rgba(0,229,160,0.03)] to-transparent flex items-center gap-4">
-          <div className="w-12 h-12 rounded-xl bg-[rgba(0,229,160,0.08)] border border-[rgba(0,229,160,0.15)] flex items-center justify-center text-[#00E5A0] flex-shrink-0">
+        <Card className="p-6 bg-gradient-to-br from-emerald-500/5 to-transparent flex items-center gap-4">
+          <div className="w-12 h-12 rounded-xl bg-emerald-500/10 border border-emerald-500/15 flex items-center justify-center text-[emerald-400] flex-shrink-0">
             <Activity className="w-6 h-6" />
           </div>
           <div>
-            <p className="text-xs text-[#8892A4] uppercase tracking-wider font-semibold">Router Status</p>
-            <h3 className="text-2xl font-bold font-heading text-[#F0F0FF] mt-0.5">
+            <p className="text-xs text-[slate-400] uppercase tracking-wider font-semibold">Router Status</p>
+            <h3 className="text-2xl font-bold font-heading text-[white] mt-0.5">
               {(data?.active_fallbacks_last_24h ?? 0) > 3 ? 'Degraded' : 'Nominal'}
             </h3>
           </div>
@@ -225,7 +225,7 @@ export default function AIMonitorPage() {
 
       {/* Model Status Details */}
       <motion.div variants={itemVariants} className="space-y-6">
-        <h2 className="text-xl font-bold font-heading text-[#F0F0FF]">Individual Model Metrics</h2>
+        <h2 className="text-xl font-bold font-heading text-[white]">Individual Model Metrics</h2>
 
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
           {data &&
@@ -234,22 +234,22 @@ export default function AIMonitorPage() {
               return (
                 <Card
                   key={modelId}
-                  className="p-6 md:p-8 space-y-6 bg-gradient-to-b from-[rgba(255,255,255,0.01)] to-transparent border-[rgba(255,255,255,0.05)] hover:border-[rgba(124,111,255,0.25)] transition-all duration-300 relative group overflow-hidden"
+                  className="p-6 md:p-8 space-y-6 bg-gradient-to-b from-white/5 to-transparent border-white/5 hover:border-emerald-500/25 transition-all duration-300 relative group overflow-hidden"
                 >
                   {/* Neon Glow Hover Effect */}
-                  <div className="absolute inset-0 bg-radial-gradient from-[rgba(124,111,255,0.05)] to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300 pointer-events-none" />
+                  <div className="absolute inset-0 bg-radial-gradient from-emerald-500/5 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300 pointer-events-none" />
 
                   {/* Header info */}
-                  <div className="flex items-center justify-between gap-4 border-b border-[rgba(255,255,255,0.06)] pb-4">
+                  <div className="flex items-center justify-between gap-4 border-b border-white/10 pb-4">
                     <div className="flex items-center gap-3">
-                      <div className="w-10 h-10 rounded-xl bg-[rgba(124,111,255,0.05)] border border-[rgba(124,111,255,0.1)] flex items-center justify-center text-[#7C6FFF] flex-shrink-0">
+                      <div className="w-10 h-10 rounded-xl bg-emerald-500/5 border border-emerald-500/10 flex items-center justify-center text-[emerald-400] flex-shrink-0">
                         <Cpu className="w-5 h-5" />
                       </div>
                       <div>
-                        <h4 className="font-bold text-[#F0F0FF] text-base leading-snug">
+                        <h4 className="font-bold text-[white] text-base leading-snug">
                           {getFriendlyModelName(modelId)}
                         </h4>
-                        <p className="text-xs text-[#8892A4] mt-0.5 font-mono">{modelId}</p>
+                        <p className="text-xs text-[slate-400] mt-0.5 font-mono">{modelId}</p>
                       </div>
                     </div>
                     {getStatusBadge(status.status)}
@@ -258,36 +258,36 @@ export default function AIMonitorPage() {
                   {/* Quota Gauge */}
                   <div className="space-y-2">
                     <div className="flex items-center justify-between text-xs">
-                      <span className="font-semibold text-[#8892A4] uppercase tracking-wider">
+                      <span className="font-semibold text-[slate-400] uppercase tracking-wider">
                         Daily Request Volume (RPD)
                       </span>
-                      <span className="font-bold text-[#F0F0FF]">
+                      <span className="font-bold text-[white]">
                         {status.used_rpd} / {status.limit_rpd}
                       </span>
                     </div>
-                    <Progress value={rpdPercentage} className="h-2 bg-[rgba(255,255,255,0.05)]" />
+                    <Progress value={rpdPercentage} className="h-2 bg-white/10" />
                   </div>
 
                   {/* Performance Indicators */}
                   <div className="grid grid-cols-2 gap-4 pt-2">
                     {/* Success Rate */}
-                    <div className="p-4 rounded-xl bg-[rgba(255,255,255,0.02)] border border-[rgba(255,255,255,0.03)] space-y-1">
-                      <div className="flex items-center gap-1.5 text-[#8892A4] text-xs">
-                        <CheckCircle className="w-3.5 h-3.5 text-[#00E5A0]" />
+                    <div className="p-4 rounded-xl bg-white/5 border border-white/5 space-y-1">
+                      <div className="flex items-center gap-1.5 text-[slate-400] text-xs">
+                        <CheckCircle className="w-3.5 h-3.5 text-[emerald-400]" />
                         <span>Success Rate</span>
                       </div>
-                      <p className="text-lg font-bold text-[#F0F0FF] font-heading">
+                      <p className="text-lg font-bold text-[white] font-heading">
                         {status.success_rate}%
                       </p>
                     </div>
 
                     {/* Average Latency */}
-                    <div className="p-4 rounded-xl bg-[rgba(255,255,255,0.02)] border border-[rgba(255,255,255,0.03)] space-y-1">
-                      <div className="flex items-center gap-1.5 text-[#8892A4] text-xs">
-                        <Clock className="w-3.5 h-3.5 text-[#00D4FF]" />
+                    <div className="p-4 rounded-xl bg-white/5 border border-white/5 space-y-1">
+                      <div className="flex items-center gap-1.5 text-[slate-400] text-xs">
+                        <Clock className="w-3.5 h-3.5 text-[sky-400]" />
                         <span>Avg Latency</span>
                       </div>
-                      <p className="text-lg font-bold text-[#F0F0FF] font-heading">
+                      <p className="text-lg font-bold text-[white] font-heading">
                         {status.avg_latency_ms > 0 ? `${status.avg_latency_ms.toFixed(0)} ms` : 'N/A'}
                       </p>
                     </div>

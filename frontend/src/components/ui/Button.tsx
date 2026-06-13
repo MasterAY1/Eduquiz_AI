@@ -26,25 +26,22 @@ export const Button = forwardRef<HTMLButtonElement, ButtonProps>(
     ref
   ) => {
     const baseStyles =
-      'inline-flex items-center justify-center gap-2 font-semibold rounded-xl transition-all duration-200 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-offset-[#080817] disabled:opacity-50 disabled:cursor-not-allowed select-none';
+      'inline-flex items-center justify-center gap-2 font-semibold rounded-xl transition-all duration-300 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-offset-bg disabled:opacity-50 disabled:cursor-not-allowed select-none';
 
     const variants = {
-      primary:
-        'bg-gradient-to-r from-[#7C6FFF] to-[#00D4FF] text-white shadow-lg hover:shadow-[0_8px_30px_rgba(124,111,255,0.4)] hover:-translate-y-0.5 active:translate-y-0 focus:ring-[#7C6FFF]',
-      secondary:
-        'bg-transparent border border-[#7C6FFF] text-[#7C6FFF] hover:bg-[rgba(124,111,255,0.1)] hover:border-[#9D93FF] focus:ring-[#7C6FFF]',
-      ghost:
-        'bg-transparent border border-[rgba(255,255,255,0.12)] text-[#F0F0FF] hover:bg-[rgba(255,255,255,0.05)] hover:border-[rgba(255,255,255,0.2)] focus:ring-white/30',
+      primary: 'btn-primary focus:ring-primary',
+      secondary: 'btn-secondary focus:ring-secondary',
+      ghost: 'btn-ghost focus:ring-white/30',
       danger:
-        'bg-gradient-to-r from-[#FF6B6B] to-[#FF4545] text-white hover:shadow-[0_8px_30px_rgba(255,107,107,0.4)] hover:-translate-y-0.5 active:translate-y-0 focus:ring-[#FF6B6B]',
+        'bg-gradient-to-r from-rose-500 to-rose-600 text-white shadow-lg shadow-rose-500/20 hover:shadow-rose-500/40 hover:-translate-y-0.5 active:translate-y-0 focus:ring-rose-500 box-shadow-[inset_0_1px_0_0_rgba(255,255,255,0.3)]',
       success:
-        'bg-gradient-to-r from-[#00E5A0] to-[#00C87A] text-[#080817] hover:shadow-[0_8px_30px_rgba(0,229,160,0.4)] hover:-translate-y-0.5 active:translate-y-0 focus:ring-[#00E5A0]',
+        'bg-gradient-to-r from-emerald-400 to-emerald-600 text-white shadow-lg shadow-emerald-500/20 hover:shadow-emerald-500/40 hover:-translate-y-0.5 active:translate-y-0 focus:ring-emerald-500 box-shadow-[inset_0_1px_0_0_rgba(255,255,255,0.3)]',
     };
 
     const sizes = {
-      sm: 'px-3 py-1.5 text-sm',
-      md: 'px-5 py-2.5 text-sm',
-      lg: 'px-7 py-3.5 text-base',
+      sm: 'px-4 py-2 text-sm',
+      md: 'px-6 py-3 text-sm rounded-2xl',
+      lg: 'px-8 py-4 text-base rounded-2xl',
     };
 
     return (

@@ -6,17 +6,17 @@ import { useUIStore } from '@/store/uiStore';
 import type { Toast as ToastType } from '@/types';
 
 const icons = {
-  success: <CheckCircle2 className="w-5 h-5 text-[#00E5A0]" />,
-  error: <XCircle className="w-5 h-5 text-[#FF6B6B]" />,
-  info: <Info className="w-5 h-5 text-[#00D4FF]" />,
-  warning: <AlertTriangle className="w-5 h-5 text-[#FFB020]" />,
+  success: <CheckCircle2 className="w-5 h-5 text-emerald-400" />,
+  error: <XCircle className="w-5 h-5 text-rose-400" />,
+  info: <Info className="w-5 h-5 text-sky-400" />,
+  warning: <AlertTriangle className="w-5 h-5 text-amber-400" />,
 };
 
 const borderColors = {
-  success: 'border-[rgba(0,229,160,0.3)]',
-  error: 'border-[rgba(255,107,107,0.3)]',
-  info: 'border-[rgba(0,212,255,0.3)]',
-  warning: 'border-[rgba(255,176,32,0.3)]',
+  success: 'border-l-4 border-l-emerald-500 border-white/5',
+  error: 'border-l-4 border-l-rose-500 border-white/5',
+  info: 'border-l-4 border-l-sky-500 border-white/5',
+  warning: 'border-l-4 border-l-amber-500 border-white/5',
 };
 
 function ToastItem({ toast }: { toast: ToastType }) {
@@ -31,10 +31,10 @@ function ToastItem({ toast }: { toast: ToastType }) {
       className={`flex items-start gap-3 glass-card px-4 py-3 min-w-[300px] max-w-[380px] border ${borderColors[toast.type]}`}
     >
       <div className="mt-0.5 flex-shrink-0">{icons[toast.type]}</div>
-      <p className="flex-1 text-sm text-[#F0F0FF] leading-relaxed">{toast.message}</p>
+      <p className="flex-1 text-sm font-medium text-slate-100 leading-relaxed">{toast.message}</p>
       <button
         onClick={() => removeToast(toast.id)}
-        className="flex-shrink-0 p-0.5 text-[#4A5568] hover:text-[#8892A4] transition-colors"
+        className="flex-shrink-0 p-0.5 text-slate-400 hover:text-slate-200 transition-colors focus:outline-none"
         aria-label="Dismiss notification"
       >
         <X className="w-4 h-4" />

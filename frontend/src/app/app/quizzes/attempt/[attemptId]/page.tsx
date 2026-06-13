@@ -182,10 +182,10 @@ export default function QuizAttemptPage() {
   if (attemptResult) {
     const scoreColor =
       attemptResult.percentage >= 70
-        ? 'text-[#00E5A0]'
+        ? 'text-[emerald-400]'
         : attemptResult.percentage >= 45
-        ? 'text-[#FFB020]'
-        : 'text-[#FF6B6B]';
+        ? 'text-[amber-400]'
+        : 'text-[rose-500]';
 
     return (
       <motion.div
@@ -195,30 +195,30 @@ export default function QuizAttemptPage() {
       >
         {/* Back navigation */}
         <div>
-          <Link href="/app/quizzes" className="inline-flex items-center gap-1 text-xs text-[#8892A4] hover:text-[#7C6FFF] transition-colors">
+          <Link href="/app/quizzes" className="inline-flex items-center gap-1 text-xs text-[slate-400] hover:text-[emerald-400] transition-colors">
             <ChevronLeft className="w-4 h-4" />
             Back to Quizzes
           </Link>
         </div>
 
         {/* Results Banner */}
-        <Card className="p-6 md:p-8 space-y-6 md:space-y-0 md:flex items-center justify-between gap-8 border-[rgba(124,111,255,0.15)] bg-gradient-to-b from-[rgba(124,111,255,0.03)] to-transparent relative overflow-hidden">
+        <Card className="p-6 md:p-8 space-y-6 md:space-y-0 md:flex items-center justify-between gap-8 border-emerald-500/15 bg-gradient-to-b from-emerald-500/5 to-transparent relative overflow-hidden">
           <div className="space-y-4 max-w-md z-10">
-            <Badge className="bg-[rgba(0,229,160,0.15)] text-[#00E5A0] border border-[rgba(0,229,160,0.25)] font-bold text-xs">
+            <Badge className="bg-emerald-500/15 text-[emerald-400] border border-emerald-500/25 font-bold text-xs">
               Quiz Completed
             </Badge>
-            <h1 className="text-2xl md:text-3xl font-bold font-heading text-[#F0F0FF]">
+            <h1 className="text-2xl md:text-3xl font-bold font-heading text-[white]">
               Evaluation Result
             </h1>
-            <p className="text-sm text-[#8892A4] leading-relaxed">
+            <p className="text-sm text-[slate-400] leading-relaxed">
               {attemptResult.overall_evaluation || 'Review your performance and explanations below.'}
             </p>
             <div className="flex items-center gap-6 pt-2">
-              <div className="flex items-center gap-1.5 text-[#FFB020]">
+              <div className="flex items-center gap-1.5 text-[amber-400]">
                 <Flame className="w-5 h-5 fill-current" />
                 <span className="text-sm font-semibold">Streak Maintained</span>
               </div>
-              <div className="flex items-center gap-1.5 text-[#7C6FFF]">
+              <div className="flex items-center gap-1.5 text-[emerald-400]">
                 <Zap className="w-5 h-5 fill-current" />
                 <span className="text-sm font-semibold">+{attemptResult.xp_earned} XP Earned</span>
               </div>
@@ -241,7 +241,7 @@ export default function QuizAttemptPage() {
                   cx="72"
                   cy="72"
                   r="60"
-                  className="stroke-[#7C6FFF]"
+                  className="stroke-[emerald-400]"
                   fill="transparent"
                   strokeWidth="8"
                   strokeDasharray={377}
@@ -254,18 +254,18 @@ export default function QuizAttemptPage() {
                 <p className={`text-4xl font-bold font-heading ${scoreColor}`}>
                   {Math.round(attemptResult.score)}
                 </p>
-                <p className="text-[10px] text-[#8892A4] font-bold uppercase mt-0.5">
+                <p className="text-[10px] text-[slate-400] font-bold uppercase mt-0.5">
                   Out of {attemptResult.max_score}
                 </p>
               </div>
             </div>
-            <p className="text-sm font-bold text-[#F0F0FF] mt-3">Score: {attemptResult.percentage}%</p>
+            <p className="text-sm font-bold text-[white] mt-3">Score: {attemptResult.percentage}%</p>
           </div>
         </Card>
 
         {/* Detailed Question Review */}
         <div className="space-y-6">
-          <h2 className="text-xl font-bold font-heading text-[#F0F0FF]">Questions Review</h2>
+          <h2 className="text-xl font-bold font-heading text-[white]">Questions Review</h2>
 
           <div className="space-y-4">
             {attemptResult.questions.map((q, idx) => (
@@ -273,24 +273,24 @@ export default function QuizAttemptPage() {
                 key={q.question_id}
                 className={`p-5 space-y-4 border transition-all ${
                   q.is_correct
-                    ? 'border-[rgba(0,229,160,0.15)] bg-[rgba(0,229,160,0.01)]'
-                    : 'border-[rgba(255,107,107,0.15)] bg-[rgba(255,107,107,0.01)]'
+                    ? 'border-emerald-500/15 bg-[rgba(0,229,160,0.01)]'
+                    : 'border-rose-500/15 bg-[rgba(255,107,107,0.01)]'
                 }`}
               >
                 <div className="flex justify-between items-start gap-4">
                   <div className="flex gap-3">
-                    <span className="w-6 h-6 rounded-lg bg-[rgba(255,255,255,0.04)] text-xs font-semibold text-[#8892A4] flex items-center justify-center flex-shrink-0">
+                    <span className="w-6 h-6 rounded-lg bg-white/5 text-xs font-semibold text-[slate-400] flex items-center justify-center flex-shrink-0">
                       {idx + 1}
                     </span>
-                    <p className="font-semibold text-sm text-[#F0F0FF]">{q.question_text}</p>
+                    <p className="font-semibold text-sm text-[white]">{q.question_text}</p>
                   </div>
                   
                   {q.is_correct ? (
-                    <Badge className="bg-[rgba(0,229,160,0.1)] text-[#00E5A0] border border-[rgba(0,229,160,0.2)] flex items-center gap-1 font-bold">
+                    <Badge className="bg-emerald-400/10 text-[emerald-400] border border-emerald-500/20 flex items-center gap-1 font-bold">
                       <CheckCircle2 className="w-3 h-3" /> Correct
                     </Badge>
                   ) : (
-                    <Badge className="bg-[rgba(255,107,107,0.1)] text-[#FF6B6B] border border-[rgba(255,107,107,0.2)] flex items-center gap-1 font-bold">
+                    <Badge className="bg-rose-500/10 text-[rose-500] border border-rose-500/20 flex items-center gap-1 font-bold">
                       <XCircle className="w-3 h-3" /> Incorrect
                     </Badge>
                   )}
@@ -298,15 +298,15 @@ export default function QuizAttemptPage() {
 
                 <div className="pl-9 space-y-2 text-xs">
                   <div className="flex flex-col sm:flex-row sm:items-start gap-2">
-                    <span className="text-[#8892A4] font-medium flex-shrink-0">Your answer:</span>
-                    <div className={`space-y-1 ${q.is_correct ? 'text-[#00E5A0]' : 'text-[#FF6B6B]'}`}>
+                    <span className="text-[slate-400] font-medium flex-shrink-0">Your answer:</span>
+                    <div className={`space-y-1 ${q.is_correct ? 'text-[emerald-400]' : 'text-[rose-500]'}`}>
                       {!q.user_answer ? (
                         <strong>No response</strong>
                       ) : typeof q.user_answer === 'object' ? (
                         <div className="space-y-2 mt-1">
                           {Object.entries(q.user_answer).map(([part, text]) => (
-                            <div key={part} className="flex gap-2 bg-[rgba(255,255,255,0.02)] p-2 rounded-lg border border-[rgba(255,255,255,0.05)]">
-                              <strong className="text-[#9D93FF] uppercase">{part}:</strong>
+                            <div key={part} className="flex gap-2 bg-white/5 p-2 rounded-lg border border-white/5">
+                              <strong className="text-[emerald-300] uppercase">{part}:</strong>
                               <span className="whitespace-pre-wrap font-medium">{String(text) || 'No response'}</span>
                             </div>
                           ))}
@@ -319,14 +319,14 @@ export default function QuizAttemptPage() {
 
                   {!q.is_correct && q.correct_answer && (
                     <div className="flex flex-col sm:flex-row sm:items-start gap-2 pt-1">
-                      <span className="text-[#8892A4] font-medium flex-shrink-0">Correct answer:</span>
-                      <strong className="text-[#00E5A0] whitespace-pre-wrap">{q.correct_answer}</strong>
+                      <span className="text-[slate-400] font-medium flex-shrink-0">Correct answer:</span>
+                      <strong className="text-[emerald-400] whitespace-pre-wrap">{q.correct_answer}</strong>
                     </div>
                   )}
 
                   {q.explanation && (
-                    <div className="mt-3 p-3 rounded-xl bg-[rgba(255,255,255,0.02)] border border-[rgba(255,255,255,0.04)] text-[#8892A4] leading-relaxed flex gap-2">
-                      <Info className="w-4 h-4 text-[#7C6FFF] flex-shrink-0 mt-0.5" />
+                    <div className="mt-3 p-3 rounded-xl bg-white/5 border border-white/5 text-[slate-400] leading-relaxed flex gap-2">
+                      <Info className="w-4 h-4 text-[emerald-400] flex-shrink-0 mt-0.5" />
                       <span>{q.explanation}</span>
                     </div>
                   )}
@@ -345,9 +345,9 @@ export default function QuizAttemptPage() {
   if (!quiz) {
     return (
       <div className="flex flex-col items-center justify-center min-h-[60vh] text-center p-6 space-y-4">
-        <AlertCircle className="w-10 h-10 text-[#FFB020]" />
-        <h3 className="text-xl font-bold font-heading text-[#F0F0FF]">Failed to load test</h3>
-        <p className="text-[#8892A4] max-w-sm">No valid quiz details were found. Return to list and generate one.</p>
+        <AlertCircle className="w-10 h-10 text-[amber-400]" />
+        <h3 className="text-xl font-bold font-heading text-[white]">Failed to load test</h3>
+        <p className="text-[slate-400] max-w-sm">No valid quiz details were found. Return to list and generate one.</p>
         <Link href="/app/quizzes">
           <Button variant="primary">Back to Quizzes</Button>
         </Link>
@@ -362,25 +362,25 @@ export default function QuizAttemptPage() {
   return (
     <div className="p-6 pb-12 max-w-5xl mx-auto space-y-6">
       {/* Top Test Nav */}
-      <div className="flex justify-between items-center bg-[rgba(15,15,45,0.5)] border border-[rgba(255,255,255,0.05)] p-4 rounded-2xl backdrop-blur-glass">
+      <div className="flex justify-between items-center bg-[rgba(15,15,45,0.5)] border border-white/5 p-4 rounded-2xl backdrop-blur-glass">
         <div>
-          <h2 className="font-heading font-semibold text-[#F0F0FF] truncate max-w-[200px] sm:max-w-md">
+          <h2 className="font-heading font-semibold text-[white] truncate max-w-[200px] sm:max-w-md">
             {quiz.title}
           </h2>
-          <p className="text-[10px] text-[#8892A4] uppercase font-bold tracking-wider mt-0.5">
+          <p className="text-[10px] text-[slate-400] uppercase font-bold tracking-wider mt-0.5">
             Question {activeQuestionIdx + 1} of {quiz.questions.length}
           </p>
         </div>
         <div className="flex items-center gap-3">
-          <div className="flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-[rgba(255,255,255,0.04)] text-xs text-[#8892A4]">
-            <Timer className="w-4 h-4 text-[#7C6FFF]" />
-            <span className="font-bold text-[#F0F0FF]">{timeLeft !== null ? formatTime(timeLeft) : 'Loading...'}</span>
+          <div className="flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-white/5 text-xs text-[slate-400]">
+            <Timer className="w-4 h-4 text-[emerald-400]" />
+            <span className="font-bold text-[white]">{timeLeft !== null ? formatTime(timeLeft) : 'Loading...'}</span>
           </div>
           <Button
             onClick={() => setConfirmSubmitOpen(true)}
             variant="primary"
             size="sm"
-            className="bg-gradient-to-r from-[#7C6FFF] to-[#00D4FF] font-semibold flex items-center gap-1"
+            className="bg-gradient-to-r from-[emerald-400] to-[sky-400] font-semibold flex items-center gap-1"
           >
             Submit
             <Send className="w-3 h-3" />
@@ -405,16 +405,16 @@ export default function QuizAttemptPage() {
               >
                 {/* Question metadata badge */}
                 <div className="flex items-center justify-between">
-                  <Badge className="bg-[rgba(124,111,255,0.08)] text-[#9D93FF] border border-[rgba(124,111,255,0.15)] uppercase text-[10px] font-bold">
+                  <Badge className="bg-emerald-500/10 text-[emerald-300] border border-emerald-500/15 uppercase text-[10px] font-bold">
                     {activeQuestion.question_type.replace('_', ' ')}
                   </Badge>
-                  <span className="text-[10px] text-[#8892A4]">
+                  <span className="text-[10px] text-[slate-400]">
                     Marks: {activeQuestion.marks || '1.0'}
                   </span>
                 </div>
 
                 {/* Question text */}
-                <h3 className="text-base md:text-lg font-semibold text-[#F0F0FF] leading-snug">
+                <h3 className="text-base md:text-lg font-semibold text-[white] leading-snug">
                   {activeQuestion.question_text}
                 </h3>
 
@@ -429,14 +429,14 @@ export default function QuizAttemptPage() {
                           onClick={() => handleAnswerSelect(activeQuestion.id, opt.key)}
                           className={`w-full text-left p-4 rounded-2xl border transition-all text-sm font-medium flex items-center gap-3 ${
                             selected
-                              ? 'bg-gradient-to-r from-[rgba(124,111,255,0.15)] to-[rgba(0,212,255,0.05)] text-[#F0F0FF] border-[#7C6FFF] glow-primary/10'
-                              : 'bg-[rgba(255,255,255,0.02)] text-[#8892A4] border-[rgba(255,255,255,0.06)] hover:bg-[rgba(255,255,255,0.04)] hover:text-[#F0F0FF]'
+                              ? 'bg-gradient-to-r from-[rgba(124,111,255,0.15)] to-[rgba(0,212,255,0.05)] text-[white] border-[emerald-400] glow-primary/10'
+                              : 'bg-white/5 text-[slate-400] border-white/10 hover:bg-white/5 hover:text-[white]'
                           }`}
                         >
                           <div className={`w-5 h-5 rounded-full border flex items-center justify-center flex-shrink-0 text-xs font-bold ${
                             selected
-                              ? 'border-[#7C6FFF] bg-[#7C6FFF] text-white'
-                              : 'border-[rgba(255,255,255,0.15)] text-[#8892A4]'
+                              ? 'border-[emerald-400] bg-[emerald-400] text-white'
+                              : 'border-[rgba(255,255,255,0.15)] text-[slate-400]'
                           }`}>
                             {selected ? <Check className="w-3.5 h-3.5" /> : opt.key}
                           </div>
@@ -448,16 +448,16 @@ export default function QuizAttemptPage() {
                 ) : activeQuestion.question_type === 'theory' && activeQuestion.options?.length ? (
                   <div className="space-y-6">
                     {activeQuestion.options.map((opt: any) => (
-                      <div key={opt.part || opt.key} className="space-y-3 p-4 rounded-xl border border-[rgba(255,255,255,0.04)] bg-[rgba(255,255,255,0.01)]">
+                      <div key={opt.part || opt.key} className="space-y-3 p-4 rounded-xl border border-white/5 bg-white/5">
                         <div className="flex items-start justify-between gap-4">
-                          <label className="text-sm font-medium text-[#F0F0FF] flex gap-3 leading-relaxed">
-                            <span className="flex-shrink-0 w-6 h-6 rounded border border-[rgba(124,111,255,0.3)] bg-[rgba(124,111,255,0.1)] text-[#9D93FF] flex items-center justify-center text-xs font-bold uppercase mt-0.5">
+                          <label className="text-sm font-medium text-[white] flex gap-3 leading-relaxed">
+                            <span className="flex-shrink-0 w-6 h-6 rounded border border-emerald-500/30 bg-emerald-500/10 text-[emerald-300] flex items-center justify-center text-xs font-bold uppercase mt-0.5">
                               {opt.part || opt.key}
                             </span>
                             <span>{opt.text}</span>
                           </label>
                           {opt.marks && (
-                            <Badge className="flex-shrink-0 bg-[rgba(255,255,255,0.05)] text-[#8892A4] text-[10px] font-bold border border-[rgba(255,255,255,0.1)]">
+                            <Badge className="flex-shrink-0 bg-white/10 text-[slate-400] text-[10px] font-bold border border-white/10">
                               {opt.marks} Marks
                             </Badge>
                           )}
@@ -481,7 +481,7 @@ export default function QuizAttemptPage() {
                       rows={5}
                       className="input-glass"
                     />
-                    <p className="text-[10px] text-[#4A5568]">
+                    <p className="text-[10px] text-[slate-500]">
                       Note: spelling matters for short answers. Essay/theory answers are evaluated using AI semantic processing.
                     </p>
                   </div>
@@ -490,7 +490,7 @@ export default function QuizAttemptPage() {
             </AnimatePresence>
 
             {/* Bottom Question Prev/Next Nav */}
-            <div className="flex justify-between items-center pt-6 border-t border-[rgba(255,255,255,0.04)] mt-8">
+            <div className="flex justify-between items-center pt-6 border-t border-white/5 mt-8">
               <Button
                 onClick={handlePrev}
                 disabled={activeQuestionIdx === 0}
@@ -520,8 +520,8 @@ export default function QuizAttemptPage() {
         <div className="space-y-6">
           <Card className="p-6 space-y-4">
             <div>
-              <h3 className="font-bold text-[#F0F0FF] text-sm">Question Navigator</h3>
-              <p className="text-[10px] text-[#8892A4] mt-0.5">Click number to hop directly to question</p>
+              <h3 className="font-bold text-[white] text-sm">Question Navigator</h3>
+              <p className="text-[10px] text-[slate-400] mt-0.5">Click number to hop directly to question</p>
             </div>
 
             <div className="grid grid-cols-5 sm:grid-cols-10 lg:grid-cols-5 gap-2">
@@ -538,10 +538,10 @@ export default function QuizAttemptPage() {
                     }}
                     className={`w-10 h-10 rounded-xl text-xs font-semibold flex items-center justify-center transition-all ${
                       isActive
-                        ? 'border border-[#7C6FFF] bg-[rgba(124,111,255,0.15)] text-[#F0F0FF] glow-primary/5'
+                        ? 'border border-[emerald-400] bg-emerald-500/15 text-[white] glow-primary/5'
                         : hasAnswer
-                        ? 'bg-[rgba(124,111,255,0.25)] text-[#9D93FF] border border-[rgba(124,111,255,0.3)]'
-                        : 'bg-[rgba(255,255,255,0.02)] text-[#8892A4] border border-[rgba(255,255,255,0.05)] hover:border-[rgba(255,255,255,0.15)]'
+                        ? 'bg-[rgba(124,111,255,0.25)] text-[emerald-300] border border-emerald-500/30'
+                        : 'bg-white/5 text-[slate-400] border border-white/5 hover:border-[rgba(255,255,255,0.15)]'
                     }`}
                   >
                     {idx + 1}
@@ -550,13 +550,13 @@ export default function QuizAttemptPage() {
               })}
             </div>
             
-            <div className="flex gap-4 pt-2 border-t border-[rgba(255,255,255,0.04)] text-[10px] text-[#8892A4]">
+            <div className="flex gap-4 pt-2 border-t border-white/5 text-[10px] text-[slate-400]">
               <div className="flex items-center gap-1.5">
-                <div className="w-2.5 h-2.5 rounded bg-[rgba(124,111,255,0.25)] border border-[rgba(124,111,255,0.3)]" />
+                <div className="w-2.5 h-2.5 rounded bg-[rgba(124,111,255,0.25)] border border-emerald-500/30" />
                 <span>Answered</span>
               </div>
               <div className="flex items-center gap-1.5">
-                <div className="w-2.5 h-2.5 rounded bg-transparent border border-[rgba(255,255,255,0.05)]" />
+                <div className="w-2.5 h-2.5 rounded bg-transparent border border-white/5" />
                 <span>Unanswered</span>
               </div>
             </div>
@@ -567,12 +567,12 @@ export default function QuizAttemptPage() {
       {/* Confirmation Modal */}
       {confirmSubmitOpen && (
         <div className="fixed inset-0 z-50 bg-slate-950/80 backdrop-blur-sm flex items-center justify-center p-6">
-          <Card className="p-6 max-w-sm w-full space-y-4 border-[rgba(124,111,255,0.2)]">
+          <Card className="p-6 max-w-sm w-full space-y-4 border-emerald-500/20">
             <div className="flex items-center gap-2">
-              <Brain className="w-5 h-5 text-[#7C6FFF]" />
-              <h3 className="font-heading font-bold text-lg text-[#F0F0FF]">Submit Quiz?</h3>
+              <Brain className="w-5 h-5 text-[emerald-400]" />
+              <h3 className="font-heading font-bold text-lg text-[white]">Submit Quiz?</h3>
             </div>
-            <p className="text-xs text-[#8892A4] leading-relaxed">
+            <p className="text-xs text-[slate-400] leading-relaxed">
               Are you sure you want to finish this quiz attempt? Unanswered questions will be marked incorrect. AI feedback will evaluate your results immediately.
             </p>
             <div className="flex gap-3">
@@ -588,7 +588,7 @@ export default function QuizAttemptPage() {
                 onClick={() => handleSubmit(false)}
                 variant="primary"
                 size="sm"
-                className="flex-1 bg-gradient-to-r from-[#7C6FFF] to-[#00D4FF] glow-primary"
+                className="flex-1 bg-gradient-to-r from-[emerald-400] to-[sky-400] glow-primary"
                 disabled={submitting}
               >
                 {submitting ? 'Evaluating...' : 'Confirm'}

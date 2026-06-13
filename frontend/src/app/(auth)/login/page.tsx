@@ -34,10 +34,10 @@ export default function LoginPage() {
   return (
     <div>
       <div className="mb-8 text-center">
-        <h1 className="font-heading text-3xl font-bold mb-2">
-          Welcome <span className="gradient-text">Back</span>
+        <h1 className="font-heading text-3xl font-bold mb-2 text-white">
+          Welcome <span className="text-emerald-400">Back</span>
         </h1>
-        <p className="text-[#8892A4] text-sm">Sign in to continue your learning journey</p>
+        <p className="text-slate-400 text-sm">Sign in to continue your learning journey</p>
       </div>
 
       <form onSubmit={handleSubmit(onSubmit)} className="space-y-5">
@@ -66,7 +66,7 @@ export default function LoginPage() {
           <div className="flex justify-end mt-2">
             <Link
               href="#"
-              className="text-xs text-[#7C6FFF] hover:text-[#9D93FF] transition-colors"
+              className="text-xs text-emerald-400 hover:text-emerald-300 transition-colors"
             >
               Forgot password?
             </Link>
@@ -86,14 +86,14 @@ export default function LoginPage() {
       </form>
 
       <div className="flex items-center gap-4 my-6">
-        <div className="flex-1 h-px bg-[rgba(255,255,255,0.08)]" />
-        <span className="text-xs text-[#4A5568]">or</span>
-        <div className="flex-1 h-px bg-[rgba(255,255,255,0.08)]" />
+        <div className="flex-1 h-px bg-white/10" />
+        <span className="text-xs text-slate-500 font-medium">or</span>
+        <div className="flex-1 h-px bg-white/10" />
       </div>
 
-      <p className="text-center text-sm text-[#8892A4]">
+      <p className="text-center text-sm text-slate-400">
         Don&apos;t have an account?{' '}
-        <Link href="/register" className="text-[#7C6FFF] hover:text-[#9D93FF] font-semibold transition-colors">
+        <Link href="/register" className="text-emerald-400 hover:text-emerald-300 font-semibold transition-colors">
           Sign up free
         </Link>
       </p>

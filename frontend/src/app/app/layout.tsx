@@ -9,8 +9,6 @@ import {
   FileText,
   Brain,
   Settings,
-  Menu,
-  X,
   Zap,
   LogOut,
   Bell,
@@ -19,7 +17,6 @@ import {
 } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { useAuth } from '@/hooks/useAuth';
-import { useUIStore } from '@/store/uiStore';
 
 const navItems = [
   { href: '/app/dashboard', icon: LayoutDashboard, label: 'Dashboard' },
@@ -34,24 +31,39 @@ function NavItem({ href, icon: Icon, label, active }: { href: string; icon: Reac
     <Link href={href}>
       <div
         className={cn(
-          'flex items-center gap-3 px-4 py-3 rounded-xl transition-all duration-200 group relative',
+          'flex items-center gap-3 px-4 py-3 rounded-xl transition-all duration-300 group relative',
           active
-            ? 'bg-gradient-to-r from-[rgba(124,111,255,0.2)] to-[rgba(0,212,255,0.08)] text-[#F0F0FF] border border-[rgba(124,111,255,0.3)]'
-            : 'text-[#8892A4] hover:text-[#F0F0FF] hover:bg-[rgba(255,255,255,0.04)]'
+            ? 'bg-emerald-500/15 text-emerald-400 border border-emerald-500/20 shadow-[inset_0_1px_0_0_rgba(16,185,129,0.2)]'
+            : 'text-slate-400 hover:text-white hover:bg-white/5'
         )}
       >
         {active && (
-          <div className="absolute left-0 top-1/2 -translate-y-1/2 w-0.5 h-6 bg-gradient-to-b from-[#7C6FFF] to-[#00D4FF] rounded-full" />
+          <div className="absolute left-0 top-1/2 -translate-y-1/2 w-1 h-6 bg-emerald-500 rounded-r-full shadow-[0_0_10px_16 185 129 / 0.5]" />
         )}
-        <Icon className={cn('w-4.5 h-4.5 flex-shrink-0', active ? 'text-[#7C6FFF]' : 'group-hover:text-[#7C6FFF]')} />
+        <Icon className={cn('w-5 h-5 flex-shrink-0 transition-colors', active ? 'text-emerald-400' : 'group-hover:text-emerald-400')} />
         <span className="font-medium text-sm">{label}</span>
-        {active && <ChevronRight className="w-3.5 h-3.5 ml-auto text-[#7C6FFF] opacity-60" />}
+        {active && <ChevronRight className="w-4 h-4 ml-auto text-emerald-500/60" />}
       </div>
     </Link>
   );
 }
 
-function Sidebar({ onClose }: { onClose?: () => void }) {
+function MobileNavItem({ href, icon: Icon, label, active }: { href: string; icon: React.ElementType; label: string; active: boolean }) {
+  return (
+    <Link href={href} className="flex-1 flex flex-col items-center justify-center gap-1 py-2 relative">
+      {active && (
+        <motion.div 
+          layoutId="mobile-active-tab"
+          className="absolute inset-x-2 inset-y-1 bg-emerald-500/15 border border-emerald-500/20 rounded-xl z-0"
+        />
+      )}
+      <Icon className={cn('w-5 h-5 z-10 transition-colors', active ? 'text-emerald-400' : 'text-slate-400')} />
+      <span className={cn('text-[10px] font-medium z-10 transition-colors', active ? 'text-emerald-400' : 'text-slate-400')}>{label}</span>
+    </Link>
+  );
+}
+
+function Sidebar() {
   const pathname = usePathname();
   const { user, logout } = useAuth();
 
@@ -60,27 +72,22 @@ function Sidebar({ onClose }: { onClose?: () => void }) {
     : '??';
 
   return (
-    <div className="flex flex-col h-full bg-[#0F0F2D] border-r border-[rgba(255,255,255,0.07)]">
+    <div className="flex flex-col h-full bg-surface/40 backdrop-blur-[40px] border-r border-border">
       {/* Logo */}
-      <div className="p-6 border-b border-[rgba(255,255,255,0.07)]">
-        <div className="flex items-center justify-between">
-          <Link href="/app/dashboard" className="flex items-center gap-2">
-            <div className="w-8 h-8 rounded-lg bg-gradient-to-br from-[#7C6FFF] to-[#00D4FF] flex items-center justify-center shadow-lg">
-              <Brain className="w-4 h-4 text-white" />
-            </div>
-            <span className="font-heading font-bold text-lg gradient-text">EduQuiz</span>
-            <span className="text-[10px] px-1.5 py-0.5 rounded-md bg-[rgba(124,111,255,0.2)] text-[#9D93FF] font-semibold">AI</span>
-          </Link>
-          {onClose && (
-            <button onClick={onClose} className="text-[#4A5568] hover:text-[#8892A4] transition-colors lg:hidden">
-              <X className="w-5 h-5" />
-            </button>
-          )}
-        </div>
+      <div className="p-6 border-b border-border/50">
+        <Link href="/app/dashboard" className="flex items-center gap-3">
+          <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-emerald-400 to-emerald-600 flex items-center justify-center shadow-lg shadow-emerald-500/20 box-shadow-[inset_0_1px_0_0_rgba(255,255,255,0.4)]">
+            <Brain className="w-5 h-5 text-white" />
+          </div>
+          <div className="flex flex-col">
+            <span className="font-heading font-bold text-xl tracking-tight text-white leading-tight">EduQuiz</span>
+            <span className="text-[10px] uppercase tracking-wider text-emerald-400 font-bold">AI Platform</span>
+          </div>
+        </Link>
       </div>
 
       {/* Nav */}
-      <nav className="flex-1 p-4 space-y-1 overflow-y-auto">
+      <nav className="flex-1 p-4 space-y-1.5 overflow-y-auto">
         {navItems.map((item) => (
           <NavItem
             key={item.href}
@@ -91,31 +98,31 @@ function Sidebar({ onClose }: { onClose?: () => void }) {
       </nav>
 
       {/* User Profile */}
-      <div className="p-4 border-t border-[rgba(255,255,255,0.07)]">
+      <div className="p-4 border-t border-border/50 bg-black/10">
         {/* XP Badge */}
-        <div className="flex items-center gap-2 px-3 py-2 mb-3 rounded-xl bg-[rgba(255,176,32,0.08)] border border-[rgba(255,176,32,0.2)]">
-          <Zap className="w-3.5 h-3.5 text-[#FFB020]" />
-          <span className="text-xs font-semibold text-[#FFB020]">{user?.xp_points?.toLocaleString() ?? 0} XP</span>
+        <div className="flex items-center gap-2 px-3 py-2.5 mb-4 rounded-xl bg-amber-500/10 border border-amber-500/20 shadow-inner">
+          <Zap className="w-4 h-4 text-amber-500" />
+          <span className="text-sm font-semibold text-amber-500">{user?.xp_points?.toLocaleString() ?? 0} XP</span>
           {user?.streak_days ? (
             <>
-              <span className="text-[#4A5568] text-xs mx-1">·</span>
-              <span className="text-xs text-[#FFB020]">🔥 {user.streak_days} day streak</span>
+              <span className="text-slate-600 text-xs mx-1">•</span>
+              <span className="text-sm font-medium text-amber-500">🔥 {user.streak_days} days</span>
             </>
           ) : null}
         </div>
 
         {/* User Info */}
-        <div className="flex items-center gap-3">
-          <div className="w-9 h-9 rounded-xl bg-gradient-to-br from-[#7C6FFF] to-[#00D4FF] flex items-center justify-center text-white font-bold text-sm flex-shrink-0">
+        <div className="flex items-center gap-3 px-1">
+          <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-emerald-400 to-emerald-600 flex items-center justify-center text-white font-bold text-sm flex-shrink-0 shadow-lg shadow-emerald-500/20 box-shadow-[inset_0_1px_0_0_rgba(255,255,255,0.3)]">
             {initials}
           </div>
           <div className="flex-1 min-w-0">
-            <p className="text-sm font-semibold text-[#F0F0FF] truncate">{user?.full_name || 'Student'}</p>
-            <p className="text-xs text-[#4A5568] truncate">{user?.email}</p>
+            <p className="text-sm font-semibold text-white truncate">{user?.full_name || 'Student'}</p>
+            <p className="text-xs text-slate-400 truncate">{user?.email}</p>
           </div>
           <button
             onClick={logout}
-            className="p-1.5 text-[#4A5568] hover:text-[#FF6B6B] transition-colors rounded-lg hover:bg-[rgba(255,107,107,0.1)]"
+            className="p-2 text-slate-400 hover:text-rose-400 transition-colors rounded-lg hover:bg-rose-500/10"
             title="Logout"
             aria-label="Logout"
           >
@@ -128,13 +135,7 @@ function Sidebar({ onClose }: { onClose?: () => void }) {
 }
 
 export default function AppLayout({ children }: { children: React.ReactNode }) {
-  const { sidebarOpen, setSidebarOpen } = useUIStore();
   const pathname = usePathname();
-
-  // Close sidebar on route change (mobile)
-  useEffect(() => {
-    setSidebarOpen(false);
-  }, [pathname, setSidebarOpen]);
 
   // Page title from pathname
   const pageTitle = navItems.find(
@@ -142,65 +143,53 @@ export default function AppLayout({ children }: { children: React.ReactNode }) {
   )?.label || 'Dashboard';
 
   return (
-    <div className="flex h-screen bg-[#080817] overflow-hidden">
+    <div className="flex h-[100dvh] bg-bg overflow-hidden relative">
+      
+      {/* Mesh Background behind everything */}
+      <div className="mesh-bg opacity-30">
+        <div className="mesh-orb mesh-orb-1" />
+        <div className="mesh-orb mesh-orb-2" />
+        <div className="mesh-orb mesh-orb-3" />
+      </div>
+
       {/* Desktop Sidebar */}
-      <aside className="hidden lg:flex w-64 flex-shrink-0">
+      <aside className="hidden lg:flex w-72 flex-shrink-0 relative z-20">
         <Sidebar />
       </aside>
 
-      {/* Mobile Sidebar Overlay */}
-      <AnimatePresence>
-        {sidebarOpen && (
-          <>
-            <motion.div
-              initial={{ opacity: 0 }}
-              animate={{ opacity: 1 }}
-              exit={{ opacity: 0 }}
-              onClick={() => setSidebarOpen(false)}
-              className="fixed inset-0 z-40 bg-black/60 backdrop-blur-sm lg:hidden"
-            />
-            <motion.aside
-              initial={{ x: -280 }}
-              animate={{ x: 0 }}
-              exit={{ x: -280 }}
-              transition={{ type: 'spring', damping: 28, stiffness: 300 }}
-              className="fixed left-0 top-0 bottom-0 z-50 w-64 lg:hidden"
-            >
-              <Sidebar onClose={() => setSidebarOpen(false)} />
-            </motion.aside>
-          </>
-        )}
-      </AnimatePresence>
-
       {/* Main Content */}
-      <div className="flex-1 flex flex-col min-w-0 overflow-hidden">
+      <div className="flex-1 flex flex-col min-w-0 overflow-hidden relative z-10 pb-16 lg:pb-0">
         {/* Topbar */}
-        <header className="flex-shrink-0 h-16 flex items-center justify-between px-6 border-b border-[rgba(255,255,255,0.07)] bg-[rgba(8,8,23,0.8)] backdrop-blur-glass">
+        <header className="flex-shrink-0 h-20 flex items-center justify-between px-6 lg:px-10 border-b border-border/50 bg-surface/50 backdrop-blur-[40px] sticky top-0 z-30">
+          <div className="flex items-center gap-4">
+            <h1 className="font-heading font-bold text-2xl text-white tracking-tight">{pageTitle}</h1>
+          </div>
           <div className="flex items-center gap-4">
             <button
-              onClick={() => setSidebarOpen(true)}
-              className="lg:hidden p-2 text-[#8892A4] hover:text-[#F0F0FF] transition-colors"
-              aria-label="Open menu"
-            >
-              <Menu className="w-5 h-5" />
-            </button>
-            <h1 className="font-heading font-semibold text-lg text-[#F0F0FF]">{pageTitle}</h1>
-          </div>
-          <div className="flex items-center gap-3">
-            <button
-              className="relative p-2 text-[#8892A4] hover:text-[#F0F0FF] transition-colors rounded-lg hover:bg-[rgba(255,255,255,0.05)]"
+              className="relative p-2.5 text-slate-400 hover:text-white transition-colors rounded-xl hover:bg-white/5 border border-transparent hover:border-white/10"
               aria-label="Notifications"
             >
               <Bell className="w-5 h-5" />
-              <span className="absolute top-1.5 right-1.5 w-1.5 h-1.5 rounded-full bg-[#7C6FFF]" />
+              <span className="absolute top-2.5 right-2.5 w-2 h-2 rounded-full bg-emerald-500 shadow-[0_0_8px_16 185 129 / 0.8]" />
             </button>
           </div>
         </header>
 
         {/* Page Content */}
-        <main className="flex-1 overflow-y-auto p-6">
+        <main className="flex-1 overflow-y-auto p-4 md:p-6 lg:p-10 scroll-smooth">
           {children}
         </main>
+      </div>
+
+      {/* Mobile Bottom Tab Bar */}
+      <div className="lg:hidden fixed bottom-0 left-0 right-0 h-16 bg-surface/80 backdrop-blur-[40px] border-t border-white/10 flex items-center justify-around px-2 pb-safe z-40">
+        {navItems.map((item) => (
+          <MobileNavItem
+            key={item.href}
+            {...item}
+            active={pathname === item.href || pathname.startsWith(item.href + '/')}
+          />
+        ))}
       </div>
     </div>
   );

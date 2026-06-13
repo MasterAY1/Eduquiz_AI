@@ -35,9 +35,9 @@ const itemVariants = {
 };
 
 const difficultyColors = {
-  easy: 'bg-[rgba(0,229,160,0.1)] text-[#00E5A0] border border-[rgba(0,229,160,0.2)]',
-  medium: 'bg-[rgba(255,176,32,0.1)] text-[#FFB020] border border-[rgba(255,176,32,0.2)]',
-  hard: 'bg-[rgba(255,107,107,0.1)] text-[#FF6B6B] border border-[rgba(255,107,107,0.2)]',
+  easy: 'bg-emerald-400/10 text-[emerald-400] border border-emerald-500/20',
+  medium: 'bg-amber-500/10 text-[amber-400] border border-amber-500/20',
+  hard: 'bg-rose-500/10 text-[rose-500] border border-rose-500/20',
 };
 
 function QuizzesContent() {
@@ -105,9 +105,9 @@ function QuizzesContent() {
       {/* Page Title */}
       <motion.div variants={itemVariants}>
         <h1 className="text-3xl sm:text-4xl font-bold font-heading">
-          Practice <span className="gradient-text">Quizzes</span>
+          Practice <span className="text-emerald-400">Quizzes</span>
         </h1>
-        <p className="text-[#8892A4] text-sm mt-1">
+        <p className="text-[slate-400] text-sm mt-1">
           Challenge yourself with custom generated assessments synced to your learning library.
         </p>
       </motion.div>
@@ -116,15 +116,15 @@ function QuizzesContent() {
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-8 items-start">
         {/* Generator Form Card */}
         <motion.div variants={itemVariants} className="lg:col-span-1">
-          <Card className="p-6 md:p-8 space-y-6 border-[rgba(124,111,255,0.15)] relative overflow-hidden">
+          <Card className="p-6 md:p-8 space-y-6 border-emerald-500/15 relative overflow-hidden">
             <div className="flex items-center gap-2">
-              <Sparkles className="w-5 h-5 text-[#7C6FFF]" />
-              <h2 className="text-xl font-bold font-heading text-[#F0F0FF]">AI Generator</h2>
+              <Sparkles className="w-5 h-5 text-[emerald-400]" />
+              <h2 className="text-xl font-bold font-heading text-[white]">AI Generator</h2>
             </div>
 
             {readyDocs.length === 0 ? (
-              <div className="text-center py-6 text-xs text-[#8892A4] space-y-3">
-                <AlertCircle className="w-8 h-8 text-[#FFB020] mx-auto opacity-80" />
+              <div className="text-center py-6 text-xs text-[slate-400] space-y-3">
+                <AlertCircle className="w-8 h-8 text-[amber-400] mx-auto opacity-80" />
                 <p>You need at least one successfully indexed document in your library to generate a quiz.</p>
                 <Link href="/app/documents" className="block pt-2">
                   <Button variant="primary" size="sm">
@@ -136,7 +136,7 @@ function QuizzesContent() {
               <form onSubmit={handleGenerate} className="space-y-4">
                 {/* Select Material */}
                 <div className="space-y-1.5">
-                  <label className="text-xs font-semibold text-[#8892A4] uppercase tracking-wider">Select Study Material</label>
+                  <label className="text-xs font-semibold text-[slate-400] uppercase tracking-wider">Select Study Material</label>
                   <select
                     value={selectedDocId}
                     onChange={(e) => setSelectedDocId(e.target.value)}
@@ -144,7 +144,7 @@ function QuizzesContent() {
                     required
                   >
                     {readyDocs.map((doc) => (
-                      <option key={doc.id} value={doc.id} className="bg-[#0F0F2D] text-[#F0F0FF]">
+                      <option key={doc.id} value={doc.id} className="bg-[#0F0F2D] text-[white]">
                         {doc.title} ({doc.subject || 'General'})
                       </option>
                     ))}
@@ -153,7 +153,7 @@ function QuizzesContent() {
 
                 {/* Exam Style */}
                 <div className="space-y-1.5">
-                  <label className="text-xs font-semibold text-[#8892A4] uppercase tracking-wider">Exam Format Style</label>
+                  <label className="text-xs font-semibold text-[slate-400] uppercase tracking-wider">Exam Format Style</label>
                   <select
                     value={examStyle}
                     onChange={(e) => setExamStyle(e.target.value)}
@@ -171,7 +171,7 @@ function QuizzesContent() {
                 {/* Difficulty & Count */}
                 <div className="grid grid-cols-2 gap-4">
                   <div className="space-y-1.5">
-                    <label className="text-xs font-semibold text-[#8892A4] uppercase tracking-wider">Difficulty</label>
+                    <label className="text-xs font-semibold text-[slate-400] uppercase tracking-wider">Difficulty</label>
                     <select
                       value={difficulty}
                       onChange={(e) => setDifficulty(e.target.value)}
@@ -184,7 +184,7 @@ function QuizzesContent() {
                   </div>
 
                   <div className="space-y-1.5">
-                    <label className="text-xs font-semibold text-[#8892A4] uppercase tracking-wider">Questions</label>
+                    <label className="text-xs font-semibold text-[slate-400] uppercase tracking-wider">Questions</label>
                     <select
                       value={questionCount}
                       onChange={(e) => setQuestionCount(Number(e.target.value))}
@@ -201,7 +201,7 @@ function QuizzesContent() {
 
                 {/* Time Limit */}
                 <div className="space-y-1.5">
-                  <label className="text-xs font-semibold text-[#8892A4] uppercase tracking-wider">Time Limit (Minutes)</label>
+                  <label className="text-xs font-semibold text-[slate-400] uppercase tracking-wider">Time Limit (Minutes)</label>
                   <input
                     type="number"
                     placeholder="Unlimited"
@@ -215,7 +215,7 @@ function QuizzesContent() {
 
                 {/* Question Types */}
                 <div className="space-y-2">
-                  <label className="text-xs font-semibold text-[#8892A4] uppercase tracking-wider block">Question Types</label>
+                  <label className="text-xs font-semibold text-[slate-400] uppercase tracking-wider block">Question Types</label>
                   <div className="grid grid-cols-2 gap-2">
                     {[
                       { key: 'mcq', label: 'Multiple Choice' },
@@ -229,8 +229,8 @@ function QuizzesContent() {
                         onClick={() => handleTypeToggle(type.key)}
                         className={`px-3 py-2 text-left text-xs font-semibold rounded-xl border transition-all ${
                           questionTypes.includes(type.key)
-                            ? 'bg-[rgba(124,111,255,0.12)] text-[#9D93FF] border-[rgba(124,111,255,0.4)]'
-                            : 'bg-transparent text-[#8892A4] border-[rgba(255,255,255,0.06)] hover:border-[rgba(255,255,255,0.12)]'
+                            ? 'bg-[rgba(124,111,255,0.12)] text-[emerald-300] border-[rgba(124,111,255,0.4)]'
+                            : 'bg-transparent text-[slate-400] border-white/10 hover:border-white/10'
                         }`}
                       >
                         {type.label}
@@ -255,10 +255,10 @@ function QuizzesContent() {
             {/* Generator Loading Overlay */}
             {generating && (
               <div className="absolute inset-0 bg-slate-950/90 rounded-2xl flex flex-col items-center justify-center p-6 space-y-4">
-                <Brain className="w-12 h-12 text-[#7C6FFF] animate-pulse" />
+                <Brain className="w-12 h-12 text-[emerald-400] animate-pulse" />
                 <div className="space-y-1.5 text-center">
-                  <h3 className="font-semibold text-base text-[#F0F0FF]">Creating Quiz...</h3>
-                  <p className="text-xs text-[#8892A4] max-w-[200px] leading-relaxed">
+                  <h3 className="font-semibold text-base text-[white]">Creating Quiz...</h3>
+                  <p className="text-xs text-[slate-400] max-w-[200px] leading-relaxed">
                     AI is analyzing your document chunks and formulating WAEC/JAMB format questions.
                   </p>
                 </div>
@@ -271,8 +271,8 @@ function QuizzesContent() {
         <motion.div variants={itemVariants} className="lg:col-span-2 space-y-6">
           <Card className="p-6 md:p-8 space-y-6">
             <div>
-              <h2 className="text-xl font-bold font-heading text-[#F0F0FF]">Your Quizzes</h2>
-              <p className="text-xs text-[#8892A4] mt-0.5">Explore your generated assessments and test yourself</p>
+              <h2 className="text-xl font-bold font-heading text-[white]">Your Quizzes</h2>
+              <p className="text-xs text-[slate-400] mt-0.5">Explore your generated assessments and test yourself</p>
             </div>
 
             {loadingQuizzes || loadingDocs ? (
@@ -282,10 +282,10 @@ function QuizzesContent() {
                 ))}
               </div>
             ) : !quizzes || quizzes.length === 0 ? (
-              <div className="text-center py-20 border border-[rgba(255,255,255,0.04)] rounded-2xl bg-[rgba(15,15,45,0.1)]">
-                <HelpCircle className="w-12 h-12 mx-auto mb-4 opacity-25 text-[#8892A4]" />
-                <h3 className="text-lg font-bold font-heading text-[#F0F0FF]">No quizzes generated</h3>
-                <p className="text-xs text-[#8892A4] mt-1 max-w-xs mx-auto">
+              <div className="text-center py-20 border border-white/5 rounded-2xl bg-[rgba(15,15,45,0.1)]">
+                <HelpCircle className="w-12 h-12 mx-auto mb-4 opacity-25 text-[slate-400]" />
+                <h3 className="text-lg font-bold font-heading text-[white]">No quizzes generated</h3>
+                <p className="text-xs text-[slate-400] mt-1 max-w-xs mx-auto">
                   Use the generator panel to create quiz assessments based on your uploaded notes.
                 </p>
               </div>
@@ -294,13 +294,13 @@ function QuizzesContent() {
                 {quizzes.map((quiz) => (
                   <div
                     key={quiz.id}
-                    className="flex flex-col sm:flex-row justify-between items-start sm:items-center p-5 rounded-2xl bg-[rgba(255,255,255,0.02)] border border-[rgba(255,255,255,0.04)] hover:bg-[rgba(255,255,255,0.04)] hover:border-[rgba(124,111,255,0.2)] transition-all duration-300 gap-4"
+                    className="flex flex-col sm:flex-row justify-between items-start sm:items-center p-5 rounded-2xl bg-white/5 border border-white/5 hover:bg-white/5 hover:border-emerald-500/20 transition-all duration-300 gap-4"
                   >
                     <div className="space-y-2">
                       <div className="flex flex-wrap items-center gap-2">
-                        <span className="font-semibold text-[#F0F0FF] text-base leading-snug">{quiz.title}</span>
+                        <span className="font-semibold text-[white] text-base leading-snug">{quiz.title}</span>
                         {quiz.subject && (
-                          <Badge className="bg-[rgba(124,111,255,0.1)] text-[#9D93FF] border border-[rgba(124,111,255,0.2)] font-semibold text-[10px]">
+                          <Badge className="bg-emerald-500/10 text-[emerald-300] border border-emerald-500/20 font-semibold text-[10px]">
                             {quiz.subject}
                           </Badge>
                         )}
@@ -309,8 +309,8 @@ function QuizzesContent() {
                         </Badge>
                       </div>
 
-                      <div className="flex flex-wrap items-center gap-x-4 gap-y-1 text-xs text-[#8892A4]">
-                        <span className="uppercase font-bold tracking-wider text-[10px] text-[#00D4FF]">
+                      <div className="flex flex-wrap items-center gap-x-4 gap-y-1 text-xs text-[slate-400]">
+                        <span className="uppercase font-bold tracking-wider text-[10px] text-[sky-400]">
                           {quiz.exam_style}
                         </span>
                         <span>•</span>
@@ -330,7 +330,7 @@ function QuizzesContent() {
                     </div>
 
                     <Link href={`/app/quizzes/${quiz.id}`} className="w-full sm:w-auto">
-                      <Button variant="ghost" size="sm" className="w-full flex items-center gap-2 group-hover:bg-[#7C6FFF] group-hover:text-white">
+                      <Button variant="ghost" size="sm" className="w-full flex items-center gap-2 group-hover:bg-[emerald-400] group-hover:text-white">
                         <Play className="w-3.5 h-3.5 fill-current" />
                         Start Quiz
                       </Button>

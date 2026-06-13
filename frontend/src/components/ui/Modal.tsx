@@ -53,7 +53,7 @@ export function Modal({ isOpen, onClose, title, children, className, size = 'md'
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
             onClick={onClose}
-            className="absolute inset-0 bg-black/60 backdrop-blur-sm"
+            className="absolute inset-0 bg-black/40 backdrop-blur-md"
           />
 
           {/* Modal */}
@@ -70,14 +70,14 @@ export function Modal({ isOpen, onClose, title, children, className, size = 'md'
           >
             {/* Header */}
             {title && (
-              <div className="flex items-center justify-between p-6 border-b border-[rgba(255,255,255,0.08)]">
-                <h3 className="text-lg font-semibold font-heading text-[#F0F0FF]">{title}</h3>
+              <div className="flex items-center justify-between p-6 border-b border-white/10">
+                <h3 className="text-xl font-bold tracking-tight text-white">{title}</h3>
                 <button
                   onClick={onClose}
-                  className="p-1.5 rounded-lg text-[#8892A4] hover:text-[#F0F0FF] hover:bg-[rgba(255,255,255,0.07)] transition-all"
+                  className="p-1.5 rounded-full text-slate-400 hover:text-white hover:bg-white/10 transition-all"
                   aria-label="Close modal"
                 >
-                  <X className="w-4 h-4" />
+                  <X className="w-5 h-5" />
                 </button>
               </div>
             )}

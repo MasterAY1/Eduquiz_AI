@@ -31,7 +31,12 @@ settings = get_settings()
 # Setup CORS middleware
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=[settings.FRONTEND_URL, "http://localhost:3000"],
+    allow_origins=[
+        settings.FRONTEND_URL, 
+        "http://localhost:3000", 
+        "https://eduquiz-ai-rose.vercel.app",
+        "https://eduquiz-ai-rose-masteray1s-projects.vercel.app"
+    ],
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],

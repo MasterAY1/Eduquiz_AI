@@ -60,25 +60,25 @@ function DocumentCard({ doc, onDelete }: { doc: any; onDelete: (id: string) => v
     switch (status) {
       case 'indexed':
         return (
-          <Badge className="bg-[rgba(0,229,160,0.1)] text-[#00E5A0] border border-[rgba(0,229,160,0.2)] flex items-center gap-1">
+          <Badge className="bg-emerald-400/10 text-[emerald-400] border border-emerald-500/20 flex items-center gap-1">
             <CheckCircle2 className="w-3 h-3" /> Indexed
           </Badge>
         );
       case 'processing':
         return (
-          <Badge className="bg-[rgba(255,176,32,0.1)] text-[#FFB020] border border-[rgba(255,176,32,0.2)] flex items-center gap-1 animate-pulse">
+          <Badge className="bg-amber-500/10 text-[amber-400] border border-amber-500/20 flex items-center gap-1 animate-pulse">
             <Clock className="w-3 h-3" /> Processing
           </Badge>
         );
       case 'pending':
         return (
-          <Badge className="bg-[rgba(255,176,32,0.05)] text-[#FFB020] border border-[rgba(255,176,32,0.15)] flex items-center gap-1">
+          <Badge className="bg-amber-500/5 text-[amber-400] border border-amber-500/15 flex items-center gap-1">
             <Clock className="w-3 h-3" /> Pending
           </Badge>
         );
       default:
         return (
-          <Badge className="bg-[rgba(255,107,107,0.1)] text-[#FF6B6B] border border-[rgba(255,107,107,0.2)] flex items-center gap-1">
+          <Badge className="bg-rose-500/10 text-[rose-500] border border-rose-500/20 flex items-center gap-1">
             <AlertCircle className="w-3 h-3" /> Failed
           </Badge>
         );
@@ -87,11 +87,11 @@ function DocumentCard({ doc, onDelete }: { doc: any; onDelete: (id: string) => v
 
   const getSourceIconColor = (type: string) => {
     switch (type) {
-      case 'pdf': return 'text-[#FF6B6B] bg-[rgba(255,107,107,0.08)]';
-      case 'docx': return 'text-[#7C6FFF] bg-[rgba(124,111,255,0.08)]';
-      case 'ppt': return 'text-[#FFB020] bg-[rgba(255,176,32,0.08)]';
-      case 'image': return 'text-[#00E5A0] bg-[rgba(0,229,160,0.08)]';
-      default: return 'text-[#00D4FF] bg-[rgba(0,212,255,0.08)]';
+      case 'pdf': return 'text-[rose-500] bg-rose-500/10';
+      case 'docx': return 'text-[emerald-400] bg-emerald-500/10';
+      case 'ppt': return 'text-[amber-400] bg-amber-500/10';
+      case 'image': return 'text-[emerald-400] bg-emerald-500/10';
+      default: return 'text-[sky-400] bg-sky-500/10';
     }
   };
 
@@ -99,7 +99,7 @@ function DocumentCard({ doc, onDelete }: { doc: any; onDelete: (id: string) => v
     <motion.div
       variants={cardVariants}
       layout
-      className="group relative flex flex-col justify-between p-5 rounded-2xl glass-card border border-[rgba(255,255,255,0.06)] hover:border-[rgba(124,111,255,0.25)] hover:shadow-[0_8px_30px_rgb(0,0,0,0.4)] transition-all duration-300 h-64"
+      className="group relative flex flex-col justify-between p-5 rounded-2xl glass-card border border-white/10 hover:border-emerald-500/25 hover:shadow-[0_8px_30px_rgb(0,0,0,0.4)] transition-all duration-300 h-64"
     >
       <div className="space-y-4">
         {/* Top details */}
@@ -112,24 +112,24 @@ function DocumentCard({ doc, onDelete }: { doc: any; onDelete: (id: string) => v
 
         {/* Title and metadata */}
         <div className="space-y-1">
-          <h3 className="font-semibold text-[#F0F0FF] text-base line-clamp-2 group-hover:text-[#7C6FFF] transition-colors leading-tight">
+          <h3 className="font-semibold text-[white] text-base line-clamp-2 group-hover:text-[emerald-400] transition-colors leading-tight">
             {doc.title}
           </h3>
-          <p className="text-xs text-[#8892A4]">
+          <p className="text-xs text-[slate-400]">
             {doc.created_at ? formatDistanceToNow(new Date(doc.created_at), { addSuffix: true }) : 'Uploaded just now'}
           </p>
         </div>
 
         {/* Extracted Details */}
         {doc.subject && (
-          <p className="text-xs font-semibold text-[#9D93FF]">
+          <p className="text-xs font-semibold text-[emerald-300]">
             Subject: {doc.subject}
           </p>
         )}
       </div>
 
       {/* Buttons / Actions */}
-      <div className="flex items-center gap-2 pt-3 border-t border-[rgba(255,255,255,0.04)] mt-4">
+      <div className="flex items-center gap-2 pt-3 border-t border-white/5 mt-4">
         {currentStatus === 'indexed' ? (
           <>
             <Link href={`/app/documents/${doc.id}`} className="flex-1">
@@ -138,18 +138,18 @@ function DocumentCard({ doc, onDelete }: { doc: any; onDelete: (id: string) => v
               </Button>
             </Link>
             <Link href={`/app/quizzes?docId=${doc.id}`} className="flex-shrink-0">
-              <Button variant="primary" size="sm" className="p-2.5 bg-gradient-to-r from-[#7C6FFF] to-[#00D4FF]">
+              <Button variant="primary" size="sm" className="p-2.5 bg-gradient-to-r from-[emerald-400] to-[sky-400]">
                 <Brain className="w-4 h-4 text-white" />
               </Button>
             </Link>
           </>
         ) : currentStatus === 'failed' ? (
-          <div className="flex-1 text-xs text-[#FF6B6B] truncate flex items-center gap-1.5 p-1 rounded bg-[rgba(255,107,107,0.05)]">
+          <div className="flex-1 text-xs text-[rose-500] truncate flex items-center gap-1.5 p-1 rounded bg-rose-500/5">
             <AlertCircle className="w-4 h-4 flex-shrink-0" />
             <span className="truncate">{doc.error_message || 'Indexing failed'}</span>
           </div>
         ) : (
-          <div className="flex-1 text-xs text-[#8892A4] animate-pulse flex items-center gap-2">
+          <div className="flex-1 text-xs text-[slate-400] animate-pulse flex items-center gap-2">
             <Clock className="w-4 h-4" />
             <span>AI analyzing document...</span>
           </div>
@@ -159,7 +159,7 @@ function DocumentCard({ doc, onDelete }: { doc: any; onDelete: (id: string) => v
           onClick={() => onDelete(doc.id)}
           variant="ghost"
           size="sm"
-          className="hover:bg-[rgba(255,107,107,0.15)] hover:text-[#FF6B6B] border-none p-2.5 ml-auto text-[#4A5568]"
+          className="hover:bg-rose-500/15 hover:text-[rose-500] border-none p-2.5 ml-auto text-[slate-500]"
         >
           <Trash2 className="w-4 h-4" />
         </Button>
@@ -212,9 +212,9 @@ export default function DocumentsPage() {
       <motion.div variants={itemVariants} className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
         <div>
           <h1 className="text-3xl sm:text-4xl font-bold font-heading">
-            Study Material <span className="gradient-text">Library</span>
+            Study Material <span className="text-emerald-400">Library</span>
           </h1>
-          <p className="text-[#8892A4] text-sm mt-1">
+          <p className="text-[slate-400] text-sm mt-1">
             Upload text, slide decks, papers, notes or textbook photos to create your RAG Knowledge Base.
           </p>
         </div>
@@ -226,20 +226,20 @@ export default function DocumentsPage() {
           {...getRootProps()}
           className={`relative border-2 border-dashed rounded-3xl p-8 text-center cursor-pointer transition-all duration-300 ${
             isDragActive
-              ? 'border-[#7C6FFF] bg-[rgba(124,111,255,0.06)]'
-              : 'border-[rgba(255,255,255,0.1)] hover:border-[rgba(124,111,255,0.3)] bg-[rgba(15,15,45,0.4)]'
+              ? 'border-[emerald-400] bg-emerald-500/10'
+              : 'border-white/10 hover:border-emerald-500/30 bg-white/5'
           }`}
         >
           <input {...getInputProps()} />
           <div className="flex flex-col items-center space-y-4 max-w-sm mx-auto">
-            <div className="w-14 h-14 rounded-2xl bg-[rgba(124,111,255,0.08)] flex items-center justify-center text-[#7C6FFF]">
+            <div className="w-14 h-14 rounded-2xl bg-emerald-500/10 flex items-center justify-center text-[emerald-400]">
               <UploadCloud className="w-8 h-8" />
             </div>
             <div className="space-y-1">
-              <h3 className="text-base font-semibold text-[#F0F0FF]">
+              <h3 className="text-base font-semibold text-[white]">
                 {isDragActive ? 'Drop your file here' : 'Drag & drop your files here'}
               </h3>
-              <p className="text-xs text-[#8892A4]">
+              <p className="text-xs text-[slate-400]">
                 Supports PDF, DOCX, PPT, TXT, or scan/photo of handwritten notes (Max 10MB)
               </p>
             </div>
@@ -251,15 +251,15 @@ export default function DocumentsPage() {
           {/* Uploading overlay */}
           {isUploading && (
             <div className="absolute inset-0 bg-slate-950/80 rounded-3xl flex flex-col items-center justify-center p-6 space-y-4">
-              <FileUp className="w-10 h-10 text-[#7C6FFF] animate-bounce" />
+              <FileUp className="w-10 h-10 text-[emerald-400] animate-bounce" />
               <div className="space-y-1.5 w-64">
-                <div className="flex justify-between text-xs text-[#8892A4] font-medium">
+                <div className="flex justify-between text-xs text-[slate-400] font-medium">
                   <span>Uploading to Cloudinary...</span>
                   <span>{uploadProgress}%</span>
                 </div>
-                <div className="w-full bg-[rgba(255,255,255,0.06)] h-2 rounded-full overflow-hidden">
+                <div className="w-full bg-white/10 h-2 rounded-full overflow-hidden">
                   <div
-                    className="h-2 bg-gradient-to-r from-[#7C6FFF] to-[#00D4FF] rounded-full transition-all duration-300"
+                    className="h-2 bg-gradient-to-r from-[emerald-400] to-[sky-400] rounded-full transition-all duration-300"
                     style={{ width: `${uploadProgress}%` }}
                   />
                 </div>
@@ -272,7 +272,7 @@ export default function DocumentsPage() {
       {/* Search Filter Bar */}
       <motion.div variants={itemVariants} className="flex gap-4">
         <div className="relative flex-1">
-          <Search className="absolute left-4 top-1/2 -translate-y-1/2 w-4 h-4 text-[#4A5568]" />
+          <Search className="absolute left-4 top-1/2 -translate-y-1/2 w-4 h-4 text-[slate-500]" />
           <input
             type="text"
             placeholder="Search documents by title or subject..."
@@ -294,15 +294,15 @@ export default function DocumentsPage() {
           ))}
         </div>
       ) : isError ? (
-        <div className="text-center py-12 text-[#FF6B6B]">
+        <div className="text-center py-12 text-[rose-500]">
           <AlertCircle className="w-10 h-10 mx-auto mb-3" />
           <p className="font-semibold">Unable to fetch document library.</p>
         </div>
       ) : filteredDocs.length === 0 ? (
-        <div className="text-center py-20 border border-[rgba(255,255,255,0.05)] rounded-3xl bg-[rgba(15,15,45,0.2)]">
-          <FileText className="w-12 h-12 mx-auto mb-4 opacity-20 text-[#8892A4]" />
-          <h3 className="text-lg font-bold font-heading text-[#F0F0FF]">No documents found</h3>
-          <p className="text-xs text-[#8892A4] mt-1 max-w-xs mx-auto">
+        <div className="text-center py-20 border border-white/5 rounded-3xl bg-white/5">
+          <FileText className="w-12 h-12 mx-auto mb-4 opacity-20 text-[slate-400]" />
+          <h3 className="text-lg font-bold font-heading text-[white]">No documents found</h3>
+          <p className="text-xs text-[slate-400] mt-1 max-w-xs mx-auto">
             {searchQuery ? 'No materials match your query.' : 'Upload study materials above to get started.'}
           </p>
         </div>

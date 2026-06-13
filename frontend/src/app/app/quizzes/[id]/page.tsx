@@ -31,9 +31,9 @@ const itemVariants = {
 };
 
 const difficultyColors = {
-  easy: 'bg-[rgba(0,229,160,0.1)] text-[#00E5A0] border border-[rgba(0,229,160,0.2)]',
-  medium: 'bg-[rgba(255,176,32,0.1)] text-[#FFB020] border border-[rgba(255,176,32,0.2)]',
-  hard: 'bg-[rgba(255,107,107,0.1)] text-[#FF6B6B] border border-[rgba(255,107,107,0.2)]',
+  easy: 'bg-emerald-400/10 text-[emerald-400] border border-emerald-500/20',
+  medium: 'bg-amber-500/10 text-[amber-400] border border-amber-500/20',
+  hard: 'bg-rose-500/10 text-[rose-500] border border-rose-500/20',
 };
 
 export default function QuizLobbyPage() {
@@ -64,11 +64,11 @@ export default function QuizLobbyPage() {
   if (isError || !quiz) {
     return (
       <div className="flex flex-col items-center justify-center min-h-[60vh] text-center p-6 space-y-4">
-        <div className="w-16 h-16 rounded-full bg-[rgba(255,107,107,0.1)] flex items-center justify-center">
-          <Brain className="w-8 h-8 text-[#FF6B6B]" />
+        <div className="w-16 h-16 rounded-full bg-rose-500/10 flex items-center justify-center">
+          <Brain className="w-8 h-8 text-[rose-500]" />
         </div>
-        <h3 className="text-xl font-bold font-heading text-[#F0F0FF]">Quiz not found</h3>
-        <p className="text-[#8892A4] max-w-sm">
+        <h3 className="text-xl font-bold font-heading text-[white]">Quiz not found</h3>
+        <p className="text-[slate-400] max-w-sm">
           We could not load this quiz. It might have been deleted or doesn't belong to your account.
         </p>
         <Link href="/app/quizzes">
@@ -87,7 +87,7 @@ export default function QuizLobbyPage() {
     >
       {/* Back button */}
       <motion.div variants={itemVariants}>
-        <Link href="/app/quizzes" className="inline-flex items-center gap-1 text-xs text-[#8892A4] hover:text-[#7C6FFF] transition-colors">
+        <Link href="/app/quizzes" className="inline-flex items-center gap-1 text-xs text-[slate-400] hover:text-[emerald-400] transition-colors">
           <ChevronLeft className="w-4 h-4" />
           Back to Quizzes
         </Link>
@@ -95,44 +95,44 @@ export default function QuizLobbyPage() {
 
       {/* Main Lobby Card */}
       <motion.div variants={itemVariants}>
-        <Card className="p-6 md:p-8 space-y-6 text-center border-[rgba(124,111,255,0.15)] relative overflow-hidden bg-gradient-to-b from-[rgba(124,111,255,0.05)] to-transparent">
-          <div className="w-16 h-16 rounded-2xl bg-[rgba(124,111,255,0.1)] flex items-center justify-center text-[#7C6FFF] mx-auto">
+        <Card className="p-6 md:p-8 space-y-6 text-center border-emerald-500/15 relative overflow-hidden bg-gradient-to-b from-[rgba(124,111,255,0.05)] to-transparent">
+          <div className="w-16 h-16 rounded-2xl bg-emerald-500/10 flex items-center justify-center text-[emerald-400] mx-auto">
             <Brain className="w-8 h-8" />
           </div>
 
           <div className="space-y-2">
-            <h1 className="text-2xl md:text-3xl font-bold font-heading text-[#F0F0FF]">
+            <h1 className="text-2xl md:text-3xl font-bold font-heading text-[white]">
               {quiz.title}
             </h1>
             <div className="flex justify-center items-center gap-2.5 flex-wrap">
               {quiz.subject && (
-                <Badge className="bg-[rgba(124,111,255,0.15)] text-[#9D93FF] border border-[rgba(124,111,255,0.25)] font-semibold text-xs">
+                <Badge className="bg-emerald-500/15 text-[emerald-300] border border-emerald-500/25 font-semibold text-xs">
                   {quiz.subject}
                 </Badge>
               )}
               <Badge className={`${difficultyColors[quiz.difficulty as keyof typeof difficultyColors]} text-xs uppercase font-bold`}>
                 {quiz.difficulty}
               </Badge>
-              <Badge className="bg-[rgba(0,212,255,0.1)] text-[#00D4FF] border border-[rgba(0,212,255,0.2)] font-semibold text-xs uppercase">
+              <Badge className="bg-sky-500/10 text-[sky-400] border border-[rgba(0,212,255,0.2)] font-semibold text-xs uppercase">
                 {quiz.exam_style}
               </Badge>
             </div>
           </div>
 
-          <div className="grid grid-cols-2 gap-4 max-w-sm mx-auto pt-4 text-left border-y border-[rgba(255,255,255,0.06)] py-6">
+          <div className="grid grid-cols-2 gap-4 max-w-sm mx-auto pt-4 text-left border-y border-white/10 py-6">
             <div className="flex items-center gap-3">
-              <ClipboardList className="w-5 h-5 text-[#8892A4]" />
+              <ClipboardList className="w-5 h-5 text-[slate-400]" />
               <div>
-                <p className="text-[10px] uppercase font-bold tracking-wider text-[#8892A4]">Questions</p>
-                <p className="font-semibold text-[#F0F0FF]">{quiz.question_count} Qs</p>
+                <p className="text-[10px] uppercase font-bold tracking-wider text-[slate-400]">Questions</p>
+                <p className="font-semibold text-[white]">{quiz.question_count} Qs</p>
               </div>
             </div>
             
             <div className="flex items-center gap-3">
-              <Clock className="w-5 h-5 text-[#8892A4]" />
+              <Clock className="w-5 h-5 text-[slate-400]" />
               <div>
-                <p className="text-[10px] uppercase font-bold tracking-wider text-[#8892A4]">Time Limit</p>
-                <p className="font-semibold text-[#F0F0FF]">
+                <p className="text-[10px] uppercase font-bold tracking-wider text-[slate-400]">Time Limit</p>
+                <p className="font-semibold text-[white]">
                   {quiz.time_limit_minutes ? `${quiz.time_limit_minutes} Mins` : 'No Limit'}
                 </p>
               </div>
@@ -149,7 +149,7 @@ export default function QuizLobbyPage() {
               <Play className="w-4 h-4 fill-white" />
               {starting ? 'Starting Attempt...' : 'Start Quiz Attempt'}
             </Button>
-            <p className="text-[10px] text-[#8892A4]">
+            <p className="text-[10px] text-[slate-400]">
               By starting, a timer will begin. Once submitted, your scores will be logged in your profile history and you will earn XP.
             </p>
           </div>
@@ -159,12 +159,12 @@ export default function QuizLobbyPage() {
       {/* Instructions Card */}
       <motion.div variants={itemVariants}>
         <Card className="p-6 md:p-8 space-y-6">
-          <div className="flex items-center gap-2 border-b border-[rgba(255,255,255,0.06)] pb-4">
-            <Award className="w-5 h-5 text-[#FFB020]" />
-            <h2 className="text-lg font-bold font-heading text-[#F0F0FF]">Exam Instructions</h2>
+          <div className="flex items-center gap-2 border-b border-white/10 pb-4">
+            <Award className="w-5 h-5 text-[amber-400]" />
+            <h2 className="text-lg font-bold font-heading text-[white]">Exam Instructions</h2>
           </div>
 
-          <ul className="space-y-3 text-xs text-[#8892A4] list-disc pl-5 leading-relaxed">
+          <ul className="space-y-3 text-xs text-[slate-400] list-disc pl-5 leading-relaxed">
             <li>Ensure you have a stable internet connection before beginning.</li>
             <li>Once you start, the timer will countdown continuously. Leaving the page does NOT pause the timer.</li>
             <li>For multiple-choice questions (MCQs), select the single best option.</li>

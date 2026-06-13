@@ -24,10 +24,10 @@ export function Progress({
   const percentage = Math.min(Math.max((value / max) * 100, 0), 100);
 
   const variantStyles = {
-    primary: 'from-[#7C6FFF] to-[#00D4FF]',
-    success: 'from-[#00E5A0] to-[#00C87A]',
-    warning: 'from-[#FFB020] to-[#FF8C42]',
-    danger: 'from-[#FF6B6B] to-[#FF4545]',
+    primary: 'from-emerald-400 to-emerald-600',
+    success: 'from-emerald-400 to-emerald-600',
+    warning: 'from-amber-400 to-amber-600',
+    danger: 'from-rose-400 to-rose-600',
   };
 
   const sizeStyles = {
@@ -40,9 +40,9 @@ export function Progress({
     <div className={cn('w-full', className)}>
       <div
         className={cn(
-          'w-full rounded-full overflow-hidden',
+          'w-full rounded-full overflow-hidden shadow-inner',
           sizeStyles[size],
-          'bg-[rgba(255,255,255,0.06)]'
+          'bg-black/20 backdrop-blur-sm border border-white/5'
         )}
       >
         <div
@@ -59,9 +59,9 @@ export function Progress({
         />
       </div>
       {showLabel && (
-        <div className="flex justify-between mt-1">
-          <span className="text-xs text-[#8892A4]">{percentage.toFixed(0)}%</span>
-          <span className="text-xs text-[#8892A4]">
+        <div className="flex justify-between mt-1.5">
+          <span className="text-xs font-medium text-slate-400">{percentage.toFixed(0)}%</span>
+          <span className="text-xs font-medium text-slate-400">
             {value}/{max}
           </span>
         </div>
