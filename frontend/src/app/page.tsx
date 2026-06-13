@@ -105,30 +105,16 @@ export default function LandingPage() {
           transition={{ delay: 0.5, duration: 1, type: "spring" }}
           className="max-w-6xl mx-auto mt-24 relative z-20"
         >
-          <div className="glass-card-heavy p-2 aspect-video rounded-3xl overflow-hidden shadow-2xl shadow-emerald-500/10">
-            {/* Mockup UI Inside */}
-            <div className="w-full h-full bg-surface/80 rounded-2xl border border-white/5 flex flex-col relative overflow-hidden">
-              <div className="h-12 border-b border-white/5 flex items-center px-6 gap-4">
-                <div className="flex gap-2">
-                  <div className="w-3 h-3 rounded-full bg-rose-500/50" />
-                  <div className="w-3 h-3 rounded-full bg-amber-500/50" />
-                  <div className="w-3 h-3 rounded-full bg-emerald-500/50" />
-                </div>
-                <div className="h-6 w-64 bg-white/5 rounded-md mx-auto" />
-              </div>
-              <div className="flex-1 p-8 flex gap-8">
-                <div className="w-64 space-y-4">
-                  <div className="h-8 w-32 bg-emerald-500/20 rounded-lg" />
-                  <div className="h-4 w-full bg-white/5 rounded-lg" />
-                  <div className="h-4 w-5/6 bg-white/5 rounded-lg" />
-                  <div className="h-4 w-4/6 bg-white/5 rounded-lg" />
-                </div>
-                <div className="flex-1 grid grid-cols-2 gap-6">
-                  <div className="glass-card bg-emerald-500/5 rounded-2xl p-6 h-48" />
-                  <div className="glass-card bg-amber-500/5 rounded-2xl p-6 h-48" />
-                  <div className="glass-card col-span-2 rounded-2xl p-6 h-64" />
-                </div>
-              </div>
+          <div className="glass-card-heavy p-2 aspect-video rounded-3xl overflow-hidden shadow-2xl shadow-emerald-500/20 relative group">
+            {/* Real Dashboard Image */}
+            <div className="w-full h-full relative rounded-2xl overflow-hidden bg-surface/80 border border-white/10">
+              <img 
+                src="/dashboard-mockup.png" 
+                alt="EduQuiz AI Dashboard Interface Preview" 
+                className="w-full h-full object-cover transform group-hover:scale-105 transition-transform duration-700"
+              />
+              {/* Optional overlay gradient for blending */}
+              <div className="absolute inset-0 bg-gradient-to-t from-[#0a0a1a] via-transparent to-transparent opacity-60 pointer-events-none" />
             </div>
           </div>
         </motion.div>
@@ -174,6 +160,54 @@ export default function LandingPage() {
         </div>
       </section>
 
+      {/* Testimonials Section */}
+      <section className="py-32 px-6 relative z-20 bg-surface/30">
+        <div className="max-w-7xl mx-auto">
+          <div className="text-center mb-20">
+            <h2 className="text-4xl md:text-5xl font-heading font-bold text-white mb-6">Success Stories</h2>
+            <p className="text-xl text-slate-400 max-w-2xl mx-auto">Hear from Nigerian students who actually gained something from our app.</p>
+          </div>
+
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+            <div className="glass-card p-8 border-emerald-500/20 relative group">
+              <div className="absolute -top-4 -left-4 text-6xl text-emerald-500/20 font-serif">"</div>
+              <p className="text-slate-300 mb-6 relative z-10 italic">"I was struggling with Physics WAEC questions until I started generating quizzes directly from my school notes. I finally scored an A1!"</p>
+              <div className="flex items-center gap-4 border-t border-white/10 pt-4">
+                <div className="w-10 h-10 rounded-full bg-gradient-to-tr from-emerald-400 to-sky-400 flex items-center justify-center font-bold text-white">D</div>
+                <div>
+                  <h4 className="font-bold text-white">David O.</h4>
+                  <p className="text-xs text-slate-400">SS3 Student</p>
+                </div>
+              </div>
+            </div>
+
+            <div className="glass-card p-8 border-amber-500/20 relative group">
+              <div className="absolute -top-4 -left-4 text-6xl text-amber-500/20 font-serif">"</div>
+              <p className="text-slate-300 mb-6 relative z-10 italic">"The JAMB formatted tests are incredibly accurate. It helped me practice my timing and I crossed the 300 mark easily."</p>
+              <div className="flex items-center gap-4 border-t border-white/10 pt-4">
+                <div className="w-10 h-10 rounded-full bg-gradient-to-tr from-amber-400 to-rose-400 flex items-center justify-center font-bold text-white">S</div>
+                <div>
+                  <h4 className="font-bold text-white">Sarah T.</h4>
+                  <p className="text-xs text-slate-400">University Aspirant</p>
+                </div>
+              </div>
+            </div>
+
+            <div className="glass-card p-8 border-sky-500/20 relative group">
+              <div className="absolute -top-4 -left-4 text-6xl text-sky-500/20 font-serif">"</div>
+              <p className="text-slate-300 mb-6 relative z-10 italic">"Instead of just reading 100-page handouts, I use EduQuiz to test myself. My GPA in Computer Science shot up immediately."</p>
+              <div className="flex items-center gap-4 border-t border-white/10 pt-4">
+                <div className="w-10 h-10 rounded-full bg-gradient-to-tr from-sky-400 to-purple-400 flex items-center justify-center font-bold text-white">E</div>
+                <div>
+                  <h4 className="font-bold text-white">Emmanuel K.</h4>
+                  <p className="text-xs text-slate-400">100 Level, Unilag</p>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
       {/* Call to Action */}
       <section className="py-32 px-6 relative z-20">
         <div className="max-w-4xl mx-auto glass-card-heavy border-emerald-500/20 p-16 text-center relative overflow-hidden">
@@ -190,13 +224,16 @@ export default function LandingPage() {
       </section>
 
       {/* Footer */}
-      <footer className="border-t border-white/5 py-12 px-6 relative z-20">
+      <footer className="border-t border-white/5 py-12 px-6 relative z-20 bg-[#0a0a1a]">
         <div className="max-w-7xl mx-auto flex flex-col md:flex-row items-center justify-between gap-6">
           <div className="flex items-center gap-2">
-            <Brain className="w-5 h-5 text-emerald-400" />
-            <span className="font-heading font-bold text-white">EduQuiz AI</span>
+            <Brain className="w-6 h-6 text-emerald-400" />
+            <span className="font-heading font-bold text-xl text-white tracking-tight">EduQuiz AI</span>
           </div>
-          <p className="text-sm text-slate-500">© 2026 EduQuiz AI Platform. Designed for Excellence.</p>
+          <div className="flex flex-col items-center md:items-end gap-1">
+            <p className="text-sm font-semibold text-emerald-400">Made by Master_AY</p>
+            <p className="text-xs text-slate-500">© 2026 EduQuiz AI Platform. Designed for Excellence.</p>
+          </div>
         </div>
       </footer>
     </div>
