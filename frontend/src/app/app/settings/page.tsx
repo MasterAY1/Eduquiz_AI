@@ -142,10 +142,10 @@ export default function SettingsPage() {
               <h2 className="text-xl font-bold font-heading text-[white]">Personal Information</h2>
             </div>
 
-            <form onSubmit={handleSave} className="space-y-6">
+            <form onSubmit={handleSave} className="space-y-8">
               {/* Name & Email */}
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                <div className="space-y-1.5">
+              <div className="space-y-5">
+                <div className="space-y-2">
                   <label className="text-xs font-semibold text-[slate-400] uppercase tracking-wider">Full Name</label>
                   <input
                     type="text"
@@ -156,7 +156,7 @@ export default function SettingsPage() {
                   />
                 </div>
 
-                <div className="space-y-1.5">
+                <div className="space-y-2">
                   <label className="text-xs font-semibold text-[slate-500] uppercase tracking-wider">Email Address (Read-only)</label>
                   <input
                     type="email"
@@ -168,14 +168,14 @@ export default function SettingsPage() {
               </div>
 
               {/* School Information */}
-              <div className="space-y-4">
-                <div className="flex items-center gap-2 border-b border-white/10 pb-2 pt-2">
-                  <School className="w-4 h-4 text-[sky-400]" />
-                  <h3 className="font-heading font-semibold text-sm text-[white]">School & Department</h3>
+              <div className="space-y-5 pt-4">
+                <div className="flex items-center gap-2 border-b border-white/10 pb-3">
+                  <School className="w-5 h-5 text-[sky-400]" />
+                  <h3 className="font-heading font-semibold text-base text-[white]">School & Department</h3>
                 </div>
 
-                <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-                  <div className="space-y-1.5">
+                <div className="space-y-5">
+                  <div className="space-y-2">
                     <label className="text-xs font-semibold text-[slate-400] uppercase tracking-wider">School / University</label>
                     <input
                       type="text"
@@ -186,7 +186,7 @@ export default function SettingsPage() {
                     />
                   </div>
 
-                  <div className="space-y-1.5">
+                  <div className="space-y-2">
                     <label className="text-xs font-semibold text-[slate-400] uppercase tracking-wider">Department / Faculty</label>
                     <input
                       type="text"
@@ -197,7 +197,7 @@ export default function SettingsPage() {
                     />
                   </div>
 
-                  <div className="space-y-1.5">
+                  <div className="space-y-2">
                     <label className="text-xs font-semibold text-[slate-400] uppercase tracking-wider">Class Level</label>
                     <input
                       type="text"
@@ -211,13 +211,13 @@ export default function SettingsPage() {
               </div>
 
               {/* Preferred Subjects */}
-              <div className="space-y-4">
-                <div className="flex items-center gap-2 border-b border-white/10 pb-2 pt-2">
-                  <BookOpen className="w-4 h-4 text-[emerald-400]" />
-                  <h3 className="font-heading font-semibold text-sm text-[white]">Subjects Interests</h3>
+              <div className="space-y-5 pt-4">
+                <div className="flex items-center gap-2 border-b border-white/10 pb-3">
+                  <BookOpen className="w-5 h-5 text-[emerald-400]" />
+                  <h3 className="font-heading font-semibold text-base text-[white]">Subjects Interests</h3>
                 </div>
 
-                <div className="space-y-1.5">
+                <div className="space-y-2">
                   <label className="text-xs font-semibold text-[slate-400] uppercase tracking-wider">Preferred Subjects</label>
                   <input
                     type="text"
@@ -233,11 +233,11 @@ export default function SettingsPage() {
               </div>
 
               {/* Submit btn */}
-              <div className="pt-2">
+              <div className="pt-6 border-t border-white/10 flex justify-end">
                 <Button
                   type="submit"
                   variant="primary"
-                  className="w-full sm:w-auto font-semibold flex items-center justify-center gap-2 px-6 py-3 glow-primary"
+                  className="w-full sm:w-auto font-semibold flex items-center justify-center gap-2 px-8 py-3 glow-primary"
                   disabled={updateProfile.isPending}
                 >
                   <Save className="w-4 h-4" />

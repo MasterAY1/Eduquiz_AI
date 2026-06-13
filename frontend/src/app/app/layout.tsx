@@ -165,13 +165,7 @@ export default function AppLayout({ children }: { children: React.ReactNode }) {
             <h1 className="font-heading font-bold text-2xl text-white tracking-tight">{pageTitle}</h1>
           </div>
           <div className="flex items-center gap-4">
-            <button
-              className="relative p-2.5 text-slate-400 hover:text-white transition-colors rounded-xl hover:bg-white/5 border border-transparent hover:border-white/10"
-              aria-label="Notifications"
-            >
-              <Bell className="w-5 h-5" />
-              <span className="absolute top-2.5 right-2.5 w-2 h-2 rounded-full bg-emerald-500 shadow-[0_0_8px_16 185 129 / 0.8]" />
-            </button>
+            {/* Optional right-side actions can be added here in the future */}
           </div>
         </header>
 
