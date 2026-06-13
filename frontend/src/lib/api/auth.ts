@@ -28,11 +28,7 @@ export const authApi = {
     const formData = new FormData();
     formData.append('file', file);
     return apiClient
-      .post<User>('/api/v1/auth/me/avatar', formData, {
-        headers: {
-          'Content-Type': 'multipart/form-data',
-        },
-      })
+      .post<User>('/api/v1/auth/me/avatar', formData)
       .then((r) => r.data);
   },
 };
