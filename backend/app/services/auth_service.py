@@ -27,7 +27,7 @@ from app.utils.security import (
     hash_token,
     verify_password,
 )
-from app.storage.cloudinary_storage import upload_to_cloudinary
+from app.storage.cloudinary_storage import storage as cloudinary_storage
 
 logger = get_logger(__name__)
 
@@ -314,12 +314,13 @@ class AuthService:
         # Upload to Cloudinary
         file_content = await file.read()
         try:
-            upload_result = await upload_to_cloudinary(
-                file_content,
-                filename=file.filename,
-                folder="avatars"
+            secure_url = await cloudinary_storage.upload_file(
+                file_bytes=file_content,
+                user_id=str(user_id),
+                filename=file.filename or "avatar.jpg",
+                resource_type="image"
             )
-            user.avatar_url = upload_result["secure_url"]
+            user.avatar_url = secure_url
             await db.flush()
             logger.info(f"Avatar updated for user {user_id}")
             return user
