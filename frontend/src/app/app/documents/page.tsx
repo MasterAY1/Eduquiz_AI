@@ -270,7 +270,7 @@ export default function DocumentsPage() {
       </motion.div>
 
       {/* Search Filter Bar */}
-      <motion.div variants={itemVariants} className="flex gap-4">
+      <motion.div variants={itemVariants} className="flex flex-col sm:flex-row gap-4">
         <div className="relative flex-1">
           <Search className="absolute left-4 top-1/2 -translate-y-1/2 w-4 h-4 text-[slate-500]" />
           <input
@@ -278,10 +278,11 @@ export default function DocumentsPage() {
             placeholder="Search documents by title or subject..."
             value={searchQuery}
             onChange={(e) => setSearchQuery(e.target.value)}
-            className="input-glass pl-11"
+            className="input-glass pl-11 w-full"
           />
         </div>
-        <Button onClick={() => refetch()} variant="ghost" size="md">
+        <Button onClick={() => refetch()} variant="ghost" size="md" className="sm:w-auto w-full flex items-center justify-center gap-2">
+          <Clock className="w-4 h-4" />
           Refresh
         </Button>
       </motion.div>
