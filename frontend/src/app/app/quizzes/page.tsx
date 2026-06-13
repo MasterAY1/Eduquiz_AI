@@ -152,65 +152,98 @@ function QuizzesContent() {
                 </div>
 
                 {/* Exam Style */}
-                <div className="space-y-1.5">
-                  <label className="text-xs font-semibold text-[slate-400] uppercase tracking-wider">Exam Format Style</label>
-                  <select
-                    value={examStyle}
-                    onChange={(e) => setExamStyle(e.target.value)}
-                    className="input-glass"
-                  >
-                    <option value="standard" className="bg-[#0F0F2D]">Standard (General Practice)</option>
-                    <option value="waec" className="bg-[#0F0F2D]">WAEC Format (5 Options)</option>
-                    <option value="jamb" className="bg-[#0F0F2D]">JAMB Format (4 Options)</option>
-                    <option value="neco" className="bg-[#0F0F2D]">NECO Format (5 Options)</option>
-                    <option value="bece" className="bg-[#0F0F2D]">BECE Junior Secondary Format</option>
-                    <option value="university_theory" className="bg-[#0F0F2D]">University Theory Exam (Sub-parts)</option>
-                  </select>
+                <div className="space-y-2">
+                  <label className="text-xs font-semibold text-[slate-400] uppercase tracking-wider">Exam Format</label>
+                  <div className="relative">
+                    <select
+                      value={examStyle}
+                      onChange={(e) => setExamStyle(e.target.value)}
+                      className="input-glass select-arrow w-full pl-10"
+                    >
+                      <option value="standard" className="bg-[#0F0F2D]">Standard (General Practice)</option>
+                      <option value="waec" className="bg-[#0F0F2D]">WAEC Format (5 Options)</option>
+                      <option value="jamb" className="bg-[#0F0F2D]">JAMB Format (4 Options)</option>
+                      <option value="neco" className="bg-[#0F0F2D]">NECO Format (5 Options)</option>
+                      <option value="bece" className="bg-[#0F0F2D]">BECE Junior Secondary</option>
+                      <option value="university_theory" className="bg-[#0F0F2D]">University Theory Exam</option>
+                    </select>
+                    <div className="absolute left-3 top-1/2 -translate-y-1/2 pointer-events-none text-emerald-400">
+                      <FileText className="w-4 h-4" />
+                    </div>
+                  </div>
                 </div>
 
-                {/* Difficulty & Count */}
-                <div className="grid grid-cols-2 gap-4">
-                  <div className="space-y-1.5">
-                    <label className="text-xs font-semibold text-[slate-400] uppercase tracking-wider">Difficulty</label>
-                    <select
-                      value={difficulty}
-                      onChange={(e) => setDifficulty(e.target.value)}
-                      className="input-glass"
-                    >
-                      <option value="easy" className="bg-[#0F0F2D]">Easy</option>
-                      <option value="medium" className="bg-[#0F0F2D]">Medium</option>
-                      <option value="hard" className="bg-[#0F0F2D]">Hard</option>
-                    </select>
+                {/* Difficulty & Count using Chips */}
+                <div className="space-y-4">
+                  <div className="space-y-2">
+                    <label className="text-xs font-semibold text-[slate-400] uppercase tracking-wider flex justify-between">
+                      <span>Difficulty Level</span>
+                      <span className="text-emerald-400 capitalize">{difficulty}</span>
+                    </label>
+                    <div className="flex bg-white/5 p-1 rounded-xl border border-white/10">
+                      {['easy', 'medium', 'hard'].map((level) => (
+                        <button
+                          key={level}
+                          type="button"
+                          onClick={() => setDifficulty(level)}
+                          className={`flex-1 py-1.5 text-xs font-semibold rounded-lg capitalize transition-all ${
+                            difficulty === level
+                              ? level === 'easy' ? 'bg-emerald-500 text-white shadow-md' :
+                                level === 'medium' ? 'bg-amber-500 text-white shadow-md' :
+                                'bg-rose-500 text-white shadow-md'
+                              : 'text-slate-400 hover:text-white'
+                          }`}
+                        >
+                          {level}
+                        </button>
+                      ))}
+                    </div>
                   </div>
 
-                  <div className="space-y-1.5">
-                    <label className="text-xs font-semibold text-[slate-400] uppercase tracking-wider">Questions</label>
-                    <select
-                      value={questionCount}
-                      onChange={(e) => setQuestionCount(Number(e.target.value))}
-                      className="input-glass"
-                    >
-                      <option value="5" className="bg-[#0F0F2D]">5</option>
-                      <option value="10" className="bg-[#0F0F2D]">10</option>
-                      <option value="20" className="bg-[#0F0F2D]">20</option>
-                      <option value="30" className="bg-[#0F0F2D]">30</option>
-                      <option value="50" className="bg-[#0F0F2D]">50</option>
-                    </select>
+                  <div className="space-y-2">
+                    <label className="text-xs font-semibold text-[slate-400] uppercase tracking-wider flex justify-between">
+                      <span>Number of Questions</span>
+                      <span className="text-emerald-400">{questionCount}</span>
+                    </label>
+                    <div className="grid grid-cols-5 gap-1.5">
+                      {[5, 10, 20, 30, 50].map((num) => (
+                        <button
+                          key={num}
+                          type="button"
+                          onClick={() => setQuestionCount(num)}
+                          className={`py-1.5 text-xs font-semibold rounded-lg transition-all border ${
+                            questionCount === num
+                              ? 'bg-emerald-500/20 text-emerald-400 border-emerald-500/50'
+                              : 'bg-white/5 text-slate-400 border-transparent hover:bg-white/10 hover:text-white'
+                          }`}
+                        >
+                          {num}
+                        </button>
+                      ))}
+                    </div>
                   </div>
                 </div>
 
                 {/* Time Limit */}
-                <div className="space-y-1.5">
-                  <label className="text-xs font-semibold text-[slate-400] uppercase tracking-wider">Time Limit (Minutes)</label>
-                  <input
-                    type="number"
-                    placeholder="Unlimited"
-                    value={timeLimit}
-                    onChange={(e) => setTimeLimit(e.target.value === '' ? '' : Number(e.target.value))}
-                    min={1}
-                    max={180}
-                    className="input-glass"
-                  />
+                <div className="space-y-2">
+                  <label className="text-xs font-semibold text-[slate-400] uppercase tracking-wider flex items-center justify-between">
+                    <span>Time Limit</span>
+                    {timeLimit && <span className="text-emerald-400">{timeLimit} min</span>}
+                  </label>
+                  <div className="relative">
+                    <input
+                      type="number"
+                      placeholder="Unlimited"
+                      value={timeLimit}
+                      onChange={(e) => setTimeLimit(e.target.value === '' ? '' : Number(e.target.value))}
+                      min={1}
+                      max={180}
+                      className="input-glass pl-10"
+                    />
+                    <div className="absolute left-3 top-1/2 -translate-y-1/2 pointer-events-none text-slate-400">
+                      <Clock className="w-4 h-4" />
+                    </div>
+                  </div>
                 </div>
 
                 {/* Question Types */}
@@ -229,8 +262,8 @@ function QuizzesContent() {
                         onClick={() => handleTypeToggle(type.key)}
                         className={`px-3 py-2 text-left text-xs font-semibold rounded-xl border transition-all ${
                           questionTypes.includes(type.key)
-                            ? 'bg-[rgba(124,111,255,0.12)] text-[emerald-300] border-[rgba(124,111,255,0.4)]'
-                            : 'bg-transparent text-[slate-400] border-white/10 hover:border-white/10'
+                            ? 'bg-emerald-500/20 text-emerald-400 border-emerald-500/40 shadow-[inset_0_0_12px_rgba(16,185,129,0.1)]'
+                            : 'bg-white/5 text-slate-400 border-white/5 hover:border-emerald-500/20'
                         }`}
                       >
                         {type.label}
