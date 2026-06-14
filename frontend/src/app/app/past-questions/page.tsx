@@ -120,7 +120,7 @@ export default function PastQuestionsPage() {
               )}
             </div>
             
-            <Button variant="outline" size="sm" className="w-full mt-2" onClick={() => refetch()}>
+            <Button variant="ghost" size="sm" className="w-full mt-2 border border-white/20" onClick={() => refetch()}>
               Refresh Intelligence
             </Button>
           </Card>

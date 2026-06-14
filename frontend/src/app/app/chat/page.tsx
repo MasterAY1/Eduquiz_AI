@@ -89,14 +89,14 @@ export default function ChatPage() {
               onChange={(e) => setNewSessionTitle(e.target.value)}
               className="h-9 text-sm"
             />
-            {documents && documents.length > 0 && (
+            {documents?.items && documents.items.length > 0 && (
               <select
                 className="w-full h-9 rounded-lg border border-white/10 bg-black/40 text-sm text-slate-300 px-3 outline-none focus:border-emerald-500/50 transition-colors"
                 value={selectedDocId || ''}
                 onChange={(e) => setSelectedDocId(e.target.value || null)}
               >
                 <option value="">No Document (General Chat)</option>
-                {documents.filter((d: any) => d.analysis_status === 'indexed').map((doc: any) => (
+                {documents.items.filter((d: any) => d.analysis_status === 'indexed').map((doc: any) => (
                   <option key={doc.id} value={doc.id}>
                     📎 {doc.title}
                   </option>

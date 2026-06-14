@@ -38,7 +38,7 @@ export default function ExamSimulatorPage() {
     });
   };
 
-  const indexedDocs = documents?.filter((d: any) => d.analysis_status === 'indexed') || [];
+  const indexedDocs = documents?.items?.filter((d: any) => d.analysis_status === 'indexed') || [];
 
   return (
     <div className="flex-1 overflow-y-auto p-4 lg:p-8">
@@ -129,7 +129,7 @@ export default function ExamSimulatorPage() {
                 ) : indexedDocs.length === 0 ? (
                   <div className="text-center p-4">
                     <p className="text-slate-400 text-sm mb-3">No indexed documents available to test on.</p>
-                    <Button variant="outline" onClick={() => router.push('/app/documents')}>
+                    <Button variant="ghost" onClick={() => router.push('/app/documents')} className="border border-white/20">
                       Upload Material First
                     </Button>
                   </div>
