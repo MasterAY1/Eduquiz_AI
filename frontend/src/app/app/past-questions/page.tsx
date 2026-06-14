@@ -2,7 +2,7 @@
 
 import { useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { History, UploadCloud, BookOpen, Search, Target, Lightbulb, AlertCircle, Loader2, FileUp, ListChecks } from 'lucide-react';
+import { History, UploadCloud, BookOpen, Search, Target, Lightbulb, AlertCircle, Loader2, FileUp, ListChecks, Brain } from 'lucide-react';
 import { useUploadDocument } from '@/hooks/useDocuments';
 import { usePastQuestionIntelligence } from '@/hooks/useAnalytics';
 import { Card } from '@/components/ui/Card';
