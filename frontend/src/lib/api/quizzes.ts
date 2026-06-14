@@ -30,4 +30,7 @@ export const quizzesApi = {
     apiClient
       .get<QuizAttempt>(`/api/v1/quizzes/attempt/${attemptId}`)
       .then((r) => r.data),
+
+  getTemplates: () =>
+    apiClient.get<any[]>('/api/v1/quizzes/templates').then((r) => r.data),
 };

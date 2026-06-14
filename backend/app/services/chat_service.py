@@ -121,10 +121,40 @@ class ChatService:
             if chunks:
                 rag_context = "\n\n".join([f"--- Excerpt {i+1} ---\n{c.content}" for i, c in enumerate(chunks)])
 
-        # 5. Generate AI Response
+        # 5. Fetch Teacher Persona via PromptService
+        from app.services.prompt_service import prompt_service
+        try:
+            rendered_prompt, p_id, p_ver, p_var = await prompt_service.get_formatted_prompt(
+                db, category="chat_tutor"
+            )
+            # Prepend the system prompt to the messages list
+            ai_messages.insert(0, {"role": "system", "content": rendered_prompt})
+            
+            # Save prompt reference to the session if it's the first message
+            if not session.prompt_id:
+                session.prompt_id = p_id
+                session.prompt_version = p_ver
+                session.prompt_variant = p_var
+        except ValueError:
+            # Fallback if the database doesn't have the prompt
+            ai_messages.insert(0, {
+                "role": "system", 
+                "content": "You are a professional Nigerian educator. Be strict, clear, and educational."
+            })
+
+        # 6. Generate AI Response
         ai_response_text = await self.router.chat(messages=ai_messages, context=rag_context)
 
-        # 6. Save AI Response
+        # 7. Deduct from UserQuota
+        from sqlalchemy import update
+        from app.models.security_and_metrics import UserQuota
+        await db.execute(
+            update(UserQuota)
+            .where(UserQuota.user_id == user_id)
+            .values(ai_requests_today=UserQuota.ai_requests_today + 1)
+        )
+
+        # 8. Save AI Response
         ai_msg = ChatMessage(session_id=session_id, sender="ai", content=ai_response_text)
         db.add(ai_msg)
         await db.commit()

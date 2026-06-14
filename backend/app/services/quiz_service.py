@@ -28,6 +28,38 @@ logger = get_logger(__name__)
 class QuizService:
     """Handles generating quizzes via AI, starting/submitting attempts, and scoring."""
 
+    def get_exam_templates(self):
+        """Returns standard configurations for WAEC, NECO, and JAMB."""
+        return [
+            {
+                "id": "jamb_cbt",
+                "name": "JAMB UTME Simulation",
+                "exam_style": "jamb",
+                "question_count": 60,
+                "time_limit_minutes": 45,
+                "description": "Strict CBT format with exactly 60 questions and 45 minutes time limit. Four options per question.",
+                "is_randomized": True
+            },
+            {
+                "id": "waec_ssce",
+                "name": "WAEC SSCE (Obj)",
+                "exam_style": "waec",
+                "question_count": 50,
+                "time_limit_minutes": 60,
+                "description": "Standard WAEC Objective test simulation. 50 questions, 1 hour.",
+                "is_randomized": False
+            },
+            {
+                "id": "neco_ssce",
+                "name": "NECO SSCE (Obj)",
+                "exam_style": "neco",
+                "question_count": 60,
+                "time_limit_minutes": 60,
+                "description": "Standard NECO Objective test simulation. 60 questions, 1 hour.",
+                "is_randomized": False
+            }
+        ]
+
     async def generate_quiz(
         self, db: AsyncSession, user_id: uuid.UUID, request: QuizGenerateRequest
     ) -> Quiz:

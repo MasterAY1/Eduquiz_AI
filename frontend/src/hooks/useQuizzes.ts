@@ -21,6 +21,13 @@ export function useQuiz(id: string) {
   });
 }
 
+export function useExamTemplates() {
+  return useQuery({
+    queryKey: ['examTemplates'],
+    queryFn: quizzesApi.getTemplates,
+  });
+}
+
 export function useGenerateQuiz() {
   const queryClient = useQueryClient();
   const addToast = useUIStore((s) => s.addToast);

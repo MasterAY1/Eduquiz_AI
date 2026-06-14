@@ -2,9 +2,12 @@ import { apiClient } from './client';
 import type { Document, DocumentStatus, DocumentListResponse } from '@/types';
 
 export const documentsApi = {
-  upload: (file: File, onProgress?: (progress: number) => void) => {
+  upload: (file: File, onProgress?: (progress: number) => void, category?: string) => {
     const form = new FormData();
     form.append('file', file);
+    if (category) {
+      form.append('category', category);
+    }
     return apiClient
       .post<Document>('/api/v1/documents/upload', form, {
         headers: { 'Content-Type': 'multipart/form-data' },

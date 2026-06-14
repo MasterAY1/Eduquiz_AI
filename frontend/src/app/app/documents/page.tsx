@@ -177,7 +177,7 @@ export default function DocumentsPage() {
   // Dropzone integration
   const onDrop = (acceptedFiles: File[]) => {
     if (acceptedFiles.length > 0) {
-      uploadDoc(acceptedFiles[0]);
+      uploadDoc({ file: acceptedFiles[0] });
     }
   };
 

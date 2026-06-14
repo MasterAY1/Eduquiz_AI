@@ -14,6 +14,10 @@ import {
   Bell,
   ChevronRight,
   Cpu,
+  MessageSquare,
+  BarChart3,
+  Timer,
+  History
 } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { useAuth } from '@/hooks/useAuth';
@@ -22,6 +26,10 @@ const navItems = [
   { href: '/app/dashboard', icon: LayoutDashboard, label: 'Dashboard' },
   { href: '/app/documents', icon: FileText, label: 'Documents' },
   { href: '/app/quizzes', icon: Brain, label: 'Quizzes' },
+  { href: '/app/chat', icon: MessageSquare, label: 'AI Tutor' },
+  { href: '/app/exam-simulator', icon: Timer, label: 'Exam Simulator' },
+  { href: '/app/past-questions', icon: History, label: 'Past Questions' },
+  { href: '/app/analytics', icon: BarChart3, label: 'Analytics' },
   { href: '/app/settings', icon: Settings, label: 'Settings' },
   { href: '/app/admin/ai', icon: Cpu, label: 'AI Monitor' },
 ];

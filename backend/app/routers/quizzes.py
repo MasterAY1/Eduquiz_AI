@@ -23,29 +23,7 @@ router = APIRouter(tags=["quizzes"])
 @router.get("/templates", status_code=status.HTTP_200_OK)
 async def get_quiz_templates():
     """Fetch configuration templates for CBT Exam Simulation."""
-    return {
-        "jamb": {
-            "name": "JAMB Simulation",
-            "question_count": 40,
-            "time_limit_minutes": 45,
-            "options_count": 4,
-            "is_randomized": True
-        },
-        "waec": {
-            "name": "WAEC Simulation",
-            "question_count": 50,
-            "time_limit_minutes": 60,
-            "options_count": 4,
-            "is_randomized": False
-        },
-        "neco": {
-            "name": "NECO Simulation",
-            "question_count": 60,
-            "time_limit_minutes": 75,
-            "options_count": 5,
-            "is_randomized": False
-        }
-    }
+    return quiz_service.get_exam_templates()
 
 
 

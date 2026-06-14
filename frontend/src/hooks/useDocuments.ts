@@ -39,8 +39,8 @@ export function useUploadDocument() {
   const [uploadProgress, setUploadProgress] = useState(0);
 
   const mutation = useMutation({
-    mutationFn: (file: File) =>
-      documentsApi.upload(file, (progress) => setUploadProgress(progress)),
+    mutationFn: ({ file, category }: { file: File; category?: string }) =>
+      documentsApi.upload(file, (progress) => setUploadProgress(progress), category),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['documents'] });
       addToast({ type: 'success', message: 'Document uploaded! AI is now analyzing it.' });
