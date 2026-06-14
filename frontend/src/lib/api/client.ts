@@ -36,6 +36,16 @@ apiClient.interceptors.response.use(
         document.cookie = `refresh_token=${data.refresh_token}; path=/; max-age=2592000; SameSite=Lax`;
         
         original.headers.Authorization = `Bearer ${data.access_token}`;
+        
+        // Prevent Axios from double-serializing JSON data on retry
+        if (typeof original.data === 'string') {
+          try {
+            original.data = JSON.parse(original.data);
+          } catch {
+            // leave as-is if not valid JSON
+          }
+        }
+        
         return apiClient(original);
       } catch {
         localStorage.clear();
