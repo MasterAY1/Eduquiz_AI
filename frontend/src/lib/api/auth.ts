@@ -24,26 +24,43 @@ export const authApi = {
   updateProfile: (data: Partial<User>) =>
     apiClient.put<User>('/api/v1/auth/me', data).then((r) => r.data),
 
-  uploadAvatar: async (file: File) => {
-    const formData = new FormData();
-    formData.append('file', file);
-    
-    const token = localStorage.getItem('access_token');
-    const baseUrl = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:8000';
-    
-    const res = await fetch(`${baseUrl}/api/v1/auth/me/avatar`, {
-      method: 'POST',
-      headers: {
-        Authorization: `Bearer ${token}`
-      },
-      body: formData
+  uploadAvatar: (file: File): Promise<User> => {
+    return new Promise((resolve, reject) => {
+      const formData = new FormData();
+      formData.append('file', new Blob([file], { type: file.type || 'image/jpeg' }), file.name || 'avatar.jpg');
+      
+      const token = localStorage.getItem('access_token');
+      const baseUrl = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:8000';
+      
+      const xhr = new XMLHttpRequest();
+      xhr.open('POST', `${baseUrl}/api/v1/auth/me/avatar`, true);
+      
+      if (token) {
+        xhr.setRequestHeader('Authorization', `Bearer ${token}`);
+      }
+      
+      xhr.onload = () => {
+        if (xhr.status >= 200 && xhr.status < 300) {
+          try {
+            resolve(JSON.parse(xhr.responseText));
+          } catch (e) {
+            resolve({} as User);
+          }
+        } else {
+          try {
+            const err = JSON.parse(xhr.responseText);
+            reject({ response: { data: err } });
+          } catch (e) {
+            reject({ response: { data: { detail: `HTTP ${xhr.status} Error` } } });
+          }
+        }
+      };
+      
+      xhr.onerror = () => {
+        reject({ response: { data: { detail: 'Network error during upload' } } });
+      };
+      
+      xhr.send(formData);
     });
-    
-    if (!res.ok) {
-      const errorData = await res.json().catch(() => ({ detail: 'Failed to upload photo.' }));
-      throw { response: { data: errorData } };
-    }
-    
-    return res.json() as Promise<User>;
   },
 };
