@@ -7,7 +7,7 @@ from app.models.user import User
 from app.schemas.analytics import PerformanceReport
 from app.services.analytics_service import analytics_service
 
-router = APIRouter(prefix="/analytics", tags=["Analytics"])
+router = APIRouter(tags=["Analytics"])
 
 
 @router.get("/performance/{subject}", response_model=PerformanceReport)
