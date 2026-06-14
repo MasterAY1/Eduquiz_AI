@@ -60,6 +60,7 @@ interface FormState {
 export default function RegisterPage() {
   const { register: registerMutation } = useAuth();
   const [step, setStep] = useState(1);
+  const [customSubjectInput, setCustomSubjectInput] = useState('');
   const [formState, setFormState] = useState<FormState>({
     full_name: '',
     email: '',
@@ -100,6 +101,16 @@ export default function RegisterPage() {
         ? prev.preferred_subjects.filter((s) => s !== subject)
         : [...prev.preferred_subjects, subject],
     }));
+  };
+
+  const handleAddCustomSubject = () => {
+    if (customSubjectInput.trim() && !formState.preferred_subjects.includes(customSubjectInput.trim())) {
+      setFormState((prev) => ({
+        ...prev,
+        preferred_subjects: [...prev.preferred_subjects, customSubjectInput.trim()],
+      }));
+      setCustomSubjectInput('');
+    }
   };
 
   const onFinalSubmit = () => {
@@ -353,6 +364,32 @@ export default function RegisterPage() {
                   );
                 })}
               </div>
+
+              {/* Custom Subject Input for Tertiary levels or general use */}
+              {['university', 'polytechnic', 'col_of_edu'].includes(formState.educational_level || '') ? (
+                <div className="flex gap-2 mt-4">
+                  <Input
+                    placeholder="E.g. Anatomy, Engineering Math"
+                    value={customSubjectInput}
+                    onChange={(e) => setCustomSubjectInput(e.target.value)}
+                    onKeyDown={(e) => {
+                      if (e.key === 'Enter') {
+                        e.preventDefault();
+                        handleAddCustomSubject();
+                      }
+                    }}
+                    className="flex-1 bg-white/5 border-white/10"
+                  />
+                  <Button 
+                    type="button" 
+                    variant="primary" 
+                    onClick={handleAddCustomSubject}
+                    disabled={!customSubjectInput.trim()}
+                  >
+                    Add
+                  </Button>
+                </div>
+              ) : null}
 
               {formState.preferred_subjects.length > 0 && (
                 <p className="text-xs text-emerald-400">

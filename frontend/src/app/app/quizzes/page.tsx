@@ -51,6 +51,7 @@ function QuizzesContent() {
   // Form State
   const [selectedDocId, setSelectedDocId] = useState('');
   const [examStyle, setExamStyle] = useState('standard');
+  const [selectedSubject, setSelectedSubject] = useState('All');
   const [difficulty, setDifficulty] = useState('medium');
   const [questionCount, setQuestionCount] = useState(10);
   const [questionTypes, setQuestionTypes] = useState<string[]>(['mcq']);
@@ -94,6 +95,22 @@ function QuizzesContent() {
 
   const docs = documentsData?.items || [];
   const readyDocs = docs.filter((d) => d.analysis_status === 'indexed');
+  const uniqueSubjects = Array.from(new Set(readyDocs.map(d => d.subject || 'General'))).sort();
+
+  const filteredDocs = selectedSubject === 'All' 
+    ? readyDocs 
+    : readyDocs.filter(d => (d.subject || 'General') === selectedSubject);
+
+  // Auto-select first doc when subject changes
+  useEffect(() => {
+    if (!docIdParam) {
+      if (filteredDocs.length > 0 && !filteredDocs.find(d => d.id === selectedDocId)) {
+        setSelectedDocId(filteredDocs[0].id);
+      } else if (filteredDocs.length === 0) {
+        setSelectedDocId('');
+      }
+    }
+  }, [filteredDocs, selectedDocId, docIdParam]);
 
   return (
     <motion.div
@@ -134,23 +151,6 @@ function QuizzesContent() {
               </div>
             ) : (
               <form onSubmit={handleGenerate} className="space-y-4">
-                {/* Select Material */}
-                <div className="space-y-1.5">
-                  <label className="text-xs font-semibold text-[slate-400] uppercase tracking-wider">Select Study Material</label>
-                  <select
-                    value={selectedDocId}
-                    onChange={(e) => setSelectedDocId(e.target.value)}
-                    className="input-glass select-arrow"
-                    required
-                  >
-                    {readyDocs.map((doc) => (
-                      <option key={doc.id} value={doc.id} className="bg-[#0F0F2D] text-[white]">
-                        {doc.title} ({doc.subject || 'General'})
-                      </option>
-                    ))}
-                  </select>
-                </div>
-
                 {/* Exam Style */}
                 <div className="space-y-2">
                   <label className="text-xs font-semibold text-[slate-400] uppercase tracking-wider">Exam Format</label>
@@ -171,6 +171,49 @@ function QuizzesContent() {
                       <FileText className="w-4 h-4" />
                     </div>
                   </div>
+                </div>
+
+                {/* Select Subject/Course */}
+                <div className="space-y-1.5">
+                  <label className="text-xs font-semibold text-[slate-400] uppercase tracking-wider">
+                    {examStyle === 'university_theory' ? 'Select Course' : 'Select Subject'}
+                  </label>
+                  <select
+                    value={selectedSubject}
+                    onChange={(e) => setSelectedSubject(e.target.value)}
+                    className="input-glass select-arrow"
+                    required
+                  >
+                    <option value="All" className="bg-[#0F0F2D] text-[white]">All Subjects/Courses</option>
+                    {uniqueSubjects.map((sub) => (
+                      <option key={sub} value={sub} className="bg-[#0F0F2D] text-[white]">
+                        {sub}
+                      </option>
+                    ))}
+                  </select>
+                </div>
+
+                {/* Select Material */}
+                <div className="space-y-1.5">
+                  <label className="text-xs font-semibold text-[slate-400] uppercase tracking-wider">Select Study Material</label>
+                  {filteredDocs.length === 0 ? (
+                    <div className="text-sm text-amber-400 bg-amber-500/10 p-2 rounded-lg">
+                      No documents available for this selection.
+                    </div>
+                  ) : (
+                    <select
+                      value={selectedDocId}
+                      onChange={(e) => setSelectedDocId(e.target.value)}
+                      className="input-glass select-arrow"
+                      required
+                    >
+                      {filteredDocs.map((doc) => (
+                        <option key={doc.id} value={doc.id} className="bg-[#0F0F2D] text-[white]">
+                          {doc.title}
+                        </option>
+                      ))}
+                    </select>
+                  )}
                 </div>
 
                 {/* Difficulty & Count using Chips */}
