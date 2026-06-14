@@ -28,7 +28,7 @@ import { useRouter } from 'next/navigation';
 
 export default function AnalyticsPage() {
   const router = useRouter();
-  const [subject, setSubject] = useState('Biology');
+  const [subject, setSubject] = useState('All');
   const [searchInput, setSearchInput] = useState('');
 
   const { data: report, isLoading } = usePerformanceReport(subject);

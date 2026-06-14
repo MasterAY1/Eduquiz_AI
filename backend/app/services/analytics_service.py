@@ -17,12 +17,12 @@ class AnalyticsService:
     async def get_performance_report(
         self, db: AsyncSession, user_id: uuid.UUID, subject: str
     ) -> PerformanceReport:
-        # Fetch all quiz attempts for the user in the given subject
+        query = select(QuizAttempt).join(Quiz).filter(QuizAttempt.user_id == user_id)
+        if subject.lower() != "all":
+            query = query.filter(Quiz.subject == subject)
+            
         result = await db.execute(
-            select(QuizAttempt)
-            .join(Quiz)
-            .filter(QuizAttempt.user_id == user_id, Quiz.subject == subject)
-            .options(selectinload(QuizAttempt.quiz).selectinload(Quiz.questions))
+            query.options(selectinload(QuizAttempt.quiz).selectinload(Quiz.questions))
         )
         attempts = result.scalars().all()
 
@@ -90,13 +90,14 @@ class AnalyticsService:
         from app.ai.router import ModelRouter
 
         # Fetch past questions for the user and subject
-        result = await db.execute(
-            select(Document).filter(
-                Document.user_id == user_id,
-                Document.subject == subject,
-                Document.category == "past_question"
-            )
+        query = select(Document).filter(
+            Document.user_id == user_id,
+            Document.category == "past_question"
         )
+        if subject.lower() != "all":
+            query = query.filter(Document.subject == subject)
+            
+        result = await db.execute(query)
         documents = result.scalars().all()
 
         if not documents:
