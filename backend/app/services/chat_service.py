@@ -121,26 +121,18 @@ class ChatService:
             if chunks:
                 rag_context = "\n\n".join([f"--- Excerpt {i+1} ---\n{c.content}" for i, c in enumerate(chunks)])
 
-        # 5. Fetch Teacher Persona via PromptService
+        # 5. Save Prompt reference to the session
         from app.services.prompt_service import prompt_service
-        try:
-            rendered_prompt, p_id, p_ver, p_var = await prompt_service.get_formatted_prompt(
-                db, category="chat_tutor"
-            )
-            # Prepend the system prompt to the messages list
-            ai_messages.insert(0, {"role": "system", "content": rendered_prompt})
-            
-            # Save prompt reference to the session if it's the first message
-            if not session.prompt_id:
+        if not session.prompt_id:
+            try:
+                _, p_id, p_ver, p_var = await prompt_service.get_formatted_prompt(
+                    db, category="tutor_chat"
+                )
                 session.prompt_id = p_id
                 session.prompt_version = p_ver
                 session.prompt_variant = p_var
-        except ValueError:
-            # Fallback if the database doesn't have the prompt
-            ai_messages.insert(0, {
-                "role": "system", 
-                "content": "You are a professional Nigerian educator. Be strict, clear, and educational."
-            })
+            except ValueError:
+                pass
 
         # 6. Generate AI Response
         ai_response_text = await self.router.chat(messages=ai_messages, context=rag_context)
