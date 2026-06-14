@@ -59,7 +59,7 @@ export default function RegisterPage() {
           <Input
             label="Full Name"
             placeholder="John Doe"
-            icon={<User className="w-5 h-5 text-slate-400" />}
+            leftIcon={<User className="w-5 h-5 text-slate-400" />}
             {...register('full_name')}
             error={errors.full_name?.message}
           />
@@ -68,7 +68,7 @@ export default function RegisterPage() {
             label="Email Address"
             type="email"
             placeholder="you@example.com"
-            icon={<Mail className="w-5 h-5 text-slate-400" />}
+            leftIcon={<Mail className="w-5 h-5 text-slate-400" />}
             {...register('email')}
             error={errors.email?.message}
           />
@@ -77,7 +77,7 @@ export default function RegisterPage() {
             label="Password"
             type="password"
             placeholder="••••••••"
-            icon={<Lock className="w-5 h-5 text-slate-400" />}
+            leftIcon={<Lock className="w-5 h-5 text-slate-400" />}
             {...register('password')}
             error={errors.password?.message}
           />
@@ -86,7 +86,7 @@ export default function RegisterPage() {
             label="Confirm Password"
             type="password"
             placeholder="••••••••"
-            icon={<Lock className="w-5 h-5 text-slate-400" />}
+            leftIcon={<Lock className="w-5 h-5 text-slate-400" />}
             {...register('confirm_password')}
             error={errors.confirm_password?.message}
           />

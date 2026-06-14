@@ -57,7 +57,7 @@ export default function OnboardingWizard() {
   const handleSubmit = async () => {
     setLoading(true);
     try {
-      let persona = 'exam_candidate';
+      let persona: 'exam_candidate' | 'tertiary_student' | 'educator' = 'exam_candidate';
       if (isTertiary) persona = 'tertiary_student';
       if (form.academic_category === 'teacher') persona = 'educator';
 

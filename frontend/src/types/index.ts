@@ -121,7 +121,7 @@ export interface RecentAttempt {
   max_score: number;
   percentage: number;
   time_taken_seconds?: number;
-  created_at: string;
+  completed_at: string;
 }
 
 export interface TokenResponse {

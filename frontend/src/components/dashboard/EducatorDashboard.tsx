@@ -53,7 +53,7 @@ export function EducatorDashboard() {
         </div>
         <div className="flex flex-col sm:flex-row gap-3">
           <Link href="/app/documents">
-            <Button variant="outline" className="bg-white/5 border-white/10 hover:bg-purple-500/20 hover:border-purple-500/50 hover:text-purple-400 w-full">
+            <Button variant="secondary" className="bg-white/5 border-white/10 hover:bg-purple-500/20 hover:border-purple-500/50 hover:text-purple-400 w-full">
               <FileText className="w-4 h-4 mr-2" />
               Upload Material
             </Button>
@@ -134,7 +134,7 @@ export function EducatorDashboard() {
                           {doc.title}
                         </h4>
                         <p className="text-xs text-slate-500 mt-1">
-                          {formatDistanceToNow(new Date(doc.created_at), { addSuffix: true })}
+                          {doc.created_at ? formatDistanceToNow(new Date(doc.created_at), { addSuffix: true }) : 'Recently'}
                         </p>
                       </div>
                     </div>
@@ -172,7 +172,7 @@ export function EducatorDashboard() {
                 Navigate to the Quizzes page to manage your generated assessments and view participant results.
               </p>
               <Link href="/app/quizzes">
-                <Button variant="outline" className="mt-6 border-purple-500/50 text-purple-400 hover:bg-purple-500/10">Manage Assessments</Button>
+                <Button variant="secondary" className="mt-6 border-purple-500/50 text-purple-400 hover:bg-purple-500/10">Manage Assessments</Button>
               </Link>
             </Card>
           )}

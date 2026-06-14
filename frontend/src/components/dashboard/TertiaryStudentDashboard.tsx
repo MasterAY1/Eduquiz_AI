@@ -55,7 +55,7 @@ export function TertiaryStudentDashboard() {
         </div>
         <div className="flex gap-3">
           <Link href="/app/documents">
-            <Button variant="outline" className="bg-white/5 border-white/10 hover:bg-blue-500/20 hover:border-blue-500/50 hover:text-blue-400">
+            <Button variant="secondary" className="bg-white/5 border-white/10 hover:bg-blue-500/20 hover:border-blue-500/50 hover:text-blue-400">
               <FileText className="w-4 h-4 mr-2" />
               Upload Lecture Note
             </Button>
@@ -101,7 +101,7 @@ export function TertiaryStudentDashboard() {
                         {doc.source_type}
                       </span>
                       <span className="text-xs text-slate-500">
-                        {formatDistanceToNow(new Date(doc.created_at), { addSuffix: true })}
+                        {doc.created_at ? formatDistanceToNow(new Date(doc.created_at), { addSuffix: true }) : 'Recently'}
                       </span>
                     </div>
                   </Card>
@@ -123,7 +123,7 @@ export function TertiaryStudentDashboard() {
               <Brain className="w-10 h-10 text-slate-500 mx-auto mb-3" />
               <p className="text-sm text-slate-400 mb-4">No practice quizzes taken.</p>
               <Link href="/app/quizzes">
-                <Button variant="outline" size="sm" className="hover:text-blue-400 hover:border-blue-400">Generate Quiz</Button>
+                <Button variant="secondary" size="sm" className="hover:text-blue-400 hover:border-blue-400">Generate Quiz</Button>
               </Link>
             </Card>
           ) : (

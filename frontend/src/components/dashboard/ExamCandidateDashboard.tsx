@@ -131,7 +131,7 @@ export function ExamCandidateDashboard() {
                     <div>
                       <h4 className="font-semibold text-white line-clamp-1">{attempt.quiz_title}</h4>
                       <p className="text-xs text-slate-400 mt-0.5">
-                        {formatDistanceToNow(new Date(attempt.completed_at), { addSuffix: true })}
+                        {attempt.completed_at ? formatDistanceToNow(new Date(attempt.completed_at), { addSuffix: true }) : 'Recently'}
                       </p>
                     </div>
                   </div>
@@ -164,7 +164,7 @@ export function ExamCandidateDashboard() {
               <FileText className="w-10 h-10 text-slate-500 mx-auto mb-3" />
               <p className="text-sm text-slate-400 mb-4">No documents uploaded.</p>
               <Link href="/app/documents">
-                <Button variant="outline" size="sm">Upload Document</Button>
+                <Button variant="secondary" size="sm">Upload Document</Button>
               </Link>
             </Card>
           ) : (
@@ -183,7 +183,7 @@ export function ExamCandidateDashboard() {
                         <span className="text-[10px] uppercase font-bold text-slate-500">{doc.source_type}</span>
                         <span className="text-[10px] text-slate-500">•</span>
                         <span className="text-[10px] text-slate-500 truncate">
-                          {formatDistanceToNow(new Date(doc.created_at), { addSuffix: true })}
+                          {doc.created_at ? formatDistanceToNow(new Date(doc.created_at), { addSuffix: true }) : 'Recently'}
                         </span>
                       </div>
                     </div>
