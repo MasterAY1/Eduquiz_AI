@@ -86,7 +86,7 @@ async def get_dashboard_stats(
     recent_attempts = recent_attempts_res.scalars().all()
     recent_attempts_data = [
         {
-            "id": a.id,
+            "attempt_id": a.id,
             "quiz_id": a.quiz_id,
             "quiz_title": a.quiz.title if a.quiz else "Deleted Quiz",
             "score": float(a.score or 0.0),
@@ -140,7 +140,7 @@ async def get_attempt_history(
 
     items = [
         {
-            "id": a.id,
+            "attempt_id": a.id,
             "quiz_id": a.quiz_id,
             "quiz_title": a.quiz.title if a.quiz else "Deleted Quiz",
             "subject": a.quiz.subject if a.quiz else None,
