@@ -1,9 +1,8 @@
 """Authentication service: register, login, refresh, logout, profile."""
 
 import uuid
+import base64
 from datetime import datetime, timedelta, timezone
-
-from fastapi import UploadFile
 
 from sqlalchemy import select
 from sqlalchemy.ext.asyncio import AsyncSession
@@ -300,24 +299,26 @@ class AuthService:
 
     # ── Upload avatar ──────────────────────────────────────────────────────────
     
-    async def upload_avatar(
+    async def upload_avatar_base64(
         self,
         db: AsyncSession,
         user_id: uuid.UUID,
-        file: UploadFile,
+        file_base64: str,
     ) -> User:
         """
-        Upload an avatar image to Cloudinary and update the user's profile.
+        Upload an avatar image to Cloudinary and update the user's profile via Base64.
         """
         user = await self.get_user_by_id(db, user_id)
         
-        # Upload to Cloudinary
-        file_content = await file.read()
         try:
+            if file_base64.startswith("data:image"):
+                file_base64 = file_base64.split(",")[1]
+            file_bytes = base64.b64decode(file_base64)
+            
             secure_url = await cloudinary_storage.upload_file(
-                file_bytes=file_content,
+                file_bytes=file_bytes,
                 user_id=str(user_id),
-                filename=file.filename or "avatar.jpg",
+                filename="avatar.jpg",
                 resource_type="image"
             )
             user.avatar_url = secure_url

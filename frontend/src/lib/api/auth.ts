@@ -26,41 +26,26 @@ export const authApi = {
 
   uploadAvatar: (file: File): Promise<User> => {
     return new Promise((resolve, reject) => {
-      const formData = new FormData();
-      formData.append('file', new Blob([file], { type: file.type || 'image/jpeg' }), file.name || 'avatar.jpg');
+      const reader = new FileReader();
       
-      const token = localStorage.getItem('access_token');
-      const baseUrl = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:8000';
-      
-      const xhr = new XMLHttpRequest();
-      xhr.open('POST', `${baseUrl}/api/v1/auth/me/avatar`, true);
-      
-      if (token) {
-        xhr.setRequestHeader('Authorization', `Bearer ${token}`);
-      }
-      
-      xhr.onload = () => {
-        if (xhr.status >= 200 && xhr.status < 300) {
-          try {
-            resolve(JSON.parse(xhr.responseText));
-          } catch (e) {
-            resolve({} as User);
-          }
-        } else {
-          try {
-            const err = JSON.parse(xhr.responseText);
-            reject({ response: { data: err } });
-          } catch (e) {
-            reject({ response: { data: { detail: `HTTP ${xhr.status} Error` } } });
-          }
+      reader.onloadend = async () => {
+        const base64String = reader.result as string;
+        
+        try {
+          const res = await apiClient.post<User>('/api/v1/auth/me/avatar', {
+            file_base64: base64String
+          });
+          resolve(res.data);
+        } catch (e: any) {
+          reject(e);
         }
       };
       
-      xhr.onerror = () => {
-        reject({ response: { data: { detail: 'Network error during upload' } } });
+      reader.onerror = () => {
+        reject({ response: { data: { detail: 'Failed to read file on frontend' } } });
       };
       
-      xhr.send(formData);
+      reader.readAsDataURL(file);
     });
   },
 };

@@ -84,3 +84,7 @@ class UpdateProfileRequest(BaseModel):
     department: Optional[str] = None
     class_level: Optional[str] = None
     preferred_subjects: Optional[list[str]] = None
+
+class AvatarUploadRequest(BaseModel):
+    """Payload for POST /auth/me/avatar via JSON."""
+    file_base64: str

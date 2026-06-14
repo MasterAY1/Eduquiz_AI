@@ -12,6 +12,7 @@ from app.schemas.auth import (
     TokenResponse,
     UpdateProfileRequest,
     UserResponse,
+    AvatarUploadRequest,
 )
 from app.services.auth_service import auth_service
 from app.utils.rate_limit import limiter
@@ -108,14 +109,10 @@ async def update_me(
     status_code=status.HTTP_200_OK,
 )
 async def upload_avatar(
-    file: UploadFile = File(...),
+    request: AvatarUploadRequest,
     current_user: User = Depends(get_current_active_user),
     db: AsyncSession = Depends(get_db),
 ) -> UserResponse:
     """Upload and update the user's avatar image."""
-    updated_user = await auth_service.upload_avatar(db, current_user.id, file)
+    updated_user = await auth_service.upload_avatar_base64(db, current_user.id, request.file_base64)
     return UserResponse.model_validate(updated_user)
-
-@router.post("/test-avatar")
-async def test_avatar(file: UploadFile = File(...)):
-    return {"filename": file.filename}
