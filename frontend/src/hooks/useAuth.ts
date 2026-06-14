@@ -74,8 +74,9 @@ export function useAuth() {
       queryClient.invalidateQueries({ queryKey: ['me'] });
       addToast({ type: 'success', message: 'Profile photo updated successfully!' });
     },
-    onError: () => {
-      addToast({ type: 'error', message: 'Failed to upload photo. Please try again.' });
+    onError: (error: any) => {
+      const msg = error.response?.data?.detail || 'Failed to upload photo. Please try again.';
+      addToast({ type: 'error', message: msg });
     },
   });
 

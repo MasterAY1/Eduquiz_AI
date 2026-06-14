@@ -326,7 +326,7 @@ class AuthService:
             return user
         except Exception as e:
             logger.error(f"Failed to upload avatar: {e}")
-            raise ValidationError("Failed to upload avatar image. Please try again.")
+            raise ValidationError(f"Failed to upload avatar: {str(e)}")
 
     # ── Private helpers ────────────────────────────────────────────────────────
 
