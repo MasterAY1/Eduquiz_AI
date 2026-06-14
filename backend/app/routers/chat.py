@@ -10,7 +10,7 @@ from app.models.user import User
 from app.schemas.chat import ChatMessageCreate, ChatMessageResponse, ChatSessionCreate, ChatSessionResponse
 from app.services.chat_service import chat_service
 
-router = APIRouter(prefix="/chat", tags=["Chat"])
+router = APIRouter(tags=["Chat"])
 
 @router.post("/sessions", response_model=ChatSessionResponse, status_code=201)
 async def create_chat_session(
