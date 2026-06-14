@@ -17,12 +17,12 @@ export interface ChatSession {
 
 export const chatApi = {
   getSessions: async () => {
-    const { data } = await apiClient.get<ChatSession[]>('/chat/sessions');
+    const { data } = await apiClient.get<ChatSession[]>('/api/v1/chat/sessions');
     return data;
   },
 
   createSession: async (title: string, document_id?: string | null) => {
-    const { data } = await apiClient.post<ChatSession>('/chat/sessions', {
+    const { data } = await apiClient.post<ChatSession>('/api/v1/chat/sessions', {
       title,
       document_id: document_id || null,
     });
@@ -30,12 +30,12 @@ export const chatApi = {
   },
 
   getMessages: async (sessionId: string) => {
-    const { data } = await apiClient.get<ChatMessage[]>(`/chat/sessions/${sessionId}/messages`);
+    const { data } = await apiClient.get<ChatMessage[]>(`/api/v1/chat/sessions/${sessionId}/messages`);
     return data;
   },
 
   sendMessage: async (sessionId: string, content: string) => {
-    const { data } = await apiClient.post<ChatMessage>(`/chat/sessions/${sessionId}/messages`, {
+    const { data } = await apiClient.post<ChatMessage>(`/api/v1/chat/sessions/${sessionId}/messages`, {
       content,
     });
     return data;

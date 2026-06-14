@@ -24,12 +24,12 @@ export interface PastQuestionIntelligence {
 
 export const analyticsApi = {
   getPerformanceReport: async (subject: string) => {
-    const { data } = await apiClient.get<PerformanceReport>(`/analytics/performance/${encodeURIComponent(subject)}`);
+    const { data } = await apiClient.get<PerformanceReport>(`/api/v1/analytics/performance/${encodeURIComponent(subject)}`);
     return data;
   },
 
   getPastQuestionIntelligence: async (subject: string) => {
-    const { data } = await apiClient.get<PastQuestionIntelligence>(`/analytics/past-questions/topics/${encodeURIComponent(subject)}`);
+    const { data } = await apiClient.get<PastQuestionIntelligence>(`/api/v1/analytics/past-questions/topics/${encodeURIComponent(subject)}`);
     return data;
   },
 };
