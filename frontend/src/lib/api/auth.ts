@@ -24,9 +24,26 @@ export const authApi = {
   updateProfile: (data: Partial<User>) =>
     apiClient.put<User>('/api/v1/auth/me', data).then((r) => r.data),
 
-  uploadAvatar: (file: File) => {
-    return apiClient
-      .postForm<User>('/api/v1/auth/me/avatar', { file })
-      .then((r) => r.data);
+  uploadAvatar: async (file: File) => {
+    const formData = new FormData();
+    formData.append('file', file);
+    
+    const token = localStorage.getItem('access_token');
+    const baseUrl = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:8000';
+    
+    const res = await fetch(`${baseUrl}/api/v1/auth/me/avatar`, {
+      method: 'POST',
+      headers: {
+        Authorization: `Bearer ${token}`
+      },
+      body: formData
+    });
+    
+    if (!res.ok) {
+      const errorData = await res.json().catch(() => ({ detail: 'Failed to upload photo.' }));
+      throw { response: { data: errorData } };
+    }
+    
+    return res.json() as Promise<User>;
   },
 };
