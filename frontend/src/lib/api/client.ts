@@ -7,20 +7,11 @@ export const apiClient = axios.create({
   headers: { 'Content-Type': 'application/json' },
 });
 
-// Request interceptor: attach Bearer token and fix Content-Type for FormData
+// Request interceptor: attach Bearer token from localStorage
 apiClient.interceptors.request.use((config) => {
   if (typeof window !== 'undefined') {
     const token = localStorage.getItem('access_token');
     if (token) config.headers.Authorization = `Bearer ${token}`;
-  }
-  // Let the browser set the correct Content-Type (with boundary) for FormData
-  if (config.data instanceof FormData) {
-    if (typeof config.headers.delete === 'function') {
-      config.headers.delete('Content-Type');
-    } else {
-      delete config.headers['Content-Type'];
-      delete config.headers['content-type'];
-    }
   }
   return config;
 });

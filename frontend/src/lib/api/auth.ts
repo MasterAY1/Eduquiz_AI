@@ -25,10 +25,8 @@ export const authApi = {
     apiClient.put<User>('/api/v1/auth/me', data).then((r) => r.data),
 
   uploadAvatar: (file: File) => {
-    const formData = new FormData();
-    formData.append('file', file);
     return apiClient
-      .post<User>('/api/v1/auth/me/avatar', formData)
+      .postForm<User>('/api/v1/auth/me/avatar', { file })
       .then((r) => r.data);
   },
 };
