@@ -115,3 +115,7 @@ async def upload_avatar(
     """Upload and update the user's avatar image."""
     updated_user = await auth_service.upload_avatar(db, current_user.id, file)
     return UserResponse.model_validate(updated_user)
+
+@router.post("/test-avatar")
+async def test_avatar(file: UploadFile = File(...)):
+    return {"filename": file.filename}

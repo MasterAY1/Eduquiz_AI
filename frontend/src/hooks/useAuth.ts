@@ -75,7 +75,14 @@ export function useAuth() {
       addToast({ type: 'success', message: 'Profile photo updated successfully!' });
     },
     onError: (error: any) => {
-      const msg = error.response?.data?.detail || 'Failed to upload photo. Please try again.';
+      let msg = 'Failed to upload photo. Please try again.';
+      if (error.response?.data?.detail) {
+        if (Array.isArray(error.response.data.detail)) {
+          msg = JSON.stringify(error.response.data.detail);
+        } else {
+          msg = String(error.response.data.detail);
+        }
+      }
       addToast({ type: 'error', message: msg });
     },
   });
