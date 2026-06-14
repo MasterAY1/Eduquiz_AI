@@ -1,5 +1,5 @@
 import { apiClient } from './client';
-import type { TokenResponse, User, RegisterData } from '@/types';
+import type { TokenResponse, User, RegisterData, LearningProfile } from '@/types';
 
 export const authApi = {
   register: (data: RegisterData) =>
@@ -62,4 +62,10 @@ export const authApi = {
 
     return responseBody as User;
   },
+
+  createProfile: (data: Partial<LearningProfile>) =>
+    apiClient.post<LearningProfile>('/api/v1/profiles', data).then((r) => r.data),
+
+  activateProfile: (profileId: string) =>
+    apiClient.post<LearningProfile>(`/api/v1/profiles/${profileId}/activate`).then((r) => r.data),
 };

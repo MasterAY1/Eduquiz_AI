@@ -2,7 +2,7 @@ export interface User {
   id: string;
   full_name: string;
   email: string;
-  educational_level: 'primary' | 'jss' | 'sss' | 'polytechnic' | 'col_of_edu' | 'university';
+  educational_level?: string;
   school_name?: string;
   department?: string;
   class_level?: string;
@@ -11,6 +11,21 @@ export interface User {
   xp_points: number;
   streak_days: number;
   created_at: string;
+  learning_profiles: LearningProfile[];
+}
+
+export interface LearningProfile {
+  id: string;
+  user_id: string;
+  persona: 'exam_candidate' | 'tertiary_student' | 'educator';
+  academic_category: string;
+  institution_name?: string;
+  faculty?: string;
+  department?: string;
+  academic_level?: string;
+  target_exam?: string;
+  preferred_subjects?: string[];
+  is_active: boolean;
 }
 
 export interface Document {
@@ -120,11 +135,6 @@ export interface RegisterData {
   full_name: string;
   email: string;
   password: string;
-  educational_level: User['educational_level'];
-  school_name?: string;
-  department?: string;
-  class_level?: string;
-  preferred_subjects?: string[];
 }
 
 export interface GenerateQuizData {

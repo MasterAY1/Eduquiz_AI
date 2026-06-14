@@ -1,6 +1,7 @@
 'use client';
 
 import { useDocument } from '@/hooks/useDocuments';
+import { useAuth } from '@/hooks/useAuth';
 import { Card } from '@/components/ui/Card';
 import { Button } from '@/components/ui/Button';
 import { Badge } from '@/components/ui/Badge';
@@ -17,6 +18,7 @@ import {
   Layers,
   Sparkles,
   ListCheck,
+  AlertTriangle,
 } from 'lucide-react';
 import { format } from 'date-fns';
 
@@ -34,6 +36,9 @@ export default function DocumentDetailsPage() {
   const { id } = useParams() as { id: string };
   const router = useRouter();
   const { data: doc, isLoading, isError } = useDocument(id);
+  const { user } = useAuth();
+  
+  const activeProfile = user?.learning_profiles?.find(p => p.is_active);
 
   if (isLoading) {
     return (
@@ -74,11 +79,27 @@ export default function DocumentDetailsPage() {
     >
       {/* Back button */}
       <motion.div variants={itemVariants}>
-        <Link href="/app/documents" className="inline-flex items-center gap-1 text-xs text-[slate-400] hover:text-[emerald-400] transition-colors">
+        <Link href="/app/documents" className="inline-flex items-center gap-1 text-xs text-slate-400 hover:text-emerald-400 transition-colors">
           <ChevronLeft className="w-4 h-4" />
           Back to Library
         </Link>
       </motion.div>
+
+      {/* Mismatch Warning */}
+      {doc?.detected_level && activeProfile && (
+        ['university', 'polytechnic'].includes(doc.detected_level.toLowerCase()) && 
+        ['waec', 'neco', 'jss', 'sss'].includes(activeProfile.academic_category.toLowerCase())
+      ) && (
+        <motion.div variants={itemVariants} className="bg-amber-500/10 border border-amber-500/30 rounded-xl p-4 flex items-start gap-4">
+          <AlertTriangle className="w-6 h-6 text-amber-500 flex-shrink-0 mt-0.5" />
+          <div className="flex-1">
+            <h4 className="text-sm font-bold text-amber-500">Mismatched Content Detected</h4>
+            <p className="text-xs text-slate-300 mt-1">
+              This document appears to be university/polytechnic level material, but you are currently in an exam candidate profile ({activeProfile.academic_category.toUpperCase()}). You might want to switch to your Tertiary profile for better AI generation and questions.
+            </p>
+          </div>
+        </motion.div>
+      )}
 
       {/* Header card */}
       <motion.div variants={itemVariants}>

@@ -31,6 +31,39 @@ class EducationalLevel(str, enum.Enum):
     COL_OF_EDU = "col_of_edu"
     UNIVERSITY = "university"
 
+class DashboardPersona(str, enum.Enum):
+    EXAM_CANDIDATE = "exam_candidate"
+    TERTIARY_STUDENT = "tertiary_student"
+    EDUCATOR = "educator"
+
+class LearningProfile(Base, TimestampMixin):
+    """A personalized learning journey for a user."""
+    __tablename__ = "learning_profiles"
+
+    id: Mapped[uuid.UUID] = mapped_column(
+        UUID(as_uuid=True), primary_key=True, default=uuid.uuid4
+    )
+    user_id: Mapped[uuid.UUID] = mapped_column(
+        UUID(as_uuid=True),
+        ForeignKey("users.id", ondelete="CASCADE"),
+        nullable=False,
+        index=True,
+    )
+    persona: Mapped[DashboardPersona] = mapped_column(
+        SAEnum(DashboardPersona, name="dashboardpersona"), nullable=False
+    )
+    academic_category: Mapped[str] = mapped_column(String(100), nullable=False) # e.g. WAEC, JAMB, University
+    institution_name: Mapped[str | None] = mapped_column(String(300))
+    faculty: Mapped[str | None] = mapped_column(String(200))
+    department: Mapped[str | None] = mapped_column(String(200))
+    academic_level: Mapped[str | None] = mapped_column(String(100))
+    target_exam: Mapped[str | None] = mapped_column(String(100))
+    preferred_subjects: Mapped[list[str] | None] = mapped_column(ARRAY(String))
+    is_active: Mapped[bool] = mapped_column(Boolean, default=False)
+    
+    # Relationships
+    user: Mapped["User"] = relationship("User", back_populates="learning_profiles")
+
 
 class User(Base, TimestampMixin):
     """Platform user account."""
@@ -45,8 +78,8 @@ class User(Base, TimestampMixin):
         String(255), unique=True, nullable=False, index=True
     )
     password_hash: Mapped[str | None] = mapped_column(String(255))
-    educational_level: Mapped[EducationalLevel] = mapped_column(
-        SAEnum(EducationalLevel, name="educationallevel"), nullable=False
+    educational_level: Mapped[EducationalLevel | None] = mapped_column(
+        SAEnum(EducationalLevel, name="educationallevel"), nullable=True
     )
     school_name: Mapped[str | None] = mapped_column(String(300))
     department: Mapped[str | None] = mapped_column(String(200))
@@ -68,6 +101,9 @@ class User(Base, TimestampMixin):
     )
     refresh_tokens: Mapped[list["RefreshToken"]] = relationship(
         "RefreshToken", back_populates="user", lazy="select"
+    )
+    learning_profiles: Mapped[list["LearningProfile"]] = relationship(
+        "LearningProfile", back_populates="user", lazy="select", cascade="all, delete-orphan"
     )
 
 

@@ -6,7 +6,7 @@ from fastapi.middleware.cors import CORSMiddleware
 
 from app.config import get_settings
 from app.database import init_db
-from app.routers import auth, documents, quizzes, dashboard, admin_ai, chat, analytics
+from app.routers import auth, documents, quizzes, dashboard, admin_ai, chat, analytics, profiles
 from app.utils.errors import register_exception_handlers
 
 
@@ -84,6 +84,7 @@ app.include_router(dashboard.router, prefix="/api/v1/dashboard")
 app.include_router(admin_ai.router, prefix="/api/v1/admin/ai")
 app.include_router(chat.router, prefix="/api/v1/chat")
 app.include_router(analytics.router, prefix="/api/v1/analytics")
+app.include_router(profiles.router, prefix="/api/v1")
 
 
 @app.get("/", status_code=200)

@@ -25,7 +25,12 @@ export function useAuth() {
     onSuccess: (data) => {
       store.login(data.user, data.access_token, data.refresh_token);
       addToast({ type: 'success', message: `Welcome back, ${data.user.full_name.split(' ')[0]}! 👋` });
-      router.push('/app/dashboard');
+      
+      if (!data.user.learning_profiles || data.user.learning_profiles.length === 0) {
+        router.push('/app/onboarding');
+      } else {
+        router.push('/app/dashboard');
+      }
     },
     onError: () => {
       addToast({ type: 'error', message: 'Invalid email or password. Please try again.' });
@@ -37,7 +42,7 @@ export function useAuth() {
     onSuccess: (data) => {
       store.login(data.user, data.access_token, data.refresh_token);
       addToast({ type: 'success', message: `Welcome to EduQuiz AI, ${data.user.full_name.split(' ')[0]}! 🎉` });
-      router.push('/app/dashboard');
+      router.push('/app/onboarding');
     },
     onError: () => {
       addToast({ type: 'error', message: 'Registration failed. Please try again.' });

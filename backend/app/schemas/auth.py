@@ -2,9 +2,11 @@
 
 import uuid
 from datetime import datetime
-from typing import Optional
+from typing import Optional, List
 
 from pydantic import BaseModel, ConfigDict, EmailStr, field_validator
+
+from app.schemas.profile import LearningProfileResponse
 
 
 class RegisterRequest(BaseModel):
@@ -13,11 +15,6 @@ class RegisterRequest(BaseModel):
     full_name: str
     email: EmailStr
     password: str
-    educational_level: str
-    school_name: Optional[str] = None
-    department: Optional[str] = None
-    class_level: Optional[str] = None
-    preferred_subjects: Optional[list[str]] = None
 
     @field_validator("password")
     @classmethod
@@ -49,7 +46,7 @@ class UserResponse(BaseModel):
     id: uuid.UUID
     full_name: str
     email: str
-    educational_level: str
+    educational_level: Optional[str] = None
     school_name: Optional[str] = None
     department: Optional[str] = None
     class_level: Optional[str] = None
@@ -59,6 +56,7 @@ class UserResponse(BaseModel):
     streak_days: int
     is_email_verified: bool
     created_at: datetime
+    learning_profiles: List[LearningProfileResponse] = []
 
 
 class TokenResponse(BaseModel):

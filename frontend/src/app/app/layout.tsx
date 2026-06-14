@@ -23,18 +23,39 @@ import {
 } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { useAuth } from '@/hooks/useAuth';
+import { ProfileSwitcher } from '@/components/ui/ProfileSwitcher';
 
-const navItems = [
-  { href: '/app/dashboard', icon: LayoutDashboard, label: 'Dashboard' },
-  { href: '/app/documents', icon: FileText, label: 'Documents' },
-  { href: '/app/quizzes', icon: Brain, label: 'Quizzes' },
-  { href: '/app/chat', icon: MessageSquare, label: 'AI Tutor' },
-  { href: '/app/exam-simulator', icon: Timer, label: 'Exam Simulator' },
-  { href: '/app/past-questions', icon: History, label: 'Past Questions' },
-  { href: '/app/analytics', icon: BarChart3, label: 'Analytics' },
-  { href: '/app/settings', icon: Settings, label: 'Settings' },
-  { href: '/app/admin/ai', icon: Cpu, label: 'AI Monitor' },
-];
+const getNavItems = (persona?: string) => {
+  const base = [
+    { href: '/app/dashboard', icon: LayoutDashboard, label: 'Dashboard' },
+    { href: '/app/documents', icon: FileText, label: 'Documents' },
+    { href: '/app/quizzes', icon: Brain, label: 'Quizzes' },
+    { href: '/app/chat', icon: MessageSquare, label: 'AI Tutor' },
+  ];
+
+  if (persona === 'exam_candidate') {
+    base.push(
+      { href: '/app/exam-simulator', icon: Timer, label: 'Exam Simulator' },
+      { href: '/app/past-questions', icon: History, label: 'Past Questions' }
+    );
+  }
+
+  if (persona === 'tertiary_student') {
+    // Maybe course materials, assignments in future
+  }
+
+  if (persona === 'educator') {
+    // Classes, student analytics
+  }
+
+  base.push(
+    { href: '/app/analytics', icon: BarChart3, label: 'Analytics' },
+    { href: '/app/settings', icon: Settings, label: 'Settings' },
+    { href: '/app/admin/ai', icon: Cpu, label: 'AI Monitor' }
+  );
+
+  return base;
+};
 
 function NavItem({ href, icon: Icon, label, active }: { href: string; icon: React.ElementType; label: string; active: boolean }) {
   return (
@@ -98,7 +119,7 @@ function Sidebar() {
 
       {/* Nav */}
       <nav className="flex-1 p-4 space-y-1.5 overflow-y-auto">
-        {navItems.map((item) => (
+        {getNavItems(user?.learning_profiles?.find(p => p.is_active)?.persona).map((item) => (
           <NavItem
             key={item.href}
             {...item}
@@ -107,8 +128,11 @@ function Sidebar() {
         ))}
       </nav>
 
-      {/* User Profile */}
+      {/* User Profile & Switcher */}
       <div className="p-4 border-t border-border/50 bg-black/10">
+        <div className="mb-4">
+          <ProfileSwitcher />
+        </div>
         {/* XP Badge */}
         <div className="flex items-center gap-2 px-3 py-2.5 mb-4 rounded-xl bg-amber-500/10 border border-amber-500/20 shadow-inner">
           <Zap className="w-4 h-4 text-amber-500" />
@@ -153,8 +177,13 @@ export default function AppLayout({ children }: { children: React.ReactNode }) {
     setIsMobileMenuOpen(false);
   }, [pathname]);
 
+  if (pathname === '/app/onboarding') {
+    return <div className="min-h-screen bg-bg">{children}</div>;
+  }
+
   // Page title from pathname
-  const pageTitle = navItems.find(
+  const currentNavItems = getNavItems(user?.learning_profiles?.find(p => p.is_active)?.persona);
+  const pageTitle = currentNavItems.find(
     (item) => pathname === item.href || pathname.startsWith(item.href + '/')
   )?.label || 'Dashboard';
 
@@ -225,7 +254,7 @@ export default function AppLayout({ children }: { children: React.ReactNode }) {
                 </button>
               </div>
               <div className="grid grid-cols-2 gap-3 max-h-[60vh] overflow-y-auto pb-4">
-                {navItems.map((item) => (
+                {currentNavItems.map((item) => (
                   <Link 
                     key={item.href} 
                     href={item.href}
@@ -248,13 +277,15 @@ export default function AppLayout({ children }: { children: React.ReactNode }) {
 
       {/* Mobile Bottom Tab Bar */}
       <div className="lg:hidden fixed bottom-0 left-0 right-0 h-16 bg-surface/80 backdrop-blur-[40px] border-t border-white/10 flex items-center justify-around px-2 pb-safe z-50">
-        {mobilePrimaryNav.map((item) => (
-          <MobileNavItem
-            key={item.href}
-            {...item}
-            active={pathname === item.href || pathname.startsWith(item.href + '/')}
-          />
-        ))}
+        <div className="flex-1 flex px-4">
+          {currentNavItems.slice(0, 4).map((item) => (
+            <MobileNavItem
+              key={item.href}
+              {...item}
+              active={pathname === item.href || pathname.startsWith(item.href + '/')}
+            />
+          ))}
+        </div>
         <button
           onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
           className="flex-1 flex flex-col items-center justify-center gap-1 py-2 relative"

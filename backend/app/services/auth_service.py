@@ -51,24 +51,10 @@ class AuthService:
         if result.scalar_one_or_none():
             raise ValidationError("An account with this email already exists.")
 
-        # Validate educational level
-        try:
-            edu_level = EducationalLevel(request.educational_level)
-        except ValueError:
-            valid = [e.value for e in EducationalLevel]
-            raise ValidationError(
-                f"Invalid educational_level. Must be one of: {valid}"
-            )
-
         user = User(
             full_name=request.full_name,
             email=request.email,
             password_hash=get_password_hash(request.password),
-            educational_level=edu_level,
-            school_name=request.school_name,
-            department=request.department,
-            class_level=request.class_level,
-            preferred_subjects=request.preferred_subjects,
         )
         db.add(user)
         await db.flush()  # get user.id
