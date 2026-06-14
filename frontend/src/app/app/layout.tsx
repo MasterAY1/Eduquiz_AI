@@ -17,7 +17,9 @@ import {
   MessageSquare,
   BarChart3,
   Timer,
-  History
+  History,
+  Menu,
+  X
 } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { useAuth } from '@/hooks/useAuth';
@@ -144,11 +146,23 @@ function Sidebar() {
 
 export default function AppLayout({ children }: { children: React.ReactNode }) {
   const pathname = usePathname();
+  const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
+
+  // Close mobile menu on route change
+  useEffect(() => {
+    setIsMobileMenuOpen(false);
+  }, [pathname]);
 
   // Page title from pathname
   const pageTitle = navItems.find(
     (item) => pathname === item.href || pathname.startsWith(item.href + '/')
   )?.label || 'Dashboard';
+
+  const mobilePrimaryNav = [
+    { href: '/app/dashboard', icon: LayoutDashboard, label: 'Home' },
+    { href: '/app/quizzes', icon: Brain, label: 'Quizzes' },
+    { href: '/app/chat', icon: MessageSquare, label: 'Tutor' },
+  ];
 
   return (
     <div className="flex h-[100dvh] bg-bg overflow-hidden relative">
@@ -183,15 +197,71 @@ export default function AppLayout({ children }: { children: React.ReactNode }) {
         </main>
       </div>
 
+      {/* Mobile Menu Drawer */}
+      <AnimatePresence>
+        {isMobileMenuOpen && (
+          <>
+            <motion.div
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              exit={{ opacity: 0 }}
+              onClick={() => setIsMobileMenuOpen(false)}
+              className="lg:hidden fixed inset-0 bg-black/60 backdrop-blur-sm z-40"
+            />
+            <motion.div
+              initial={{ y: '100%' }}
+              animate={{ y: 0 }}
+              exit={{ y: '100%' }}
+              transition={{ type: 'spring', damping: 25, stiffness: 200 }}
+              className="lg:hidden fixed bottom-16 left-0 right-0 bg-surface/95 backdrop-blur-[40px] border-t border-white/10 rounded-t-3xl z-50 p-6 shadow-[0_-10px_40px_rgba(0,0,0,0.5)]"
+            >
+              <div className="flex justify-between items-center mb-6">
+                <h2 className="text-lg font-bold font-heading text-white">Menu</h2>
+                <button 
+                  onClick={() => setIsMobileMenuOpen(false)}
+                  className="w-8 h-8 flex items-center justify-center rounded-full bg-white/5 text-slate-400 hover:text-white"
+                >
+                  <X className="w-5 h-5" />
+                </button>
+              </div>
+              <div className="grid grid-cols-2 gap-3 max-h-[60vh] overflow-y-auto pb-4">
+                {navItems.map((item) => (
+                  <Link 
+                    key={item.href} 
+                    href={item.href}
+                    className={cn(
+                      "flex flex-col items-center gap-3 p-4 rounded-2xl border transition-all",
+                      pathname === item.href || pathname.startsWith(item.href + '/')
+                        ? "bg-emerald-500/15 border-emerald-500/30 text-emerald-400"
+                        : "bg-black/20 border-white/5 text-slate-400 hover:bg-white/5 hover:text-white"
+                    )}
+                  >
+                    <item.icon className="w-6 h-6" />
+                    <span className="text-xs font-semibold text-center">{item.label}</span>
+                  </Link>
+                ))}
+              </div>
+            </motion.div>
+          </>
+        )}
+      </AnimatePresence>
+
       {/* Mobile Bottom Tab Bar */}
-      <div className="lg:hidden fixed bottom-0 left-0 right-0 h-16 bg-surface/80 backdrop-blur-[40px] border-t border-white/10 flex items-center justify-around px-2 pb-safe z-40">
-        {navItems.map((item) => (
+      <div className="lg:hidden fixed bottom-0 left-0 right-0 h-16 bg-surface/80 backdrop-blur-[40px] border-t border-white/10 flex items-center justify-around px-2 pb-safe z-50">
+        {mobilePrimaryNav.map((item) => (
           <MobileNavItem
             key={item.href}
             {...item}
             active={pathname === item.href || pathname.startsWith(item.href + '/')}
           />
         ))}
+        <button
+          onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
+          className="flex-1 flex flex-col items-center justify-center gap-1 py-2 relative"
+        >
+          <Menu className={cn('w-5 h-5 z-10 transition-colors', isMobileMenuOpen ? 'text-emerald-400' : 'text-slate-400')} />
+          <span className={cn('text-[10px] font-medium z-10 transition-colors', isMobileMenuOpen ? 'text-emerald-400' : 'text-slate-400')}>Menu</span>
+        </button>
       </div>
     </div>
   );
