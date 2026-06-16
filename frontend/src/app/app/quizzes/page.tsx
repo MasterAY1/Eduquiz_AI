@@ -2,6 +2,7 @@
 
 import { Suspense } from 'react';
 import { useQuizzes, useGenerateQuiz } from '@/hooks/useQuizzes';
+import { useAuth } from '@/hooks/useAuth';
 import { useDocuments } from '@/hooks/useDocuments';
 import { Card } from '@/components/ui/Card';
 import { Button } from '@/components/ui/Button';
@@ -47,6 +48,10 @@ function QuizzesContent() {
   const { data: quizzes, isLoading: loadingQuizzes } = useQuizzes();
   const { data: documentsData, isLoading: loadingDocs } = useDocuments();
   const { mutate: generateQuiz, isPending: generating } = useGenerateQuiz();
+  const { user } = useAuth();
+  
+  const activeProfile = user?.learning_profiles?.[0];
+  const isTertiary = activeProfile?.persona === 'tertiary_student' || activeProfile?.academic_category?.toLowerCase().includes('university') || activeProfile?.academic_category?.toLowerCase().includes('polytechnic');
 
   // Form State
   const [selectedDocId, setSelectedDocId] = useState('');
@@ -161,11 +166,17 @@ function QuizzesContent() {
                       className="input-glass select-arrow w-full pl-10"
                     >
                       <option value="standard" className="bg-[#0F0F2D]">Standard (General Practice)</option>
-                      <option value="waec" className="bg-[#0F0F2D]">WAEC Format (5 Options)</option>
-                      <option value="jamb" className="bg-[#0F0F2D]">JAMB Format (4 Options)</option>
-                      <option value="neco" className="bg-[#0F0F2D]">NECO Format (5 Options)</option>
-                      <option value="bece" className="bg-[#0F0F2D]">BECE Junior Secondary</option>
-                      <option value="university_theory" className="bg-[#0F0F2D]">University Theory Exam</option>
+                      
+                      {isTertiary ? (
+                        <option value="university_theory" className="bg-[#0F0F2D]">University Theory Exam</option>
+                      ) : (
+                        <>
+                          <option value="waec" className="bg-[#0F0F2D]">WAEC Format (5 Options)</option>
+                          <option value="jamb" className="bg-[#0F0F2D]">JAMB Format (4 Options)</option>
+                          <option value="neco" className="bg-[#0F0F2D]">NECO Format (5 Options)</option>
+                          <option value="bece" className="bg-[#0F0F2D]">BECE Junior Secondary</option>
+                        </>
+                      )}
                     </select>
                     <div className="absolute left-3 top-1/2 -translate-y-1/2 pointer-events-none text-emerald-400">
                       <FileText className="w-4 h-4" />
