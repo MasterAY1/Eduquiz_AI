@@ -64,6 +64,9 @@ class AuthService:
         quota = UserQuota(user_id=user.id, plan_type="free")
         db.add(quota)
         await db.flush()
+        
+        # Refresh user to eager-load relationships needed for TokenResponse
+        await db.refresh(user, ["learning_profiles"])
 
         token_response = await self._issue_tokens(db, user)
 

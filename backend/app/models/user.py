@@ -103,7 +103,7 @@ class User(Base, TimestampMixin):
         "RefreshToken", back_populates="user", lazy="select"
     )
     learning_profiles: Mapped[list["LearningProfile"]] = relationship(
-        "LearningProfile", back_populates="user", lazy="select", cascade="all, delete-orphan"
+        "LearningProfile", back_populates="user", lazy="selectin", cascade="all, delete-orphan"
     )
 
 
