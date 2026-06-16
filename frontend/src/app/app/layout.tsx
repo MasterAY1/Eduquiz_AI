@@ -278,15 +278,13 @@ export default function AppLayout({ children }: { children: React.ReactNode }) {
 
       {/* Mobile Bottom Tab Bar */}
       <div className="lg:hidden fixed bottom-0 left-0 right-0 h-16 bg-surface/80 backdrop-blur-[40px] border-t border-white/10 flex items-center justify-around px-2 pb-safe z-50">
-        <div className="flex-1 flex px-4">
-          {currentNavItems.slice(0, 4).map((item) => (
-            <MobileNavItem
-              key={item.href}
-              {...item}
-              active={pathname === item.href || pathname.startsWith(item.href + '/')}
-            />
-          ))}
-        </div>
+        {currentNavItems.slice(0, 4).map((item) => (
+          <MobileNavItem
+            key={item.href}
+            {...item}
+            active={pathname === item.href || pathname.startsWith(item.href + '/')}
+          />
+        ))}
         <button
           onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
           className="flex-1 flex flex-col items-center justify-center gap-1 py-2 relative"
