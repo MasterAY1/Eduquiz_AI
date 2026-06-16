@@ -278,7 +278,7 @@ export default function DocumentsPage() {
             placeholder="Search documents by title or subject..."
             value={searchQuery}
             onChange={(e) => setSearchQuery(e.target.value)}
-            className="input-glass pl-11 w-full"
+            className="input-glass pl-11 pr-4 py-2.5 rounded-xl w-full"
           />
         </div>
         <Button onClick={() => refetch()} variant="ghost" size="md" className="sm:w-auto w-full flex items-center justify-center gap-2">

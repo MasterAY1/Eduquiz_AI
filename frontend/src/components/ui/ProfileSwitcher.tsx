@@ -81,7 +81,7 @@ export function ProfileSwitcher() {
               initial={{ opacity: 0, y: -10, scale: 0.95 }}
               animate={{ opacity: 1, y: 0, scale: 1 }}
               exit={{ opacity: 0, y: -10, scale: 0.95 }}
-              className="absolute top-full left-0 right-0 mt-2 p-2 rounded-xl border border-white/10 bg-surface/90 backdrop-blur-xl shadow-xl z-50 overflow-hidden"
+              className="absolute bottom-full mb-2 left-0 right-0 p-2 rounded-xl border border-white/10 bg-surface/90 backdrop-blur-xl shadow-xl z-50 overflow-hidden"
             >
               <div className="px-2 pb-2 text-xs font-semibold text-slate-500 uppercase tracking-wider">
                 Switch Profile
