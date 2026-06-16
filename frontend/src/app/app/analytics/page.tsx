@@ -9,21 +9,9 @@ import { Button } from '@/components/ui/Button';
 import { Input } from '@/components/ui/Input';
 import { Badge } from '@/components/ui/Badge';
 import { Skeleton } from '@/components/ui/SkeletonLoader';
-import {
-  Radar,
-  RadarChart,
-  PolarGrid,
-  PolarAngleAxis,
-  PolarRadiusAxis,
   ResponsiveContainer,
-  BarChart,
-  Bar,
-  XAxis,
-  YAxis,
-  Tooltip,
-  CartesianGrid,
-  Cell
 } from 'recharts';
+import { cn } from '@/lib/utils';
 import { useRouter } from 'next/navigation';
 
 export default function AnalyticsPage() {
@@ -120,47 +108,59 @@ export default function AnalyticsPage() {
 
           <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
             
-            {/* Radar Chart */}
+            {/* Topic Mastery Progress Bars */}
             <Card className="p-6 bg-surface/40 backdrop-blur-md border-white/5 lg:col-span-2 flex flex-col">
-              <h3 className="text-lg font-bold text-white mb-6">Topic Proficiency (Radar)</h3>
-              {radarData.length > 2 ? (
-                <div className="flex-1 min-h-[300px]">
-                  <ResponsiveContainer width="100%" height="100%">
-                    <RadarChart cx="50%" cy="50%" outerRadius="80%" data={radarData}>
-                      <PolarGrid stroke="rgba(255,255,255,0.1)" />
-                      <PolarAngleAxis dataKey="topic" tick={{ fill: '#94a3b8', fontSize: 12 }} />
-                      <PolarRadiusAxis angle={30} domain={[0, 100]} tick={false} axisLine={false} />
-                      <Radar
-                        name="Success Rate"
-                        dataKey="successRate"
-                        stroke="#34d399"
-                        fill="#34d399"
-                        fillOpacity={0.3}
-                      />
-                      <Tooltip 
-                        contentStyle={{ backgroundColor: '#0f172a', borderColor: '#1e293b', color: '#f8fafc', borderRadius: '8px' }}
-                        itemStyle={{ color: '#34d399' }}
-                      />
-                    </RadarChart>
-                  </ResponsiveContainer>
+              <div className="flex items-center gap-2 mb-6">
+                <BrainCircuit className="w-5 h-5 text-sky-400" />
+                <h3 className="text-lg font-bold text-white">Topic Mastery</h3>
+              </div>
+              
+              {report.topics.length > 0 ? (
+                <div className="space-y-5 flex-1 overflow-y-auto pr-2 custom-scrollbar">
+                  {report.topics.map((t, idx) => (
+                    <div key={idx} className="space-y-2">
+                      <div className="flex justify-between items-center text-sm">
+                        <span className="font-medium text-slate-200 truncate pr-4">{t.topic}</span>
+                        <span className={cn("font-bold tabular-nums flex-shrink-0", t.is_weakness ? "text-rose-400" : "text-emerald-400")}>
+                          {t.success_rate}%
+                        </span>
+                      </div>
+                      <div className="h-2.5 w-full bg-black/40 rounded-full overflow-hidden border border-white/5 shadow-inner">
+                        <motion.div 
+                          initial={{ width: 0 }}
+                          animate={{ width: `${t.success_rate}%` }}
+                          transition={{ duration: 1, ease: "easeOut", delay: idx * 0.05 }}
+                          className={cn(
+                            "h-full rounded-full relative overflow-hidden",
+                            t.is_weakness 
+                              ? "bg-gradient-to-r from-rose-600 to-rose-400 shadow-[0_0_10px_rgba(244,63,94,0.3)]" 
+                              : "bg-gradient-to-r from-emerald-600 to-emerald-400 shadow-[0_0_10px_rgba(16,185,129,0.3)]"
+                          )}
+                        >
+                          {/* Shimmer effect inside the bar */}
+                          <div className="absolute inset-0 w-full h-full bg-gradient-to-r from-transparent via-white/20 to-transparent -translate-x-full animate-[shimmer_2s_infinite]" />
+                        </motion.div>
+                      </div>
+                    </div>
+                  ))}
                 </div>
               ) : (
                 <div className="flex-1 flex flex-col items-center justify-center text-slate-500 min-h-[300px]">
                   <AlertCircle className="w-12 h-12 mb-3 opacity-50" />
-                  <p>Not enough topic data to generate a radar chart.</p>
+                  <p>Not enough topic data.</p>
                   <p className="text-sm">Complete more quizzes in this subject!</p>
                 </div>
               )}
             </Card>
 
             {/* Action Plan */}
-            <Card className="p-6 bg-surface/40 backdrop-blur-md border-white/5 flex flex-col">
+            <Card className="p-6 bg-surface/40 backdrop-blur-md border-white/5 flex flex-col max-h-[500px]">
               <div className="flex items-center gap-2 mb-6">
                 <Sparkles className="w-5 h-5 text-amber-400" />
                 <h3 className="text-lg font-bold text-white">Recommended Actions</h3>
               </div>
 
-              <div className="flex-1 overflow-y-auto space-y-4">
+              <div className="flex-1 overflow-y-auto space-y-4 pr-2 custom-scrollbar">
                 {report.weaknesses.length === 0 ? (
                   <div className="flex flex-col items-center justify-center text-center p-6 h-full border border-dashed border-emerald-500/20 rounded-xl bg-emerald-500/5">
                     <CheckCircle2 className="w-8 h-8 text-emerald-400 mb-2" />
@@ -181,7 +181,7 @@ export default function AnalyticsPage() {
                           <TrendingDown className="w-4 h-4 text-rose-400 flex-shrink-0" />
                           <span className="font-semibold text-rose-100 text-sm">{weakTopic}</span>
                         </div>
-                        <Badge className="bg-rose-500/20 text-rose-400">Weakness</Badge>
+                        <Badge className="bg-rose-500/20 text-rose-400">Weak</Badge>
                       </div>
                       
                       <Button 
@@ -198,39 +198,6 @@ export default function AnalyticsPage() {
               </div>
             </Card>
           </div>
-
-          {/* Detailed Performance Bar Chart */}
-          <Card className="p-6 bg-surface/40 backdrop-blur-md border-white/5">
-            <h3 className="text-lg font-bold text-white mb-6">All Topics Accuracy</h3>
-            <div className="h-[300px] w-full">
-              <ResponsiveContainer width="100%" height="100%">
-                <BarChart data={report.topics} margin={{ top: 20, right: 30, left: 0, bottom: 5 }}>
-                  <CartesianGrid strokeDasharray="3 3" stroke="rgba(255,255,255,0.05)" vertical={false} />
-                  <XAxis 
-                    dataKey="topic" 
-                    tick={{ fill: '#94a3b8', fontSize: 12 }} 
-                    axisLine={{ stroke: 'rgba(255,255,255,0.1)' }}
-                    tickFormatter={(val) => val.length > 10 ? val.substring(0, 10) + '...' : val}
-                  />
-                  <YAxis 
-                    tick={{ fill: '#94a3b8', fontSize: 12 }} 
-                    axisLine={false} 
-                    tickLine={false} 
-                    domain={[0, 100]}
-                  />
-                  <Tooltip 
-                    contentStyle={{ backgroundColor: '#0f172a', borderColor: '#1e293b', color: '#f8fafc', borderRadius: '8px' }}
-                    cursor={{ fill: 'rgba(255,255,255,0.05)' }}
-                  />
-                  <Bar dataKey="success_rate" name="Accuracy %" radius={[4, 4, 0, 0]}>
-                    {report.topics.map((entry, index) => (
-                      <Cell key={`cell-${index}`} fill={entry.is_weakness ? '#fb7185' : '#34d399'} />
-                    ))}
-                  </Bar>
-                </BarChart>
-              </ResponsiveContainer>
-            </div>
-          </Card>
         </>
       ) : (
         <div className="p-12 text-center border border-dashed border-white/10 rounded-2xl flex flex-col items-center">
