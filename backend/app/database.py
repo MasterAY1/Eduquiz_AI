@@ -97,6 +97,13 @@ async def init_db() -> None:
                 )
 
             await conn.run_sync(Base.metadata.create_all)
+            
+            # Apply schema migration for educational_level (DROP NOT NULL)
+            try:
+                await conn.execute(text("ALTER TABLE users ALTER COLUMN educational_level DROP NOT NULL;"))
+            except Exception as e:
+                logger.warning(f"Could not drop NOT NULL constraint on educational_level: {e}")
+                
             logger.info("Database tables created (or already exist).")
     except Exception as exc:
         logger.error(f"Failed to initialise database: {exc}")
