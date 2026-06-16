@@ -9,8 +9,6 @@ import { Button } from '@/components/ui/Button';
 import { Input } from '@/components/ui/Input';
 import { Badge } from '@/components/ui/Badge';
 import { Skeleton } from '@/components/ui/SkeletonLoader';
-  ResponsiveContainer,
-} from 'recharts';
 import { cn } from '@/lib/utils';
 import { useRouter } from 'next/navigation';
 
@@ -34,12 +32,7 @@ export default function AnalyticsPage() {
     router.push(`/app/quizzes?topic=${encodeURIComponent(topic)}&subject=${encodeURIComponent(subject)}`);
   };
 
-  // Format data for radar chart (max 6 topics for readability)
-  const radarData = report?.topics.slice(0, 6).map((t) => ({
-    topic: t.topic.length > 15 ? t.topic.substring(0, 15) + '...' : t.topic,
-    successRate: t.success_rate,
-    fullMark: 100,
-  })) || [];
+
 
   return (
     <div className="flex-1 overflow-y-auto p-4 lg:p-8 space-y-8">
