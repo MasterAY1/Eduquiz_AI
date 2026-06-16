@@ -94,6 +94,12 @@ async def _generic_handler(request: Request, exc: EduQuizException) -> JSONRespo
     return JSONResponse(status_code=500, content=_error_body(500, exc.message))
 
 
+async def _fallback_exception_handler(request: Request, exc: Exception) -> JSONResponse:
+    import logging
+    logging.error(f"Unhandled exception: {exc}", exc_info=True)
+    return JSONResponse(status_code=500, content=_error_body(500, "An internal server error occurred."))
+
+
 def register_exception_handlers(app: FastAPI) -> None:
     """Register all custom exception handlers on the FastAPI app."""
     app.add_exception_handler(NotFoundError, _not_found_handler)  # type: ignore[arg-type]
@@ -103,3 +109,4 @@ def register_exception_handlers(app: FastAPI) -> None:
     app.add_exception_handler(AIProviderError, _ai_provider_handler)  # type: ignore[arg-type]
     app.add_exception_handler(DocumentProcessingError, _document_processing_handler)  # type: ignore[arg-type]
     app.add_exception_handler(EduQuizException, _generic_handler)  # type: ignore[arg-type]
+    app.add_exception_handler(Exception, _fallback_exception_handler)
