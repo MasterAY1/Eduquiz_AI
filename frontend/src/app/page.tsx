@@ -25,22 +25,22 @@ export default function LandingPage() {
       </div>
 
       {/* Navigation */}
-      <nav className="fixed top-0 inset-x-0 z-50 px-4 sm:px-6 py-4">
-        <div className="max-w-7xl mx-auto glass-pill px-4 sm:px-6 py-3 flex items-center justify-between shadow-2xl">
-          <div className="flex items-center gap-2">
-            <div className="w-8 h-8 rounded-lg bg-gradient-to-br from-emerald-400 to-emerald-600 flex items-center justify-center">
-              <Brain className="w-4 h-4 text-white" />
+      <nav className="fixed top-0 inset-x-0 z-50 px-2 sm:px-6 py-4">
+        <div className="max-w-7xl mx-auto glass-pill px-3 sm:px-6 py-3 flex items-center justify-between shadow-2xl">
+          <div className="flex items-center gap-1.5 sm:gap-2">
+            <div className="w-7 h-7 sm:w-8 sm:h-8 rounded-lg bg-gradient-to-br from-emerald-400 to-emerald-600 flex items-center justify-center">
+              <Brain className="w-3.5 h-3.5 sm:w-4 sm:h-4 text-white" />
             </div>
-            <span className="font-heading font-bold text-lg tracking-tight text-white hidden sm:block">EduQuiz</span>
+            <span className="font-heading font-bold text-sm sm:text-lg tracking-tight text-white">EduQuiz</span>
           </div>
           
-          <div className="flex items-center gap-3 sm:gap-4">
-            <Link href="/login" className="text-sm font-medium text-slate-300 hover:text-white transition-colors">
+          <div className="flex items-center gap-2 sm:gap-4">
+            <Link href="/login" className="text-xs sm:text-sm font-medium text-slate-300 hover:text-white transition-colors">
               Sign In
             </Link>
             <Link 
               href="/register" 
-              className="text-xs sm:text-sm font-semibold bg-white text-bg px-4 sm:px-5 py-2 rounded-full hover:scale-105 transition-transform"
+              className="text-xs sm:text-sm font-semibold bg-white text-bg px-3 sm:px-5 py-2 rounded-full hover:scale-105 transition-transform"
             >
               Get Started
             </Link>

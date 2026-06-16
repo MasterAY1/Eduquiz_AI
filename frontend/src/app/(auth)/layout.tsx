@@ -18,7 +18,7 @@ export default function AuthLayout({ children }: { children: React.ReactNode }) 
       <motion.div
         initial={{ opacity: 0, x: -20 }}
         animate={{ opacity: 1, x: 0 }}
-        className="absolute top-6 left-6 z-20"
+        className="w-full max-w-md flex justify-start mb-6 z-20 relative"
       >
         <Link
           href="/"
