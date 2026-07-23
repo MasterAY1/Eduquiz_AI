@@ -10,7 +10,6 @@ export const documentsApi = {
     }
     return apiClient
       .post<Document>('/api/v1/documents/upload', form, {
-        headers: { 'Content-Type': 'multipart/form-data' },
         onUploadProgress: (progressEvent) => {
           if (onProgress && progressEvent.total) {
             const progress = Math.round((progressEvent.loaded * 100) / progressEvent.total);
