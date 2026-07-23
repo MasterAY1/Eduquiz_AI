@@ -87,17 +87,16 @@ async def process_document_background(
       5. Update document record with results
       6. Mark as 'indexed' (or 'failed' on error)
     """
-    from sqlalchemy.ext.asyncio import async_sessionmaker, create_async_engine
+    from app.database import AsyncSessionLocal
+    import uuid as _uuid
 
-    settings = get_settings()
-    engine = create_async_engine(settings.DATABASE_URL, echo=False)
-    SessionLocal = async_sessionmaker(bind=engine, expire_on_commit=False)
+    doc_uuid = _uuid.UUID(document_id) if isinstance(document_id, str) else document_id
 
-    async with SessionLocal() as db:
+    async with AsyncSessionLocal() as db:
         try:
             # 1. Update status → processing
             result = await db.execute(
-                select(Document).where(Document.id == document_id)
+                select(Document).where(Document.id == doc_uuid)
             )
             doc = result.scalar_one_or_none()
             if not doc:
@@ -165,7 +164,7 @@ async def process_document_background(
             try:
                 await db.rollback()
                 result = await db.execute(
-                    select(Document).where(Document.id == document_id)
+                    select(Document).where(Document.id == doc_uuid)
                 )
                 doc = result.scalar_one_or_none()
                 if doc:
@@ -182,7 +181,7 @@ async def process_document_background(
             try:
                 await db.rollback()
                 result = await db.execute(
-                    select(Document).where(Document.id == document_id)
+                    select(Document).where(Document.id == doc_uuid)
                 )
                 doc = result.scalar_one_or_none()
                 if doc:
@@ -194,7 +193,7 @@ async def process_document_background(
                     f"Failed to update document status after error: {inner_exc}"
                 )
         finally:
-            await engine.dispose()
+            pass  # No standalone engine to dispose; using shared pool
 
 
 # ── DocumentService ────────────────────────────────────────────────────────────
@@ -340,7 +339,12 @@ class DocumentService:
         db.add(audit)
         await db.flush()
 
-        # Schedule background processing AFTER flush so doc.id is set
+        # COMMIT the document row BEFORE scheduling the background task.
+        # Without this commit, the background task races against get_db()'s
+        # post-response commit and may not find the document row.
+        await db.commit()
+
+        # Schedule background processing AFTER commit so doc exists in DB
         doc_id = str(doc.id)
         st = source_type.value
         background_tasks.add_task(

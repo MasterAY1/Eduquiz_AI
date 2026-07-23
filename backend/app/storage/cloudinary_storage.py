@@ -47,7 +47,7 @@ class CloudinaryStorage:
         # Strip extension from filename for public_id
         stem = filename.rsplit(".", 1)[0] if "." in filename else filename
 
-        loop = asyncio.get_event_loop()
+        loop = asyncio.get_running_loop()
         upload_func = partial(
             cloudinary.uploader.upload,
             file_bytes,
@@ -69,7 +69,7 @@ class CloudinaryStorage:
             public_id:     The Cloudinary public_id of the resource.
             resource_type: 'raw' for documents, 'image' for images.
         """
-        loop = asyncio.get_event_loop()
+        loop = asyncio.get_running_loop()
         destroy_func = partial(
             cloudinary.uploader.destroy,
             public_id,

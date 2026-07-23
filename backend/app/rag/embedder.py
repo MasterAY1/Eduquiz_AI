@@ -47,7 +47,7 @@ class GeminiEmbedder:
         if self._active_model is not None:
             return self._active_model
 
-        loop = asyncio.get_event_loop()
+        loop = asyncio.get_running_loop()
         for model_name in _EMBEDDING_MODELS:
             try:
                 probe = partial(
@@ -78,7 +78,7 @@ class GeminiEmbedder:
         task_type: str,
     ):
         """Call embed_content, retrying with the next model on 404."""
-        loop = asyncio.get_event_loop()
+        loop = asyncio.get_running_loop()
         model = await self._resolve_model()
 
         embed_func = partial(
