@@ -38,13 +38,13 @@ class ModelRouter(AIProvider):
 
             # Determine candidates based on active models
             if tier == 1:
-                candidates = ["gemini-2.5-flash", "gemini-3.1-flash-lite", "deepseek-chat"]
+                candidates = ["gemini-2.0-flash", "gemini-2.0-flash-lite", "deepseek-chat"]
             elif tier == 2:
-                candidates = ["gemini-2.5-flash", "gemini-3.1-flash-lite", "deepseek-chat"]
+                candidates = ["gemini-2.0-flash", "gemini-2.0-flash-lite", "deepseek-chat"]
             elif tier == 3:
-                candidates = ["gemini-2.5-flash", "gemini-3.1-flash-lite", "deepseek-chat"]
+                candidates = ["gemini-2.0-flash", "gemini-2.0-flash-lite", "deepseek-chat"]
             else:
-                candidates = ["gemini-2.5-flash", "gemini-3.1-flash-lite", "deepseek-chat"]
+                candidates = ["gemini-2.0-flash", "gemini-2.0-flash-lite", "deepseek-chat"]
 
             last_error = None
             routed_model = None

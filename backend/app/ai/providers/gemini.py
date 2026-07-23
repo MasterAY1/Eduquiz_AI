@@ -25,12 +25,24 @@ logger = get_logger(__name__)
 class GeminiProvider(AIProvider):
     """AI provider backed by Google Gemini 2.0 Flash."""
 
+    # Map friendly names to actual Google Generative AI model IDs
+    _MODEL_MAP = {
+        "gemini-2.0-flash": "gemini-2.0-flash",
+        "gemini-2.0-flash-lite": "gemini-2.0-flash-lite",
+        "gemini-1.5-flash": "gemini-1.5-flash",
+        "gemini-1.5-pro": "gemini-1.5-pro",
+        # Legacy / incorrect names that should be mapped
+        "gemini-2.5-flash": "gemini-2.0-flash",
+        "gemini-3.1-flash-lite": "gemini-2.0-flash-lite",
+        "gemini-3.6-flash": "gemini-2.0-flash",
+    }
+
     def __init__(self, api_key: str, model_name: str = "gemini-2.0-flash") -> None:
         genai.configure(api_key=api_key)
         
-        # Map friendly model names to actual API models if needed
+        # Map friendly model names to actual API models
         self.friendly_name = model_name
-        self.api_model_name = model_name
+        self.api_model_name = self._MODEL_MAP.get(model_name, "gemini-2.0-flash")
         
         self.model = genai.GenerativeModel(
             self.api_model_name,
