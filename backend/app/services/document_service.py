@@ -135,12 +135,26 @@ async def process_document_background(
                         return count
 
                 async def _analysis_task():
-                    ai_provider = get_ai_provider()
-                    analysis_text = extracted_text[:8000]
-                    return await ai_provider.analyze_document(
-                        analysis_text,
-                        level=doc.detected_level or "sss",
-                    )
+                    try:
+                        ai_provider = get_ai_provider()
+                        analysis_text = extracted_text[:8000]
+                        return await ai_provider.analyze_document(
+                            analysis_text,
+                            level=doc.detected_level or "sss",
+                        )
+                    except Exception as exc:
+                        logger.warning(f"AI document analysis failed (using fallback metadata): {exc}")
+                        from app.ai.base import DocumentAnalysis
+                        # Extract first meaningful line for subject if available
+                        lines = [line.strip() for line in extracted_text.split("\n") if line.strip()]
+                        fallback_subject = lines[0][:80] if lines else "General Study Material"
+                        return DocumentAnalysis(
+                            subject=fallback_subject,
+                            detected_level=doc.detected_level or "sss",
+                            topics=["General Study Notes"],
+                            subtopics={},
+                            summary="Document text successfully extracted and indexed for study guide and quiz generation.",
+                        )
 
                 chunk_count, analysis = await asyncio.gather(_index_task(), _analysis_task())
 

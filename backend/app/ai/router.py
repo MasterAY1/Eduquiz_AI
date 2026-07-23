@@ -36,18 +36,15 @@ class ModelRouter(AIProvider):
             except Exception as bootstrap_exc:
                 logger.warning(f"Router: QuotaManager bootstrap failed (non-fatal): {bootstrap_exc}")
 
-            # Determine candidates based on the task tier escalation rules
+            # Determine candidates based on active models
             if tier == 1:
-                # Tier 1 (Lite): Try Gemini Lite first, then fall back directly to DeepSeek V4
-                candidates = ["gemini-3.1-flash-lite", "deepseek-v4"]
+                candidates = ["gemini-2.5-flash", "gemini-3.1-flash-lite", "deepseek-chat"]
             elif tier == 2:
-                # Tier 2 (Assessment): Try Gemini 2.5, then Gemini Lite, then DeepSeek V4
-                candidates = ["gemini-2.5-flash", "gemini-3.1-flash-lite", "deepseek-v4"]
+                candidates = ["gemini-2.5-flash", "gemini-3.1-flash-lite", "deepseek-chat"]
             elif tier == 3:
-                # Tier 3 (Reasoning/Tutor): Try Gemini 3.5, then fall back directly to DeepSeek V4
-                candidates = ["gemini-3.5-flash", "deepseek-v4"]
+                candidates = ["gemini-2.5-flash", "gemini-3.1-flash-lite", "deepseek-chat"]
             else:
-                candidates = ["gemini-3.1-flash-lite", "deepseek-v4"]
+                candidates = ["gemini-2.5-flash", "gemini-3.1-flash-lite", "deepseek-chat"]
 
             last_error = None
             routed_model = None
