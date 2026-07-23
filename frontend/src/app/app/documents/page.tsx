@@ -1,6 +1,6 @@
 'use client';
 
-import { useDocuments, useUploadDocument, useDeleteDocument } from '@/hooks/useDocuments';
+import { useDocuments, useUploadDocument, useDeleteDocument, useDocumentStatus } from '@/hooks/useDocuments';
 import { Card } from '@/components/ui/Card';
 import { Button } from '@/components/ui/Button';
 import { Badge } from '@/components/ui/Badge';
@@ -46,15 +46,11 @@ const cardVariants = {
 
 // Document Card Component to isolate polling state if a document is not yet completed
 function DocumentCard({ doc, onDelete }: { doc: any; onDelete: (id: string) => void }) {
-  const [currentStatus, setCurrentStatus] = useState(doc.analysis_status);
-  
-  // Poll if pending or processing
-  const isPolling = currentStatus === 'pending' || currentStatus === 'processing';
-  
-  // Custom polling logic inside card if needed, or query client will naturally invalidate on success
-  useEffect(() => {
-    setCurrentStatus(doc.analysis_status);
-  }, [doc.analysis_status]);
+  const isPendingOrProcessing = doc.analysis_status === 'pending' || doc.analysis_status === 'processing';
+  const { data: statusData } = useDocumentStatus(doc.id, isPendingOrProcessing);
+
+  const currentStatus = statusData?.analysis_status || doc.analysis_status;
+  const currentErrorMessage = statusData?.error_message || doc.error_message;
 
   const getStatusDisplay = (status: string) => {
     switch (status) {
@@ -146,7 +142,7 @@ function DocumentCard({ doc, onDelete }: { doc: any; onDelete: (id: string) => v
         ) : currentStatus === 'failed' ? (
           <div className="flex-1 text-xs text-[rose-500] truncate flex items-center gap-1.5 p-1 rounded bg-rose-500/5">
             <AlertCircle className="w-4 h-4 flex-shrink-0" />
-            <span className="truncate">{doc.error_message || 'Indexing failed'}</span>
+            <span className="truncate">{currentErrorMessage || 'Indexing failed'}</span>
           </div>
         ) : (
           <div className="flex-1 text-xs text-[slate-400] animate-pulse flex items-center gap-2">

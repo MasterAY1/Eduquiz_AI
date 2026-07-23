@@ -9,6 +9,13 @@ export function useDocuments() {
   return useQuery({
     queryKey: ['documents'],
     queryFn: () => documentsApi.list(0, 50),
+    refetchInterval: (query) => {
+      const items = query.state.data?.items || [];
+      const hasProcessing = items.some(
+        (doc: any) => doc.analysis_status === 'pending' || doc.analysis_status === 'processing'
+      );
+      return hasProcessing ? 3000 : false;
+    },
   });
 }
 
