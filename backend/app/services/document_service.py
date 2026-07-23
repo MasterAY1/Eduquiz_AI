@@ -107,9 +107,11 @@ async def process_document_background(
             doc.analysis_status = AnalysisStatus.PROCESSING
             await db.commit()
 
-            # 2. Parse text
+            # 2. Parse text (run CPU-bound parse in thread pool)
             parser = get_parser(source_type)
-            extracted_text = parser.parse(file_bytes, doc.original_filename or "")
+            extracted_text = await asyncio.to_thread(
+                parser.parse, file_bytes, doc.original_filename or ""
+            )
 
             if not extracted_text or len(extracted_text.strip()) < 50:
                 doc.analysis_status = AnalysisStatus.FAILED
@@ -124,40 +126,54 @@ async def process_document_background(
             doc.word_count = len(extracted_text.split())
             await db.commit()
 
-            # 3. Index into vector store
-            chunk_count = await knowledge_base.index_document(
-                db, document_id, extracted_text
-            )
-            doc.chunk_count = chunk_count
-            await db.commit()
+            # 3 & 4. Index into vector store and run AI analysis (with 120s timeout)
+            async def _run_indexing_and_ai():
+                chunk_count = await knowledge_base.index_document(
+                    db, document_id, extracted_text
+                )
+                doc.chunk_count = chunk_count
+                await db.commit()
 
-            # 4. AI analysis
-            ai_provider = get_ai_provider()
-            # Use RAG context for the analysis query
-            context = await knowledge_base.retrieve_context(
-                db, document_id, f"Overview and key topics of this document", top_k=5
-            )
-            analysis_text = context if context else extracted_text[:8000]
-            analysis = await ai_provider.analyze_document(
-                analysis_text,
-                level=doc.detected_level or "sss",
-            )
+                ai_provider = get_ai_provider()
+                context = await knowledge_base.retrieve_context(
+                    db, document_id, "Overview and key topics of this document", top_k=5
+                )
+                analysis_text = context if context else extracted_text[:8000]
+                analysis = await ai_provider.analyze_document(
+                    analysis_text,
+                    level=doc.detected_level or "sss",
+                )
 
-            # 5. Update document with analysis results
-            doc.subject = analysis.subject
-            doc.detected_level = analysis.detected_level
-            doc.topics = analysis.topics
-            doc.subtopics = analysis.subtopics
-            doc.summary = analysis.summary
-            doc.analysis_status = AnalysisStatus.INDEXED
-            doc.error_message = None
-            await db.commit()
+                doc.subject = analysis.subject
+                doc.detected_level = analysis.detected_level
+                doc.topics = analysis.topics
+                doc.subtopics = analysis.subtopics
+                doc.summary = analysis.summary
+                doc.analysis_status = AnalysisStatus.INDEXED
+                doc.error_message = None
+                await db.commit()
 
-            logger.info(
-                f"Document {document_id} indexed successfully. "
-                f"Subject={analysis.subject}, chunks={chunk_count}"
-            )
+                logger.info(
+                    f"Document {document_id} indexed successfully. "
+                    f"Subject={analysis.subject}, chunks={chunk_count}"
+                )
 
+            await asyncio.wait_for(_run_indexing_and_ai(), timeout=120.0)
+
+        except asyncio.TimeoutError:
+            logger.error(f"Background processing timed out for document {document_id}")
+            try:
+                await db.rollback()
+                result = await db.execute(
+                    select(Document).where(Document.id == document_id)
+                )
+                doc = result.scalar_one_or_none()
+                if doc:
+                    doc.analysis_status = AnalysisStatus.FAILED
+                    doc.error_message = "Processing timed out (took longer than 2 minutes)."
+                    await db.commit()
+            except Exception as inner_exc:
+                logger.error(f"Failed to update document status after timeout: {inner_exc}")
         except Exception as exc:
             logger.error(
                 f"Background processing failed for document {document_id}: {exc}",
@@ -450,6 +466,19 @@ class DocumentService:
     ) -> DocumentStatusResponse:
         """Return a friendly status message for polling during background processing."""
         doc = await self.get_document(db, document_id, user_id)
+
+        # Auto-heal orphaned stuck documents (created > 3 minutes ago still pending or processing)
+        if doc.analysis_status in (AnalysisStatus.PENDING, AnalysisStatus.PROCESSING):
+            created = doc.created_at
+            if created:
+                if created.tzinfo is None:
+                    created = created.replace(tzinfo=timezone.utc)
+                now = datetime.now(timezone.utc)
+                if (now - created).total_seconds() > 180:
+                    doc.analysis_status = AnalysisStatus.FAILED
+                    doc.error_message = "Processing timed out or server restarted. Please re-upload your document."
+                    await db.commit()
+
         status_val = doc.analysis_status.value
         progress_message = _STATUS_MESSAGES.get(status_val, "Unknown status.")
         return DocumentStatusResponse(
