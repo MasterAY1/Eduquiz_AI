@@ -14,10 +14,9 @@ from app.utils.logger import get_logger
 
 logger = get_logger(__name__)
 
-# Ordered list of embedding models to try (first available wins).
 _EMBEDDING_MODELS = [
-    "models/text-embedding-005",       # Primary — 768 dims, English + code
-    "models/gemini-embedding-001",     # Fallback — up to 3072 dims (we request 768)
+    "models/gemini-embedding-001",     # Primary — 768 dims supported
+    "models/gemini-embedding-2",       # Fallback
 ]
 
 
