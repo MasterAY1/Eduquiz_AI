@@ -12,10 +12,65 @@ from app.utils.logger import get_logger
 
 logger = get_logger(__name__)
 
-# Basic in-memory cache for prompts to avoid DB hits on every request
-# Format: {(category, target_model): {"prompt": AIPrompt, "expires": datetime}}
-_PROMPT_CACHE: Dict[Tuple[str, Optional[str]], Dict[str, Any]] = {}
-CACHE_TTL_SECONDS = 300  # 5 minutes
+DEFAULT_SYSTEM_PERSONA = """You are an experienced teacher and lecturer with strong subject expertise.
+Your communication style must be professional, clear, educational, confident, structured, respectful, and encouraging.
+Prioritize accuracy, clarity, and learning."""
+
+DEFAULT_PROMPTS = {
+    "system_persona": DEFAULT_SYSTEM_PERSONA,
+    "document_analysis": """You are an expert educational curriculum analyser.
+{% if language == 'en' %}
+Analyze the following document text and extract metadata in English.
+{% else %}
+Analyze the following document text and extract metadata in {{ language }}.
+{% endif %}
+
+{{ system_persona }}
+
+Extract the following details from the text:
+1. "subject": The main academic subject (e.g., Mathematics, Biology, History, Zoology).
+2. "detected_level": The target educational level (e.g., Primary, JSS, SSS, Polytechnic, University).
+3. "topics": A list of main topics covered in the text.
+4. "subtopics": A dictionary mapping each main topic to a list of subtopics.
+5. "summary": A concise educational summary of the content (3-5 sentences).
+
+Document Text:
+{{ text }}
+
+Return ONLY a raw JSON object with the exact keys: 'subject', 'detected_level', 'topics', 'subtopics', 'summary'.
+Do not include any markdown formatting (like ```json), no explanations, just the JSON string.""",
+    "quiz_generation": """You are an expert educational quiz generator.
+{% if language == 'en' %}
+Write all questions and answers in English.
+{% else %}
+Write all questions and answers in {{ language }}.
+{% endif %}
+
+{{ system_persona }}
+
+Generate questions based on the educational content provided below.
+
+Subject: {{ subject }}
+Educational Level: {{ level }}
+Difficulty: {{ difficulty }}
+
+Educational Content:
+{{ context }}
+
+Return ONLY a valid JSON array of question objects.""",
+    "tutor_chat": """{{ system_persona }}
+
+{% if language != 'en' %}
+Please communicate primarily in {{ language }}.
+{% endif %}
+
+You are tutoring a student based on their uploaded study materials.
+Use the following extracted context from their document to answer their question:
+
+Document Context:
+{{ context }}""",
+}
+
 
 class PromptService:
     def __init__(self):
@@ -52,6 +107,19 @@ class PromptService:
         active_prompts = result.scalars().all()
 
         if not active_prompts:
+            if category in DEFAULT_PROMPTS:
+                logger.warning(f"No active prompt in DB for category '{category}'. Using built-in default.")
+                fallback = AIPrompt(
+                    id=uuid.uuid4(),
+                    name=f"default_{category}",
+                    category=category,
+                    template=DEFAULT_PROMPTS[category],
+                    description="Built-in fallback prompt",
+                    is_active=True,
+                    version=1,
+                    variant="default",
+                )
+                return fallback
             raise ValueError(f"No active prompt found for category '{category}'")
 
         # Select the best prompt: Model specific > Generic (target_model IS NULL)
