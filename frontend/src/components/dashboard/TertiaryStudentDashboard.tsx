@@ -129,7 +129,7 @@ export function TertiaryStudentDashboard() {
           ) : (
             <div className="space-y-3">
               {stats.recent_attempts.map((attempt) => (
-                <Link key={attempt.attempt_id} href={`/app/quizzes/${attempt.quiz_id}/results?attempt=${attempt.attempt_id}`}>
+                <Link key={attempt.attempt_id} href={`/app/quizzes/attempt/${attempt.attempt_id}`}>
                   <Card className="p-4 flex items-center justify-between group hover:border-blue-500/30 transition-colors">
                     <div>
                       <h4 className="font-semibold text-white text-sm line-clamp-1">{attempt.quiz_title}</h4>

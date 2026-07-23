@@ -140,7 +140,7 @@ export function ExamCandidateDashboard() {
                       <p className="text-sm font-bold text-emerald-400">{attempt.percentage}%</p>
                       <p className="text-xs text-slate-500">Score</p>
                     </div>
-                    <Link href={`/app/quizzes/${attempt.quiz_id}/results?attempt=${attempt.attempt_id}`}>
+                    <Link href={`/app/quizzes/attempt/${attempt.attempt_id}`}>
                       <Button variant="ghost" size="sm" className="rounded-full w-10 h-10 p-0 text-slate-400 group-hover:text-emerald-400 group-hover:bg-emerald-500/10">
                         <Play className="w-4 h-4 ml-0.5" />
                       </Button>
