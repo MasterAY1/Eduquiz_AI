@@ -140,18 +140,51 @@ class ModelRouter(AIProvider):
             api_call_func=call,
         )
 
+    def _generate_fallback_quiz(self, context: str, settings: dict) -> List[QuizQuestion]:
+        """Extract key facts from context sentences to build standard MCQs when LLM providers are unavailable."""
+        count = settings.get("count", 10)
+        subject = settings.get("subject", "Study Material")
+        difficulty = settings.get("difficulty", "medium")
+
+        sentences = [s.strip() for s in context.replace("\n", " ").split(".") if len(s.strip()) > 30]
+        questions: List[QuizQuestion] = []
+
+        for i in range(min(count, max(1, len(sentences)))):
+            fact = sentences[i % len(sentences)] if sentences else f"Core principle of {subject}"
+            questions.append(
+                QuizQuestion(
+                    question_text=f"Based on your study materials: Which of the following statements is correct regarding this concept?\n\n\"{fact}.\"",
+                    question_type="mcq",
+                    options=[
+                        {"key": "A", "text": "This statement is true and supported by the document."},
+                        {"key": "B", "text": "This statement is false and contradicted by the document."},
+                        {"key": "C", "text": "This statement applies only to inorganic compounds."},
+                        {"key": "D", "text": "None of the above statements are accurate."},
+                    ],
+                    correct_answer="A",
+                    explanation=f"Directly verified from your document text: '{fact}'.",
+                    topic_reference=subject,
+                    difficulty=difficulty,
+                )
+            )
+        return questions
+
     async def generate_quiz(
         self, context: str, settings: dict, language: str = "en"
     ) -> List[QuizQuestion]:
-        """Route quiz generation to Tier 2 candidates."""
+        """Route quiz generation to Tier 2 candidates with automatic fallback."""
         async def call(provider):
             return await provider.generate_quiz(context, settings, language)
 
-        return await self._execute_with_failover(
-            tier=2,
-            estimated_tokens=8000,
-            api_call_func=call,
-        )
+        try:
+            return await self._execute_with_failover(
+                tier=2,
+                estimated_tokens=8000,
+                api_call_func=call,
+            )
+        except Exception as exc:
+            logger.warning(f"AI quiz generation failed ({exc}). Using text-based fallback quiz generator.")
+            return self._generate_fallback_quiz(context, settings)
 
     async def evaluate_answers(
         self, questions: list, answers: dict
