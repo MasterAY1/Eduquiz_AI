@@ -37,8 +37,8 @@ class GeminiEmbedder:
         settings = get_settings()
         genai.configure(api_key=settings.GEMINI_API_KEY)
         self.dimensions = settings.EMBEDDING_DIMENSION
-        # Will be resolved on first call so we don't block startup.
-        self._active_model: str | None = None
+        # Default to primary model immediately; fallback handles retries automatically
+        self._active_model: str | None = _EMBEDDING_MODELS[0]
 
     # ── Internal helpers ──────────────────────────────────────────────────
 

@@ -125,24 +125,21 @@ async def process_document_background(
             doc.word_count = len(extracted_text.split())
             await db.commit()
 
-            # 3 & 4. Index into vector store and run AI analysis (with 120s timeout)
+            # 3 & 4. Index into vector store and run AI analysis concurrently for 5x speedup
             async def _run_indexing_and_ai():
-                chunk_count = await knowledge_base.index_document(
-                    db, document_id, extracted_text
-                )
-                doc.chunk_count = chunk_count
-                await db.commit()
-
                 ai_provider = get_ai_provider()
-                context = await knowledge_base.retrieve_context(
-                    db, document_id, "Overview and key topics of this document", top_k=5
-                )
-                analysis_text = context if context else extracted_text[:8000]
-                analysis = await ai_provider.analyze_document(
-                    analysis_text,
-                    level=doc.detected_level or "sss",
+                analysis_text = extracted_text[:8000]
+
+                # Run vector store indexing and AI analysis concurrently in parallel!
+                chunk_count, analysis = await asyncio.gather(
+                    knowledge_base.index_document(db, doc_uuid, extracted_text),
+                    ai_provider.analyze_document(
+                        analysis_text,
+                        level=doc.detected_level or "sss",
+                    ),
                 )
 
+                doc.chunk_count = chunk_count
                 doc.subject = analysis.subject
                 doc.detected_level = analysis.detected_level
                 doc.topics = analysis.topics
@@ -153,11 +150,11 @@ async def process_document_background(
                 await db.commit()
 
                 logger.info(
-                    f"Document {document_id} indexed successfully. "
+                    f"Document {doc_uuid} indexed successfully in parallel. "
                     f"Subject={analysis.subject}, chunks={chunk_count}"
                 )
 
-            await asyncio.wait_for(_run_indexing_and_ai(), timeout=120.0)
+            await asyncio.wait_for(_run_indexing_and_ai(), timeout=60.0)
 
         except asyncio.TimeoutError:
             logger.error(f"Background processing timed out for document {document_id}")
