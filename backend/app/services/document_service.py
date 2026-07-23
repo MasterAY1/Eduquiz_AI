@@ -125,19 +125,24 @@ async def process_document_background(
             doc.word_count = len(extracted_text.split())
             await db.commit()
 
-            # 3 & 4. Index into vector store and run AI analysis concurrently for 5x speedup
+            # 3 & 4. Index into vector store and run AI analysis concurrently (with separate DB sessions for safety)
             async def _run_indexing_and_ai():
-                ai_provider = get_ai_provider()
-                analysis_text = extracted_text[:8000]
+                async def _index_task():
+                    from app.database import AsyncSessionLocal
+                    async with AsyncSessionLocal() as index_db:
+                        count = await knowledge_base.index_document(index_db, doc_uuid, extracted_text)
+                        await index_db.commit()
+                        return count
 
-                # Run vector store indexing and AI analysis concurrently in parallel!
-                chunk_count, analysis = await asyncio.gather(
-                    knowledge_base.index_document(db, doc_uuid, extracted_text),
-                    ai_provider.analyze_document(
+                async def _analysis_task():
+                    ai_provider = get_ai_provider()
+                    analysis_text = extracted_text[:8000]
+                    return await ai_provider.analyze_document(
                         analysis_text,
                         level=doc.detected_level or "sss",
-                    ),
-                )
+                    )
+
+                chunk_count, analysis = await asyncio.gather(_index_task(), _analysis_task())
 
                 doc.chunk_count = chunk_count
                 doc.subject = analysis.subject
