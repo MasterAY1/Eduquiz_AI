@@ -3,7 +3,7 @@ import type { Quiz, QuizAttempt, GenerateQuizData } from '@/types';
 
 export const quizzesApi = {
   generate: (data: GenerateQuizData) =>
-    apiClient.post<Quiz>('/api/v1/quizzes/generate', data).then((r) => r.data),
+    apiClient.post<Quiz>('/api/v1/quizzes/generate', data, { timeout: 60000 }).then((r) => r.data),
 
   list: () => apiClient.get<Quiz[]>('/api/v1/quizzes').then((r) => r.data),
 

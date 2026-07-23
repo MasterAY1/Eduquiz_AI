@@ -26,23 +26,28 @@ class GeminiProvider(AIProvider):
     """AI provider backed by Google Gemini 2.0 Flash."""
 
     # Map friendly names to actual Google Generative AI model IDs
+    # Verified via genai.list_models() on 2026-07-23
     _MODEL_MAP = {
+        # Current generation models (pass-through)
+        "gemini-3.1-flash-lite": "gemini-3.1-flash-lite",
+        "gemini-2.5-flash": "gemini-2.5-flash",
+        "gemini-2.5-pro": "gemini-2.5-pro",
+        "gemini-2.5-flash-lite": "gemini-2.5-flash-lite",
         "gemini-2.0-flash": "gemini-2.0-flash",
         "gemini-2.0-flash-lite": "gemini-2.0-flash-lite",
-        "gemini-1.5-flash": "gemini-1.5-flash",
-        "gemini-1.5-pro": "gemini-1.5-pro",
-        # Legacy / incorrect names that should be mapped
-        "gemini-2.5-flash": "gemini-2.0-flash",
-        "gemini-3.1-flash-lite": "gemini-2.0-flash-lite",
-        "gemini-3.6-flash": "gemini-2.0-flash",
+        "gemini-3.5-flash": "gemini-3.5-flash",
+        "gemini-3.6-flash": "gemini-3.6-flash",
+        # Legacy names
+        "gemini-1.5-flash": "gemini-2.5-flash",
+        "gemini-1.5-pro": "gemini-2.5-pro",
     }
 
-    def __init__(self, api_key: str, model_name: str = "gemini-2.0-flash") -> None:
+    def __init__(self, api_key: str, model_name: str = "gemini-2.5-flash") -> None:
         genai.configure(api_key=api_key)
         
         # Map friendly model names to actual API models
         self.friendly_name = model_name
-        self.api_model_name = self._MODEL_MAP.get(model_name, "gemini-2.0-flash")
+        self.api_model_name = self._MODEL_MAP.get(model_name, model_name)
         
         self.model = genai.GenerativeModel(
             self.api_model_name,
