@@ -192,7 +192,20 @@ class GeminiProvider(AIProvider):
                 last_error = str(exc)
                 logger.warning(f"Gemini attempt {attempt} failed: {exc}")
 
-                # Progressive prompt adjustment
+                # Immediately bail out on non-retryable API errors (no point retrying)
+                err_lower = last_error.lower()
+                if any(phrase in err_lower for phrase in [
+                    "user location is not supported",
+                    "is not found for api version",
+                    "model not found",
+                    "api key not valid",
+                    "permission denied",
+                    "quota exceeded",
+                ]):
+                    logger.error(f"Non-retryable Gemini error detected. Aborting retries.")
+                    break
+
+                # Progressive prompt adjustment for schema/JSON errors only
                 if attempt == 1:
                     current_prompt = (
                         f"{prompt}\n\n"

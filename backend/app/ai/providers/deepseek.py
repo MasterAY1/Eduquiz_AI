@@ -194,7 +194,20 @@ class DeepSeekProvider(AIProvider):
                 last_error = str(exc)
                 logger.warning(f"DeepSeek attempt {attempt} failed: {exc}")
 
-                # Progressive prompt adjustment
+                # Immediately bail out on non-retryable API errors
+                err_lower = last_error.lower()
+                if any(phrase in err_lower for phrase in [
+                    "authentication",
+                    "invalid api key",
+                    "model not found",
+                    "insufficient_quota",
+                    "billing",
+                    "permission denied",
+                ]):
+                    logger.error(f"Non-retryable DeepSeek error detected. Aborting retries.")
+                    break
+
+                # Progressive prompt adjustment for schema/JSON errors only
                 if attempt == 1:
                     current_prompt = (
                         f"{prompt}\n\n"
