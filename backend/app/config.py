@@ -47,7 +47,7 @@ class Settings(BaseSettings):
         description="Secret key used to sign JWT tokens",
     )
     ACCESS_TOKEN_EXPIRE_MINUTES: int = Field(
-        default=15,
+        default=60,
         description="Access token lifetime in minutes",
     )
     REFRESH_TOKEN_EXPIRE_DAYS: int = Field(
