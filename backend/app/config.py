@@ -57,12 +57,13 @@ class Settings(BaseSettings):
     ALGORITHM: str = "HS256"
 
     # ── AI Providers ──────────────────────────────────────────────────────────
-    AI_PRIMARY_PROVIDER: Literal["gemini", "deepseek"] = Field(
+    AI_PRIMARY_PROVIDER: Literal["gemini", "deepseek", "openrouter"] = Field(
         default="gemini",
-        description="Primary AI provider: gemini or deepseek",
+        description="Primary AI provider: gemini, deepseek, or openrouter",
     )
     GEMINI_API_KEY: str | None = Field(default=None)
     DEEPSEEK_API_KEY: str | None = Field(default=None)
+    OPENROUTER_API_KEY: str | None = Field(default=None)
 
     # ── Cloudinary (legacy / optional) ────────────────────────────────────────
     CLOUDINARY_CLOUD_NAME: str | None = Field(default=None)

@@ -18,10 +18,10 @@ def get_ai_provider() -> AIProvider:
         return _provider_instance
 
     settings = get_settings()
-    if not settings.GEMINI_API_KEY and not settings.DEEPSEEK_API_KEY:
+    if not settings.GEMINI_API_KEY and not settings.DEEPSEEK_API_KEY and not settings.OPENROUTER_API_KEY:
         raise RuntimeError(
             "No AI provider configured. "
-            "Set GEMINI_API_KEY or DEEPSEEK_API_KEY in your .env file."
+            "Set GEMINI_API_KEY, DEEPSEEK_API_KEY, or OPENROUTER_API_KEY in your .env file."
         )
 
     from app.ai.router import ModelRouter
@@ -43,7 +43,12 @@ def get_provider_for_model(model_name: str) -> AIProvider:
 
     settings = get_settings()
 
-    if model_name.startswith("gemini"):
+    if settings.AI_PRIMARY_PROVIDER == "openrouter":
+        if not settings.OPENROUTER_API_KEY:
+            raise RuntimeError(f"Cannot initialize {model_name}: OPENROUTER_API_KEY is missing.")
+        from app.ai.providers.openrouter import OpenRouterProvider
+        provider = OpenRouterProvider(api_key=settings.OPENROUTER_API_KEY, model_name=model_name)
+    elif model_name.startswith("gemini"):
         if not settings.GEMINI_API_KEY:
             raise RuntimeError(f"Cannot initialize {model_name}: GEMINI_API_KEY is missing.")
         from app.ai.providers.gemini import GeminiProvider

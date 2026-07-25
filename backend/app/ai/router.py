@@ -8,6 +8,10 @@ from sqlalchemy import select
 
 from app.ai.base import AIProvider, DocumentAnalysis, EvaluationResult, QuizQuestion
 from app.ai.factory import get_provider_for_model
+from app.ai.providers.deepseek import DeepSeekProvider
+from app.ai.providers.gemini import GeminiProvider
+from app.ai.providers.openrouter import OpenRouterProvider
+from app.config import get_settings
 from app.database import AsyncSessionLocal
 from app.models.security_and_metrics import AIUsageLog
 from app.services.quota_manager import quota_manager
@@ -20,7 +24,22 @@ class ModelRouter(AIProvider):
     """Orchestrates intelligent multi-model routing and automatic failover."""
 
     def __init__(self) -> None:
-        pass
+        settings = get_settings()
+        # Instantiate active providers based on available keys
+        self.providers: list[AIProvider] = []
+        if settings.GEMINI_API_KEY:
+            self.providers.append(GeminiProvider(api_key=settings.GEMINI_API_KEY))
+        if settings.DEEPSEEK_API_KEY:
+            self.providers.append(
+                DeepSeekProvider(api_key=settings.DEEPSEEK_API_KEY)
+            )
+        if settings.OPENROUTER_API_KEY:
+            self.providers.append(
+                OpenRouterProvider(api_key=settings.OPENROUTER_API_KEY)
+            )
+
+        if not self.providers:
+            logger.warning("Router: No AI providers configured.")
 
     async def _execute_with_failover(
         self,
