@@ -11,6 +11,9 @@ from app.models.document import DocumentChunk
 from app.models.security_and_metrics import UserQuota
 from app.schemas.chat import ChatMessageResponse, ChatSessionResponse
 from app.utils.errors import NotFoundError, ValidationError
+from app.utils.logger import get_logger
+
+logger = get_logger(__name__)
 
 
 class ChatService:
@@ -135,7 +138,12 @@ class ChatService:
                 pass
 
         # 6. Generate AI Response
-        ai_response_text = await self.router.chat(messages=ai_messages, context=rag_context)
+        from app.utils.errors import AIProviderError
+        try:
+            ai_response_text = await self.router.chat(messages=ai_messages, context=rag_context)
+        except AIProviderError as e:
+            logger.error(f"AI Provider error during chat: {e}")
+            ai_response_text = f"⚠️ I'm sorry, but I encountered an error connecting to the AI provider. Please check your API credits or configuration. \n\n**Error Details:** {str(e)}"
 
         # 7. Deduct from UserQuota
         from sqlalchemy import update
