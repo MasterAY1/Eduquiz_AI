@@ -43,7 +43,7 @@ def get_provider_for_model(model_name: str) -> AIProvider:
 
     settings = get_settings()
 
-    if settings.AI_PRIMARY_PROVIDER == "openrouter":
+    if settings.AI_PRIMARY_PROVIDER == "openrouter" or settings.OPENROUTER_API_KEY:
         if not settings.OPENROUTER_API_KEY:
             raise RuntimeError(f"Cannot initialize {model_name}: OPENROUTER_API_KEY is missing.")
         from app.ai.providers.openrouter import OpenRouterProvider
