@@ -125,7 +125,7 @@ class QuizService:
         if not context:
             context = doc.extracted_text[:8000] if doc.extracted_text else ""
 
-        if not context or len(context.strip()) < 50:
+        if not context or len(context.strip()) < 5:
             raise ValidationError("Not enough text content in the document to generate a quiz.")
 
         # 4. Request questions from AI provider

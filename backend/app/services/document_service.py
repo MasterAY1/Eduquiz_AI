@@ -112,7 +112,7 @@ async def process_document_background(
                 parser.parse, file_bytes, doc.original_filename or ""
             )
 
-            if not extracted_text or len(extracted_text.strip()) < 50:
+            if not extracted_text or len(extracted_text.strip()) < 5:
                 doc.analysis_status = AnalysisStatus.FAILED
                 doc.error_message = (
                     "Extracted text is too short. "
