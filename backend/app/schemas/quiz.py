@@ -108,7 +108,7 @@ class StartAttemptResponse(BaseModel):
 class SubmitAttemptRequest(BaseModel):
     """Payload for POST /quizzes/attempt/{id}/submit."""
 
-    answers: dict[str, str]  # {question_id: student_answer}
+    answers: dict[str, str | dict[str, str]]  # {question_id: student_answer OR {part: student_answer}}
     time_taken_seconds: Optional[int] = None
 
 

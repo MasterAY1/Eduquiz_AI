@@ -16,7 +16,7 @@ export const quizzesApi = {
 
   submitAttempt: (
     attemptId: string,
-    answers: Record<string, string>,
+    answers: Record<string, string | Record<string, string>>,
     time_taken_seconds?: number
   ) =>
     apiClient
