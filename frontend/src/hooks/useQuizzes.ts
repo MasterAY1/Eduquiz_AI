@@ -60,6 +60,7 @@ export function useStartAttempt() {
 
 export function useSubmitAttempt() {
   const addToast = useUIStore((s) => s.addToast);
+  const queryClient = useQueryClient();
 
   return useMutation({
     mutationFn: ({
@@ -71,6 +72,10 @@ export function useSubmitAttempt() {
       answers: Record<string, any>;
       time_taken_seconds?: number;
     }) => quizzesApi.submitAttempt(attemptId, answers, time_taken_seconds),
+    onSuccess: (_, variables) => {
+      queryClient.invalidateQueries({ queryKey: ['attempt', variables.attemptId] });
+      queryClient.invalidateQueries({ queryKey: ['dashboard'] });
+    },
     onError: () => {
       addToast({ type: 'error', message: 'Failed to submit quiz. Please try again.' });
     },

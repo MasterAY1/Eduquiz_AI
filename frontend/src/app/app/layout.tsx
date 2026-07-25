@@ -13,7 +13,6 @@ import {
   LogOut,
   Bell,
   ChevronRight,
-  Cpu,
   MessageSquare,
   BarChart3,
   Timer,
@@ -50,8 +49,7 @@ const getNavItems = (persona?: string) => {
 
   base.push(
     { href: '/app/analytics', icon: BarChart3, label: 'Analytics' },
-    { href: '/app/settings', icon: Settings, label: 'Settings' },
-    { href: '/app/admin/ai', icon: Cpu, label: 'AI Monitor' }
+    { href: '/app/settings', icon: Settings, label: 'Settings' }
   );
 
   return base;
