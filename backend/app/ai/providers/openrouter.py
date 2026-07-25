@@ -51,6 +51,7 @@ class OpenRouterProvider(AIProvider):
             messages=[{"role": "user", "content": prompt}],
             response_format={"type": "json_object"},
             temperature=0.4,
+            max_tokens=4000,
         )
         return response.choices[0].message.content or ""
 
@@ -133,6 +134,7 @@ class OpenRouterProvider(AIProvider):
                     messages=[{"role": "user", "content": current_prompt}],
                     response_format={"type": "json_object"},
                     temperature=0.4,
+                    max_tokens=4000,
                 )
                 raw_text = response.choices[0].message.content or ""
 
@@ -317,6 +319,13 @@ class OpenRouterProvider(AIProvider):
         }.get(settings.get("exam_style", "standard"), "Standard general practice quiz")
 
         category = "university_theory_generation" if settings.get("exam_style") == "university_theory" else "quiz_generation"
+        quiz_kwargs = dict(settings)
+        quiz_kwargs.setdefault("subject", "General Study Material")
+        quiz_kwargs.setdefault("level", "sss")
+        quiz_kwargs.setdefault("difficulty", "medium")
+        quiz_kwargs.setdefault("count", 5)
+        quiz_kwargs.setdefault("question_types", ["mcq"])
+
         async with AsyncSessionLocal() as db:
             prompt, p_id, p_ver, p_var = await prompt_service.get_formatted_prompt(
                 db=db,
@@ -325,7 +334,7 @@ class OpenRouterProvider(AIProvider):
                 context=context,
                 language=language,
                 style_desc=style_desc,
-                **settings
+                **quiz_kwargs
             )
 
         try:

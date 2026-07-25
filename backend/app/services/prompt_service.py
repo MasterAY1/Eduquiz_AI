@@ -72,6 +72,10 @@ Document Context:
 }
 
 
+_PROMPT_CACHE: Dict[Tuple[str, Optional[str]], Dict[str, Any]] = {}
+CACHE_TTL_SECONDS = 300
+
+
 class PromptService:
     def __init__(self):
         # Initialize Jinja2 environment
