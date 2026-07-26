@@ -36,11 +36,11 @@ class OpenRouterProvider(AIProvider):
 
     def _map_model_name(self, friendly_name: str) -> str:
         mapping = {
-            "gemini-2.5-flash": "google/gemini-2.0-flash-lite-preview-02-05:free",
-            "gemini-3.1-flash-lite": "google/gemini-2.0-flash-lite-preview-02-05:free", 
-            "deepseek-chat": "deepseek/deepseek-chat:free",
+            "gemini-2.5-flash": "openrouter/free",
+            "gemini-3.1-flash-lite": "openrouter/free", 
+            "deepseek-chat": "openrouter/free",
         }
-        return mapping.get(friendly_name, "google/gemini-2.0-flash-lite-preview-02-05:free")
+        return mapping.get(friendly_name, "openrouter/free")
 
     # ── Helpers ────────────────────────────────────────────────────────────────
 
