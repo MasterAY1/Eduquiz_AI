@@ -167,4 +167,101 @@ class ChatService:
             created_at=ai_msg.created_at
         )
 
+    async def stream_message(
+        self, db: AsyncSession, user_id: uuid.UUID, session_id: uuid.UUID, content: str
+    ):
+        """Async generator that streams chat responses."""
+        # 1. Fetch Session
+        result = await db.execute(
+            select(ChatSession)
+            .options(selectinload(ChatSession.messages))
+            .filter(ChatSession.id == session_id, ChatSession.user_id == user_id)
+        )
+        session = result.scalar_one_or_none()
+        if not session:
+            yield "data: {\"error\": \"Chat session not found\"}\n\n"
+            return
+
+        # 2. Save User Message
+        user_msg = ChatMessage(session_id=session_id, sender="user", content=content)
+        db.add(user_msg)
+        await db.commit()
+        await db.refresh(session, ['messages'])
+        
+        # 3. Determine Tier and History limits
+        tier = await self.get_user_tier(db, user_id)
+        history_limit = 10 if tier == "free" else 1000
+
+        # Build message history for AI
+        sorted_messages = sorted(session.messages, key=lambda m: m.created_at)
+        recent_messages = sorted_messages[-history_limit:]
+        ai_messages = [{"role": "user" if m.sender == "user" else "ai", "content": m.content} for m in recent_messages]
+
+        # 4. RAG Context Retrieval
+        rag_context = ""
+        if session.document_id:
+            try:
+                embedder_result = await self.router.embed([content])
+                query_vector = embedder_result[0]
+                chunk_result = await db.execute(
+                    select(DocumentChunk)
+                    .filter(DocumentChunk.document_id == session.document_id)
+                    .order_by(DocumentChunk.embedding.cosine_distance(query_vector))
+                    .limit(5)
+                )
+                chunks = chunk_result.scalars().all()
+                if chunks:
+                    rag_context = "\n\n".join([f"--- Excerpt {i+1} ---\n{c.content}" for i, c in enumerate(chunks)])
+            except Exception as e:
+                logger.warning(f"RAG failed during chat stream: {e}")
+
+        # 5. Save Prompt reference
+        from app.services.prompt_service import prompt_service
+        if not session.prompt_id:
+            try:
+                _, p_id, p_ver, p_var = await prompt_service.get_formatted_prompt(db, category="tutor_chat")
+                session.prompt_id = p_id
+                session.prompt_version = p_ver
+                session.prompt_variant = p_var
+                await db.commit()
+            except ValueError:
+                pass
+
+        # 6. Stream and accumulate AI Response
+        import json
+        from app.utils.errors import AIProviderError
+        accumulated_text = []
+        try:
+            stream = await self.router.chat_stream(messages=ai_messages, context=rag_context)
+            async for chunk in stream:
+                accumulated_text.append(chunk)
+                # Yield SSE chunk
+                yield f"data: {json.dumps({'chunk': chunk})}\n\n"
+        except AIProviderError as e:
+            logger.error(f"AI stream error: {e}")
+            error_msg = f"\n\n⚠️ Provider error: {str(e)}"
+            accumulated_text.append(error_msg)
+            yield f"data: {json.dumps({'chunk': error_msg})}\n\n"
+        except Exception as e:
+            logger.error(f"Unexpected stream error: {e}")
+            yield f"data: {json.dumps({'chunk': '⚠️ Connection lost.'})}\n\n"
+
+        ai_response_text = "".join(accumulated_text)
+
+        # 7. Deduct from UserQuota & Save AI Message
+        from sqlalchemy import update
+        from app.models.security_and_metrics import UserQuota
+        try:
+            await db.execute(
+                update(UserQuota)
+                .where(UserQuota.user_id == user_id)
+                .values(ai_requests_today=UserQuota.ai_requests_today + 1)
+            )
+            ai_msg = ChatMessage(session_id=session_id, sender="ai", content=ai_response_text)
+            db.add(ai_msg)
+            await db.commit()
+            yield f"data: {json.dumps({'done': True})}\n\n"
+        except Exception as e:
+            logger.error(f"Failed saving chat message: {e}")
+
 chat_service = ChatService()

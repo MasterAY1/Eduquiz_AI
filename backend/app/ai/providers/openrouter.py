@@ -451,11 +451,7 @@ class OpenRouterProvider(AIProvider):
                 output_tokens=output_tokens,
                 response_time_ms=duration_ms,
                 status="success",
-                prompt_id=p_id,
-                prompt_version=p_ver,
-                prompt_variant=p_var,
             )
-            
             return response.choices[0].message.content or ""
         except Exception as e:
             duration_ms = int((time.perf_counter() - start_time) * 1000)
@@ -469,9 +465,48 @@ class OpenRouterProvider(AIProvider):
                 response_time_ms=duration_ms,
                 status="error",
                 error_message=str(e),
-                prompt_id=p_id,
-                prompt_version=p_ver,
-                prompt_variant=p_var,
             )
             logger.error(f"OpenRouter chat failed: {e}")
+            from app.utils.errors import AIProviderError
             raise AIProviderError(f"Chat failed: {e}")
+
+    async def chat_stream(
+        self,
+        messages: list[dict],
+        context: str = "",
+    ):
+        """Streams a chat completion response from OpenRouter."""
+        from app.database import AsyncSessionLocal
+        from app.services.prompt_service import prompt_service
+        
+        async with AsyncSessionLocal() as db:
+            system_instruction, p_id, p_ver, p_var = await prompt_service.get_formatted_prompt(
+                db=db,
+                category="tutor_chat",
+                target_model=self.friendly_name,
+                language="en",
+                context=context
+            )
+
+        ds_messages = [{"role": "system", "content": system_instruction}]
+        for msg in messages:
+            role = "assistant" if msg["role"] == "ai" else "user"
+            ds_messages.append({"role": role, "content": msg["content"]})
+
+        start_time = time.perf_counter()
+        try:
+            stream = await self.client.chat.completions.create(
+                model=self.model,
+                messages=ds_messages,
+                temperature=0.6,
+                stream=True
+            )
+            
+            async for chunk in stream:
+                if chunk.choices and chunk.choices[0].delta.content:
+                    yield chunk.choices[0].delta.content
+                    
+        except Exception as e:
+            logger.error(f"OpenRouter chat stream failed: {e}")
+            from app.utils.errors import AIProviderError
+            raise AIProviderError(f"Chat stream failed: {e}")

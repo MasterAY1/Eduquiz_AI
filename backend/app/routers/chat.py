@@ -47,3 +47,19 @@ async def send_chat_message(
     return await chat_service.send_message(
         db=db, user_id=current_user.id, session_id=session_id, content=data.content
     )
+
+from fastapi.responses import StreamingResponse
+
+@router.post("/sessions/{session_id}/messages/stream")
+async def stream_chat_message(
+    session_id: uuid.UUID,
+    data: ChatMessageCreate,
+    current_user: User = Depends(get_current_active_user),
+    db: AsyncSession = Depends(get_db),
+):
+    return StreamingResponse(
+        chat_service.stream_message(
+            db=db, user_id=current_user.id, session_id=session_id, content=data.content
+        ),
+        media_type="text/event-stream"
+    )

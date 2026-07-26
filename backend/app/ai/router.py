@@ -242,3 +242,46 @@ class ModelRouter(AIProvider):
             return await provider.chat(messages, context)
 
         return await self._execute_with_failover(tier, estimated_tokens, call_provider)
+
+    async def chat_stream(
+        self,
+        messages: list[dict],
+        context: str = "",
+    ):
+        """Route a chat completion stream request."""
+        estimated_tokens = sum(len(m["content"]) for m in messages) // 3 + len(context) // 3
+        tier = 3
+        
+        # We can't easily use execute_with_failover for streams because generators
+        # are consumed. For now, we will pick the first available provider directly.
+        from app.database import AsyncSessionLocal
+        
+        async with AsyncSessionLocal() as db:
+            try:
+                await quota_manager.ensure_bootstrapped(db)
+            except Exception as e:
+                logger.warning(f"Router: QuotaManager bootstrap failed: {e}")
+                
+            candidates = ["gemini-2.5-flash", "gemini-3.1-flash-lite", "deepseek-chat"]
+            
+            for model in candidates:
+                if not quota_manager.can_use_model(model, estimated_tokens):
+                    continue
+                    
+                try:
+                    provider = get_provider_for_model(model)
+                    quota_manager.reserve_quota(model, estimated_tokens)
+                    
+                    if not hasattr(provider, 'chat_stream'):
+                        raise NotImplementedError(f"Provider {model} does not support chat_stream")
+                        
+                    # Return the async generator directly
+                    # The caller (chat_service) is responsible for iterating and logging
+                    return provider.chat_stream(messages, context)
+                    
+                except Exception as exc:
+                    logger.warning(f"Router stream: {model} failed: {exc}")
+                    quota_manager.set_cool_down(model, 30)
+                    continue
+                    
+            raise RuntimeError("All candidate models failed for streaming.")

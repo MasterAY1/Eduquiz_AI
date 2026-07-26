@@ -1,9 +1,12 @@
 'use client';
 
+import { useQueryClient } from '@tanstack/react-query';
+
 import { useState, useRef, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { MessageSquare, Plus, FileText, Send, User, Bot, Loader2, Cpu } from 'lucide-react';
 import { useChatSessions, useChatMessages, useCreateChatSession, useSendMessage } from '@/hooks/useChat';
+import { chatApi } from '@/lib/api/chat';
 import { useDocuments } from '@/hooks/useDocuments';
 import { Card } from '@/components/ui/Card';
 import { Button } from '@/components/ui/Button';
@@ -19,11 +22,15 @@ export default function ChatPage() {
   const [activeSessionId, setActiveSessionId] = useState<string | null>(null);
 
   const { data: messages, isLoading: messagesLoading } = useChatMessages(activeSessionId);
+  const queryClient = useQueryClient();
   
   const createSession = useCreateChatSession();
   const sendMessage = useSendMessage();
 
   const [inputMessage, setInputMessage] = useState('');
+  const [isStreaming, setIsStreaming] = useState(false);
+  const [streamingContent, setStreamingContent] = useState('');
+  const [optimisticUserMsg, setOptimisticUserMsg] = useState('');
   const [newSessionTitle, setNewSessionTitle] = useState('');
   const [selectedDocId, setSelectedDocId] = useState<string | null>(null);
 
@@ -61,18 +68,31 @@ export default function ChatPage() {
     );
   };
 
-  const handleSendMessage = (e: React.FormEvent) => {
+  const handleSendMessage = async (e: React.FormEvent) => {
     e.preventDefault();
-    if (!inputMessage.trim() || !activeSessionId || sendMessage.isPending) return;
+    if (!inputMessage.trim() || !activeSessionId || isStreaming || sendMessage.isPending) return;
 
-    sendMessage.mutate(
-      { sessionId: activeSessionId, content: inputMessage },
-      {
-        onSuccess: () => {
-          setInputMessage('');
-        },
+    const currentMsg = inputMessage.trim();
+    setInputMessage('');
+    setOptimisticUserMsg(currentMsg);
+    setIsStreaming(true);
+    setStreamingContent('');
+
+    try {
+      const stream = chatApi.streamMessage(activeSessionId, currentMsg);
+      for await (const chunk of stream) {
+        setStreamingContent((prev) => prev + chunk);
       }
-    );
+      
+      // When done, invalidate to fetch canonical history
+      queryClient.invalidateQueries({ queryKey: ['chatMessages', activeSessionId] });
+    } catch (error) {
+      console.error('Streaming error:', error);
+      setStreamingContent((prev) => prev + '\n\n⚠️ Error during streaming.');
+    } finally {
+      setIsStreaming(false);
+      setOptimisticUserMsg('');
+    }
   };
 
   const SessionsListContent = (
@@ -284,8 +304,8 @@ export default function ChatPage() {
                 })}
               </AnimatePresence>
 
-              {/* Optimistic Pending Message */}
-              {sendMessage.isPending && (
+              {/* Optimistic User Message */}
+              {(isStreaming || sendMessage.isPending) && optimisticUserMsg && (
                 <motion.div
                   initial={{ opacity: 0, y: 10 }}
                   animate={{ opacity: 1, y: 0 }}
@@ -295,14 +315,14 @@ export default function ChatPage() {
                     <User className="w-3 h-3 lg:w-4 lg:h-4 text-slate-300" />
                   </div>
                   <div className="px-4 py-2.5 lg:px-5 lg:py-3 rounded-2xl bg-emerald-600/20 border border-emerald-500/30 text-white shadow-lg">
-                    <p className="text-xs lg:text-sm whitespace-pre-wrap">{inputMessage}</p>
+                    <p className="text-xs lg:text-sm whitespace-pre-wrap">{optimisticUserMsg}</p>
                     <span className="text-[10px] opacity-50 mt-1 lg:mt-2 block text-right">Sending...</span>
                   </div>
                 </motion.div>
               )}
 
-              {/* Typing Indicator */}
-              {sendMessage.isPending && (
+              {/* Streaming AI Message */}
+              {isStreaming && (
                 <motion.div
                   initial={{ opacity: 0, y: 10 }}
                   animate={{ opacity: 1, y: 0 }}
@@ -311,10 +331,27 @@ export default function ChatPage() {
                   <div className="w-6 h-6 lg:w-8 lg:h-8 rounded-full bg-gradient-to-br from-emerald-400 to-emerald-600 flex items-center justify-center flex-shrink-0 shadow-lg">
                     <Bot className="w-3 h-3 lg:w-4 lg:h-4 text-white" />
                   </div>
-                  <div className="px-4 py-3 lg:px-5 lg:py-4 rounded-2xl bg-[#1E293B]/80 border border-slate-700 text-slate-200 flex gap-1 items-center shadow-lg">
-                    <motion.div className="w-1.5 h-1.5 lg:w-2 lg:h-2 bg-emerald-500 rounded-full" animate={{ y: [0, -5, 0] }} transition={{ repeat: Infinity, duration: 0.6, delay: 0 }} />
-                    <motion.div className="w-1.5 h-1.5 lg:w-2 lg:h-2 bg-emerald-500 rounded-full" animate={{ y: [0, -5, 0] }} transition={{ repeat: Infinity, duration: 0.6, delay: 0.2 }} />
-                    <motion.div className="w-1.5 h-1.5 lg:w-2 lg:h-2 bg-emerald-500 rounded-full" animate={{ y: [0, -5, 0] }} transition={{ repeat: Infinity, duration: 0.6, delay: 0.4 }} />
+                  <div className="px-4 py-3 lg:px-5 lg:py-4 rounded-2xl bg-[#1E293B]/80 border border-slate-700 text-slate-200 shadow-lg w-full">
+                    {streamingContent ? (
+                      <div className="prose prose-invert prose-emerald max-w-none text-xs lg:text-sm
+                        prose-headings:font-heading prose-headings:font-semibold prose-headings:mt-3 prose-headings:mb-2
+                        prose-p:leading-relaxed prose-p:mb-2
+                        prose-a:text-emerald-400 prose-a:no-underline hover:prose-a:text-emerald-300
+                        prose-strong:text-white prose-strong:font-semibold
+                        prose-code:text-emerald-300 prose-code:bg-emerald-950/50 prose-code:px-1.5 prose-code:py-0.5 prose-code:rounded
+                        prose-pre:bg-slate-900 prose-pre:border prose-pre:border-slate-800
+                        prose-ul:my-2 prose-li:my-0.5
+                        [&>*:first-child]:mt-0 [&>*:last-child]:mb-0
+                      ">
+                        <ReactMarkdown remarkPlugins={[remarkGfm]}>{streamingContent}</ReactMarkdown>
+                      </div>
+                    ) : (
+                      <div className="flex gap-1 items-center h-5">
+                        <motion.div className="w-1.5 h-1.5 lg:w-2 lg:h-2 bg-emerald-500 rounded-full" animate={{ y: [0, -5, 0] }} transition={{ repeat: Infinity, duration: 0.6, delay: 0 }} />
+                        <motion.div className="w-1.5 h-1.5 lg:w-2 lg:h-2 bg-emerald-500 rounded-full" animate={{ y: [0, -5, 0] }} transition={{ repeat: Infinity, duration: 0.6, delay: 0.2 }} />
+                        <motion.div className="w-1.5 h-1.5 lg:w-2 lg:h-2 bg-emerald-500 rounded-full" animate={{ y: [0, -5, 0] }} transition={{ repeat: Infinity, duration: 0.6, delay: 0.4 }} />
+                      </div>
+                    )}
                   </div>
                 </motion.div>
               )}
